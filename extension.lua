@@ -100,7 +100,6 @@ function dropdownterminal()
 end
 -- drop-down ncmpcpp
 function dropdownncmpcpp()
-    if mpd_off then return end
     local temp = find_client_with_name("drop-down-ncmpcpp")
     if not temp then
         awful.spawn(terminal.." --title drop-down-ncmpcpp -e ncmpcpp")

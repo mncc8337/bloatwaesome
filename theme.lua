@@ -102,24 +102,12 @@ theme.layout_equalarea  = themes_path.."/layouts/equalarea.png"
 theme.layout_machi      = themes_path.."/layouts/machi.png"
 theme.layout_mstab      = themes_path.."/layouts/mstab.png"
 
-theme.taglist_squares_sel   = themes_path.."/taglist/squarefz.png"
-theme.taglist_squares_unsel = themes_path.."/taglist/squarez.png"
-
 theme.awesome_icon      = themes_path.."/awesome-icon.png"
 theme.menu_submenu_icon = themes_path.."/submenu.png"
 
--- Generate taglist squares:
-local taglist_square_size = dpi(5)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
-)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
-)
-
 theme.wallpaper             = themes_path.."/crt_magentan.jpg"
-theme.taglist_squares       = "true"
-theme.titlebar_close_button = "true"
+theme.taglist_squares       = false
+theme.titlebar_close_button = true
 theme.menu_height = dpi(25)
 theme.menu_width  = dpi(250)
 theme.menu_border_color = theme.border_focus
@@ -127,7 +115,7 @@ theme.menu_bg_focus = theme.bg_minimize
 
 theme.taglist_font  = "sans 18"
 theme.taglist_bg_focus    = color_base
-theme.taglist_fg_focus    = color_lavender
+theme.taglist_fg_not_focus= color_lavender
 --theme.taglist_fg_occupied = color_overlay1
 theme.taglist_bg_urgent   = color_blue
 --theme.taglist_fg_urgent   = color_surface2
@@ -135,10 +123,10 @@ theme.taglist_bg_urgent   = color_blue
 theme.taglist_spacing     = 2
 
 theme.tag_colors = {
-    color_yellow,
+    color_blue,
     color_red,
     color_green,
-    color_blue
+    color_yellow
 }
 
 --[[ bling ]]--

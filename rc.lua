@@ -144,3 +144,4 @@ end)
 
 -- important disk
 awful.spawn.easy_async("gio mount -d /dev/sdb5", function() end)
+awful.spawn.easy_async("picom", function() end)

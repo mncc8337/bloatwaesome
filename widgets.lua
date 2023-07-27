@@ -26,8 +26,6 @@ separator = v_centered_widget(separator)
 memico    = markup.fg.color(color_yellow, "󰘚  ")
 tempico   = markup.fg.color(color_red,    "󰔏  ")
 cpuico    = markup.fg.color(color_blue,   "󰍛  ")
-upico     = markup.fg.color(color_pink,   "󰕒  ")
-downico   = markup.fg.color(color_green,  "󰇚  ")
 volumeico = markup.fg.color(color_text,   "󰕾  ") -- 󰕿 󰖀 󰖁 󰝟
 
 --[[ lain widgets ]]--
@@ -57,9 +55,9 @@ local lain_weather = lain.widget.weather {
         return "<span font='Dosis bold 12'>"..day.."</span>, "..desc..'\n'.."<span font='Dosis 12'>"..
                " "..temp.."°C, * "..tfeel.."°C\n"..
                " "..pres.."hPa,  "..humi.."%\n"..
-               " "..wspe.."m/s,  "..wdeg.."°\n"..
-               " "..clou.."%,  "..visb.."km\n"..
-               " "..rise..",  "..sset.."</span>"
+               "   "..wspe.."m/s,   "..wdeg.."°\n"..
+               "   "..clou.."%,    "..visb.."km\n"..
+               "   "..rise..",    "..sset.."</span>"
     end,
 }
 lain_weather.widget.forced_width = 40
@@ -83,6 +81,7 @@ lain_mem.widget.align = "center"
 
 local lain_temp = lain.widget.temp {
     timeout = 1,
+    -- run `find /sys/devices -type f -name *temp*`
     tempfile = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input",
     settings = function()
         widget:set_markup(tempico..coretemp_now.."°C")
@@ -117,59 +116,6 @@ lain_alsa = lain.widget.alsa {
     end
 }
 lain_alsa.widget.align = "center"
-
-local lain_netup_text   = wibox.widget.textbox()
-local lain_netdown_text = wibox.widget.textbox()
-local lain_net = lain.widget.net {
-    timeout = 1,
-    units = 1,
-    settings = function()
-        local byte_d = net_now.received
-        local kilobyte_d = byte_d / 1000
-        local megabyte_d = kilobyte_d / 1000
-        local gigabyte_d = megabyte_d / 1000
-        local unit_d = "Bps"
-        local display_d = byte_d
-        if math.floor(gigabyte_d) > 0.01 then
-            unit_d = "GBps"
-            display_d = gigabyte_d
-        elseif math.floor(megabyte_d) > 0.01 then
-            unit_d = "MBps"
-            display_d = megabyte_d
-        elseif math.floor(kilobyte_d) > 0.01 then
-            unit_d = "KBps"
-            display_d = kilobyte_d
-        else
-            unit_d = "Bps"
-            display_d = byte_d
-        end
-
-        local byte_u = net_now.sent
-        local kilobyte_u = byte_u / 1000
-        local megabyte_u = kilobyte_u / 1000
-        local gigabyte_u = megabyte_u / 1000
-        local unit_u = "Bps"
-        local display_u = byte_u
-        if math.floor(gigabyte_u) > 0.01 then
-            unit_u = "GBps"
-            display_u = gigabyte_u
-        elseif math.floor(megabyte_u) > 0.01 then
-            unit_u = "MBps"
-            display_u = megabyte_u
-        elseif math.floor(kilobyte_u) > 0.01 then
-            unit_u = "KBps"
-            display_u = kilobyte_u
-        else
-            unit_u = "Bps"
-            display_u = byte_u
-        end
-
-        lain_netdown_text:set_markup(downico..(math.floor(display_d*10)/10)..unit_d)
-        lain_netup_text:set_markup(upico..(math.floor(display_u*10)/10)..unit_u)
-    end
-}
-lain_netup_text.align = "center"
-lain_netdown_text.align = "center"
 
 local musicico = markup.fg.color(color_blue, "󰝚  ")
 local songinf4 = wibox.widget.textbox()
@@ -352,16 +298,6 @@ volume_slider:connect_signal("widget::redraw_needed", function() -- when value c
     volume_setter_timer:again()
 end)
 
-netdownwidget = wibox.widget {
-    layout = wibox.layout.align.horizontal,
-    lain_netdown_text,
-}
-
-netupwidget = wibox.widget {
-    layout = wibox.layout.align.horizontal,
-    lain_netup_text,
-}
-
 cpuwidget = wibox.widget {
     layout = wibox.layout.align.horizontal,
     lain_cpu,
@@ -403,11 +339,9 @@ local sysmon = awful.popup {
     widget = {
         {
             layout = wibox.layout.fixed.vertical,
-            netdownwidget,
-            netupwidget,
+            memwidget,
             cpuwidget,
             tempwidget,
-            memwidget,
         },
         widget = wibox.container.margin,
         margins = 5
@@ -427,18 +361,6 @@ local sysmon_timer = gears.timer {
     end
 }
 sysmon_icon:connect_signal("mouse::enter", function()
-    --[[
-    lain_net.timer:start()
-    lain_cpu.timer:start()
-    lain_temp.timer:start()
-    lain_mem.timer:start()
-
-    lain_net.update()
-    lain_cpu.update()
-    lain_temp.update()
-    lain_mem.update()
-    ]]--
-
     sysmon_timer:stop()
     sysmon.visible = true
     sysmon:move_next_to(mouse.current_widget_geometry)
@@ -456,11 +378,11 @@ sysmon:connect_signal("mouse::leave", function() sysmon_timer:again() end)
 ██║ ╚═╝ ██╚██████╔█████████╚██████╗    ██║    ██║  ████║ ╚██████████████████╗
 ╚═╝     ╚═╝╚═════╝╚══════╚═╝╚═════╝    ╚═╝    ╚═╝  ╚═╚═╝  ╚═══╚══════╚══════╝
 ]]--
-local prevbutton    = wibox.widget.textbox("󰒮")
-local togglebutton  = wibox.widget.textbox("")
-local nextbutton    = wibox.widget.textbox("󰒭")
+local prevbutton    = wibox.widget.textbox(" 󰒮")
+local togglebutton  = wibox.widget.textbox("󰏤")
+local nextbutton    = wibox.widget.textbox("󰒭 ")
 prevbutton  .font   = "sans 18"
-togglebutton.font   = "sans 12"
+togglebutton.font   = "sans 16"
 nextbutton  .font   = "sans 18"
 prevbutton  .align  = "left"
 togglebutton.align  = "center"
@@ -562,10 +484,10 @@ end)))
 togglebutton:buttons(gears.table.join(awful.button({}, 1, function()
     awful.spawn.with_shell("mpc toggle")
     lain_mpd.update()
-    if togglebutton.markup == "" then
-        togglebutton.markup = ""
+    if togglebutton.markup == "󰐊" then
+        togglebutton.markup = "󰏤"
     else
-        togglebutton.markup = ""
+        togglebutton.markup = "󰐊"
     end
 end)))
 nextbutton:buttons(gears.table.join(awful.button({}, 1, function()
@@ -615,9 +537,9 @@ mpdwidget:connect_signal("mouse::enter", function()
     if mpd_off then return end
 
     if not mpd_paused then
-        togglebutton.markup = ""
+        togglebutton.markup = "󰏤"
     else
-        togglebutton.markup = ""
+        togglebutton.markup = "󰐊"
     end
 
     mpd_inf4_timer:stop()
@@ -663,7 +585,12 @@ local function update_fc_widget()
     local current_focus_client = client.focus
     if current_focus_client then
         if current_focus_client.name then
-            focused_client.markup = markup.fg.color(color_subtext0, current_focus_client.name)
+            -- shorten the name
+            local name = current_focus_client.name
+            if string.len(name) > 50 then
+                name = string.sub(name, 1, 47) .. "..."
+            end
+            focused_client.markup = markup.fg.color(color_subtext0, name)
         else
             focused_client.markup = markup.fg.color(color_overlay2, "unamed client")
         end

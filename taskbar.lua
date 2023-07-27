@@ -93,7 +93,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "󰮯 ", "󰊠 ", "󰊠 ", "󰊠 " }, s, awful.layout.layouts[1])
+    awful.tag({ "1", "2", "3", "4" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     --s.mypromptbox = awful.widget.prompt()
@@ -122,10 +122,16 @@ awful.screen.connect_for_each_screen(function(s)
         widget_template = {
             {
                 {
-                    id     = 'text_role',
-                    align = "center",
-                    valign = "center",
-                    widget = wibox.widget.textbox,
+                    {
+                        id     = 'mytext_role',
+                        align = "center",
+                        valign = "center",
+                        widget = wibox.widget.textbox,
+                        font = "sans 16",
+                    },
+                    id = "offset",
+                    widget = wibox.container.margin,
+                    right = 7,
                 },
                 id = 'text_color',
                 forced_width = 30,
@@ -134,18 +140,39 @@ awful.screen.connect_for_each_screen(function(s)
             },
             id     = 'background_role',
             widget = wibox.container.background,
+
             -- Add support for hover colors and an index label
             create_callback = function(self, c3, index, objects) --luacheck: no unused args
-                self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
                 self:connect_signal('mouse::enter', function()
                     self.bg = beautiful.tag_colors[index]
                 end)
                 self:connect_signal('mouse::leave', function()
                    self.bg = color_base
                 end)
+
+                self:get_children_by_id('mytext_role')[1].text = ""
+                self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
+
+                -- change focused tag name and color
+                for i, tag in ipairs(awful.screen.focused().tags) do
+                    if tag.selected and i == index then
+                        self:get_children_by_id('mytext_role')[1].text = ""
+                        self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                    end
+                end
             end,
+
             update_callback = function(self, c3, index, objects) --luacheck: no unused args
-                self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                self:get_children_by_id('mytext_role')[1].text = ""
+                self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
+
+                -- change focused tag name and color
+                for i, tag in ipairs(awful.screen.focused().tags) do
+                    if tag.selected and i == index then
+                        self:get_children_by_id('mytext_role')[1].text = ""
+                        self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                    end
+                end
             end,
         },
     }
