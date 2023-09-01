@@ -47,43 +47,6 @@ function find_client_with_class(class_)
     return temp
 end
 
---[[ mpd helper ]]--
-function toggle_lain_mpd(state, nofitication)
-    if notification == 'NO' then notification = false else notification = true end
-    local common = {
-        text = "MPD ",
-        position = "top_middle",
-        timeout = 2,
-        border_width = beautiful.border_width,
-    }
-    local function callback(mpd_state)
-        lain_mpd.update()
-        mpd_off = mpd_state
-        if notification then naughty.notify(common) end
-    end
-
-    local function off()
-        lain_mpd.timer:stop()
-        common.text = common.text .. markup.bold("OFF")
-        lain_mpd.widget:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
-        awful.spawn.easy_async("mpd --kill", function() callback(true) end)
-    end
-    local function on()
-        lain_mpd.timer:again()
-        common.text = common.text .. markup.bold("ON")
-        awful.spawn.easy_async("mpd", function() callback(false) end)
-    end
-    if not mpd_off then off() else on() end
-    if not state then return else
-        if state == 'on' then on() else off() end
-    end
-end
-
---[[ client ]]--
-function move_client(c, dx, dy, dw, dh)
-  c:relative_move(dx, dy, dw, dh)
-end
-
 --[[ drop down client ]]--
 --drop-down terminal
 function dropdownterminal()
@@ -124,24 +87,8 @@ tag.connect_signal("property::selected", function()
     if c then c.hidden = true end
 end)
 
---[[ pavu control ]]--
-function toggle_pavucontrol()
-    local c = find_client_with_class("Pavucontrol")
-    if c then
-        c:kill()
-        if mouse.current_widget == lain_alsa.widget then
-            volume_slider_popup.visible = true
-        end
-    else
-        if volume_slider_popup.visible then volume_slider_popup.visible = false end
-        awful.spawn("pavucontrol")
-    end
-end
-
-function set_volume_slider_value(val)
-    volume_slider.value = val
-end
-function show_volume_slider()
-    volume_button_triggered_timer:again()
-    volume_slider_popup.visible = true
+function utf8.sub(s, start_char_idx, end_char_idx)
+    start_byte_idx = utf8.offset(s, start_char_idx)
+    end_byte_idx = utf8.offset(s, end_char_idx + 1) - 1
+    return string.sub(s, start_byte_idx, end_byte_idx)
 end

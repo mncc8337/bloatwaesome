@@ -105,7 +105,7 @@ theme.layout_mstab      = themes_path.."/layouts/mstab.png"
 theme.awesome_icon      = themes_path.."/awesome-icon.png"
 theme.menu_submenu_icon = themes_path.."/submenu.png"
 
-theme.wallpaper             = themes_path.."/crt_magentan.jpg"
+theme.wallpaper             = themes_path.."/mru.jpg"
 theme.taglist_squares       = false
 theme.titlebar_close_button = true
 theme.menu_height = dpi(25)
@@ -115,7 +115,7 @@ theme.menu_bg_focus = theme.bg_minimize
 
 theme.taglist_font  = "sans 18"
 theme.taglist_bg_focus    = color_base
-theme.taglist_fg_not_focus= color_lavender
+theme.taglist_fg_not_focus= color_surface2
 --theme.taglist_fg_occupied = color_overlay1
 theme.taglist_bg_urgent   = color_blue
 --theme.taglist_fg_urgent   = color_surface2

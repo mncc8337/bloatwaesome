@@ -1,3 +1,5 @@
+local freedesktop = require("freedesktop")
+
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {

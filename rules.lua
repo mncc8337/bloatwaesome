@@ -105,6 +105,11 @@ client.connect_signal("manage", function (c)
         awful.placement.no_offscreen(c)
     end
     reconfig_border(c)
+
+    if (c.floating or awful.layout.get(awful.screen.focused()) == awful.layout.suit.floating)
+       and c.class ~= "Pavucontrol" and c.name ~= "drop-down-ncmpcpp" and c.name ~= "drop-down-terminal" then
+        awful.placement.centered(c, {honor_workarea = true})
+    end
 end)
 client.connect_signal("property::fullscreen", reconfig_border)
 client.connect_signal("property::maximized", reconfig_border)

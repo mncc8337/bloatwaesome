@@ -1,3 +1,5 @@
+local widgets = require("widgets")
+
 local lbl = awful.popup {
     ontop = true,
     visible = false,
@@ -87,7 +89,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 --[[ taskbar ]]--
 awful.screen.connect_for_each_screen(function(s)
     -- volume slider poup position
-    volume_slider_popup.x = s.geometry.width - 336 - beautiful.border_width*3
+    widgets.alsa.volume_slider_popup.x = s.geometry.width - 336 - beautiful.border_width * 4
 
     -- Wallpaper
     set_wallpaper(s)
@@ -153,11 +155,14 @@ awful.screen.connect_for_each_screen(function(s)
                 self:get_children_by_id('mytext_role')[1].text = ""
                 self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
 
-                -- change focused tag name and color
                 for i, tag in ipairs(awful.screen.focused().tags) do
-                    if tag.selected and i == index then
-                        self:get_children_by_id('mytext_role')[1].text = ""
-                        self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                    if i == index then
+                        if #tag:clients() > 0 then
+                            self:get_children_by_id('mytext_role')[1].text = ""
+                        end
+                        if tag.selected then
+                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                        end
                     end
                 end
             end,
@@ -166,11 +171,14 @@ awful.screen.connect_for_each_screen(function(s)
                 self:get_children_by_id('mytext_role')[1].text = ""
                 self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
 
-                -- change focused tag name and color
                 for i, tag in ipairs(awful.screen.focused().tags) do
-                    if tag.selected and i == index then
-                        self:get_children_by_id('mytext_role')[1].text = ""
-                        self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                    if i == index then
+                        if #tag:clients() > 0 then
+                            self:get_children_by_id('mytext_role')[1].text = ""
+                        end
+                        if tag.selected then
+                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                        end
                     end
                 end
             end,
@@ -217,35 +225,30 @@ awful.screen.connect_for_each_screen(function(s)
         {
             layout = wibox.layout.fixed.horizontal,
             centered_widget(s.mytaglist),
-            separator,
+            widgets.separator,
             s.mytasklist,
             {
                 widget = wibox.container.margin,
                 left = 5,
-                focused_client,
+                widgets.focused_client,
             }
         },
         -- middle
-        {
-            layout = wibox.layout.flex.horizontal,
-            {
-                {
-                    mytextclock,
-                    widget = wibox.container.background,
-                    bg = color_surface0,
-                    shape = gears.shape.rounded_rect
-                },
-                widget = wibox.container.margin,
-                top = 5, bottom = 5
-            }
+        wibox.widget {
+            widget = wibox.widget.textclock,
+            valign = "center",
+            align = "center",
+            forced_width = 160,
         },
         -- right
         {
             layout = wibox.layout.fixed.horizontal,
-            mpdwidget,
-            sysmon_icon,
-            weatherwidget,
-            volumewidget,
+            widgets.mpdwidget,
+            widgets.memwidget,
+            widgets.tempwidget,
+            widgets.cpuwidget,
+            widgets.weatherwidget,
+            widgets.alsa.volumewidget,
             {
                 widget = wibox.container.margin,
                 margins = 3,
@@ -258,4 +261,3 @@ awful.screen.connect_for_each_screen(function(s)
         }
     }
 end)
-

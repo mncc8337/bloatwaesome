@@ -1,12 +1,8 @@
-freedesktop = require("freedesktop")
 gears       = require("gears")
 awful       = require("awful")
 beautiful   = require("beautiful")
 require("awful.autofocus")
 wibox       = require("wibox")
-lain        = require("lain")
-markup      = lain.util.markup
-machi       = require("layout-machi")
 naughty     = require("naughty")
 -- menubar     = require("menubar")
 
@@ -58,6 +54,8 @@ nice {
 
 
 --[[ layouts ]]--
+local machi = require("layout-machi")
+
 local centered = bling.layout.centered
 local equal = bling.layout.equalarea
 local desk = bling.layout.desk
@@ -83,8 +81,7 @@ awful.layout.layouts = {
 require("extension")
 
 --[[ main widgets ]]--
-require("menu")
-require("widgets")
+-- require("menu")
 require("taskbar")
 
 --[[ key bindings ]]--
@@ -95,24 +92,6 @@ require("rules")
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
-]]--
-
--- Hide the menu when the mouse leaves it
---[[
-mymainmenu.wibox:connect_signal("mouse::leave", function()
-    if not mymainmenu.active_child or
-       (mymainmenu.wibox ~= mouse.current_wibox and
-       mymainmenu.active_child.wibox ~= mouse.current_wibox) then
-        mymainmenu:hide()
-    else
-        mymainmenu.active_child.wibox:connect_signal("mouse::leave",
-        function()
-            if mymainmenu.wibox ~= mouse.current_wibox then
-                mymainmenu:hide()
-            end
-        end)
-    end
 end)
 ]]--
 
@@ -129,19 +108,15 @@ end)
 
 -- Run garbage collector regularly to prevent memory leaks
 gears.timer {
-       timeout = 30,
-       autostart = true,
-       callback = function() collectgarbage() end
+    timeout = 30,
+    autostart = true,
+    callback = function() collectgarbage() end
 }
 
 -- hide drop-down clients on start
-awful.spawn.easy_async("sleep 0.0001", function(_, _, _, _)
+awful.spawn.easy_async("sleep 0.0001", function()
     local drop_term = find_client_with_name("drop-down-terminal")
     local drop_mpll = find_client_with_name("drop-down-ncmpcpp")
     if drop_term then drop_term.hidden = true end
     if drop_mpll then drop_mpll.hidden = true end
 end)
-
--- important disk
-awful.spawn.easy_async("gio mount -d /dev/sdb5", function() end)
-awful.spawn.easy_async("picom", function() end)

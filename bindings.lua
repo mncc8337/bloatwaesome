@@ -1,3 +1,5 @@
+local alsa = require("widgets").alsa
+
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
     -- awful.button({ }, 3, function () mymainmenu:toggle() end)
@@ -10,11 +12,11 @@ root.buttons(gears.table.join(
 globalkeys = gears.table.join(
     awful.key({altkey}, "o", function() toggle_lain_mpd() end,
         {description = "toggle mpd widget", group = "media"}),
-    awful.key({altkey}, "n", function() awful.spawn.with_shell("mpc next") end,
+    awful.key({altkey}, "n", function() awful.spawn("mpc next") end,
         {description = "next song", group = "media"}),
-    awful.key({altkey}, "p", function() awful.spawn.with_shell("mpc prev") end,
+    awful.key({altkey}, "p", function() awful.spawn("mpc prev") end,
         {description = "previous song", group = "media"}),
-    awful.key({altkey}, "space", function() awful.spawn.with_shell("mpc toggle") end,
+    awful.key({altkey}, "space", function() awful.spawn("mpc toggle") end,
         {description = "pause/play song", group = "media"}),
     awful.key({ modkey }, "F12", function() dropdownterminal() end,
         {description = "spawn a drop-down terminal", group = "launcher"}),
@@ -56,32 +58,35 @@ globalkeys = gears.table.join(
         {description = "toggle wibar", group = "awesome"}),
     -- VOLUME
     awful.key({}, "XF86AudioRaiseVolume", function ()
-        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." +2%", function() lain_alsa.update() end)
-        set_volume_slider_value(lain_alsa.last.level+2)
-        show_volume_slider()
+        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." +2%", function() alsa.lain_alsa.update() end)
+        alsa.volume_slider.value = alsa.lain_alsa.last.level + 2
+        alsa.volume_button_triggered_timer:again()
+        alsa.volume_slider_popup.visible = true
     end,
     {description = "increase volume", group = "media"}),
     awful.key({}, "XF86AudioLowerVolume", function ()
-        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." -2%", function() lain_alsa.update() end)
-        set_volume_slider_value(lain_alsa.last.level-2)
-        show_volume_slider()
+        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." -2%", function() alsa.lain_alsa.update() end)
+        alsa.volume_slider.value = alsa.lain_alsa.last.level - 2
+        alsa.volume_button_triggered_timer:again()
+        alsa.volume_slider_popup.visible = true
     end,
-    {description = "decrease volume", group = "media"}), -- down
+    {description = "decrease volume", group = "media"}),
     awful.key({}, "XF86AudioMute", function ()
-        awful.spawn.easy_async("pactl set-sink-mute "..alsa_device.." toggle", function() lain_alsa.update() end)
-        show_volume_slider()
+        awful.spawn.easy_async("pactl set-sink-mute "..alsa_device.." toggle", function() alsa.lain_alsa.update() end)
+        alsa.volume_button_triggered_timer:again()
+        alsa.volume_slider_popup.visible = true
     end,
-    {description = "mute volume", group = "media"}), -- mute
+    {description = "mute volume", group = "media"}),
     -- FILE MANAGER
     awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end, {description = "open file explorer", group = "launcher"}),
     -- PRINT
-    awful.key({}, "Print", function () os.execute(". ~/.config/awesome/screenshot.sh full") end,
+    awful.key({}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh full") end,
         {description = "print full screen", group = "media"}),
-    awful.key({modkey}, "Print", function () os.execute(". ~/.config/awesome/screenshot.sh full save") end,
+    awful.key({modkey}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh full save") end,
         {description = "print full screen and save", group = "media"}),
-    awful.key({ "Shift" }, "Print", function () os.execute(". ~/.config/awesome/screenshot.sh area") end,
+    awful.key({ "Shift" }, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh area") end,
         {description = "print a part of screen", group = "media"}),
-    awful.key({modkey, "Shift"}, "Print", function () os.execute(". ~/.config/awesome/screenshot.sh area save") end,
+    awful.key({modkey, "Shift"}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh area save") end,
         {description = "print a part of screen and save", group = "media"}),
     -- BOTTOM
     awful.key({"Shift", "Control"}, "Escape", function() awful.spawn(terminal.." --title=\"btop\" -e btop") end,
@@ -203,47 +208,6 @@ globalkeys = gears.table.join(
 )
 
 clientkeys = gears.table.join(
-    awful.key({ modkey, "Control"}, "Up",
-      function (c)
-        move_client(c, 0, -8, 0, 0)
-      end,
-      {description = "move client up", group = "client"}),
-    awful.key({ modkey, "Control"}, "Down",
-      function (c)
-        move_client(c, 0, 8, 0, 0)
-      end,
-      {description = "move client down", group = "client"}),
-    awful.key({ modkey, "Control"}, "Left",
-      function (c)
-        move_client(c, -8, 0, 0, 0)
-      end,
-      {description = "move client left", group = "client"}),
-    awful.key({ modkey, "Control"}, "Right",
-      function (c)
-        move_client(c, 8, 0, 0, 0)
-      end,
-      {description = "move client right", group = "client"}),
-    --[[ client size ]]--
-    awful.key({ altkey, "Control"}, "Up",
-      function (c)
-        move_client(c, 0, 0, 0, -5)
-      end,
-      {description = "expand client up", group = "client"}),
-    awful.key({ altkey, "Control"}, "Down",
-      function (c)
-        move_client(c, 0, 0, 0, 5)
-      end,
-      {description = "expand client down", group = "client"}),
-    awful.key({ altkey, "Control"}, "Left",
-      function (c)
-        move_client(c, 0, 0, -5, 0)
-      end,
-      {description = "expand client left", group = "client"}),
-    awful.key({ altkey, "Control"}, "Right",
-      function (c)
-        move_client(c, 0, 0, 5, 0)
-      end,
-      {description = "expand client right", group = "client"}),
     awful.key({ modkey,           }, "f",
         function (c)
             c.fullscreen = not c.fullscreen
