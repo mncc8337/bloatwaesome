@@ -28,6 +28,10 @@ editor_cmd = terminal .. " -e " .. editor
 
 alsa_device = 0
 
+-- "mpd" or "playerctl"
+-- use "playerctl" for support for vlc, mpv, RhythmBox, web browsers, cmus, spotify and others
+music_player = "playerctl"
+
 -- Default modkey.
 modkey = "Mod4"
 altkey = "Mod1"
@@ -116,7 +120,5 @@ gears.timer {
 -- hide drop-down clients on start
 awful.spawn.easy_async("sleep 0.0001", function()
     local drop_term = find_client_with_name("drop-down-terminal")
-    local drop_mpll = find_client_with_name("drop-down-ncmpcpp")
     if drop_term then drop_term.hidden = true end
-    if drop_mpll then drop_mpll.hidden = true end
 end)

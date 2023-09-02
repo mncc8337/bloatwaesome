@@ -10,18 +10,26 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-    awful.key({altkey}, "o", function() toggle_lain_mpd() end,
-        {description = "toggle mpd widget", group = "media"}),
-    awful.key({altkey}, "n", function() awful.spawn("mpc next") end,
+    awful.key({altkey}, "n", function() awful.spawn(music_player.." next") end,
         {description = "next song", group = "media"}),
-    awful.key({altkey}, "p", function() awful.spawn("mpc prev") end,
+    awful.key({altkey}, "p", function()
+            if music_player == "mpd" then
+                awful.spawn("mpc prev")
+            elseif music_player == "playerctl" then
+                awful.spawn("playerctl previous")
+            end
+        end,
         {description = "previous song", group = "media"}),
-    awful.key({altkey}, "space", function() awful.spawn("mpc toggle") end,
+    awful.key({altkey}, "space", function()
+            if music_player == "mpd" then
+                awful.spawn("mpc toggle")
+            elseif music_player == "playerctl" then
+                awful.spawn("playerctl play-pause")
+            end
+        end,
         {description = "pause/play song", group = "media"}),
     awful.key({ modkey }, "F12", function() dropdownterminal() end,
         {description = "spawn a drop-down terminal", group = "launcher"}),
-    awful.key({ modkey }, "F11", function() dropdownncmpcpp() end,
-        {description = "spawn a drop-down music player", group = "launcher"}),
     -- On the fly useless gaps change
     awful.key({ modkey, "Control" }, "F1", function () lain.util.useless_gaps_resize(1) end,
         {description = "increase useless gaps size", group = "layout"}),
@@ -34,7 +42,7 @@ globalkeys = gears.table.join(
     for _, cl in ipairs(mouse.screen.selected_tag:clients()) do
             local c = cl
             if c then
-                if not c.minimized and c.name ~= "drop-down-terminal" and c.name ~= "drop-down-ncmpcpp" then
+                if not c.minimized and c.name ~= "drop-down-terminal" then
                     already_minimized = false
                 end
             end
@@ -44,7 +52,7 @@ globalkeys = gears.table.join(
             local c = cl
             if c then
                 -- if all clients are minimized then unminimize them, else minimized all clients
-                if c.name ~= "drop-down-terminal" and c.name ~= "drop-down-ncmpcpp" then
+                if c.name ~= "drop-down-terminal" then
                     c.minimized = not already_minimized
                 end
             end

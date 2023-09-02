@@ -23,9 +23,16 @@ widget_spacing = 10
 -- require("widgets.alsa")
 -- require("widgets.focused_client_name")
 
+local musicwidget
+if music_player == "mpd" then
+    musicwidget = require("widgets.mpd")
+elseif music_player == "playerctl" then
+    musicwidget = require("widgets.playerctl")
+end
+
 return {
     separator = separator,
-    mpdwidget = require("widgets.mpd"),
+    musicwidget = musicwidget,
     memwidget = require("widgets.mem"),
     cpuwidget = require("widgets.cpu"),
     tempwidget = require("widgets.temperature"),

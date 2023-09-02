@@ -61,29 +61,8 @@ function dropdownterminal()
         temp:raise()
     end
 end
--- drop-down ncmpcpp
-function dropdownncmpcpp()
-    local temp = find_client_with_name("drop-down-ncmpcpp")
-    if not temp then
-        awful.spawn(terminal.." --title drop-down-ncmpcpp -e ncmpcpp")
-        mpd_inf4.visible = false
-    elseif temp.hidden == false then
-        temp.hidden = true
-        if mouse.current_widget == lain_mpd.widget then
-            mpd_inf4.visible = true
-        end
-    else
-        temp:move_to_tag(awful.tag.selected())
-        temp.hidden = false
-        client.focus = temp
-        temp:raise()
-        mpd_inf4.visible = false
-    end
-end
 tag.connect_signal("property::selected", function()
     local c = find_client_with_name("drop-down-terminal")
-    if c then c.hidden = true end
-    c = find_client_with_name("drop-down-ncmpcpp")
     if c then c.hidden = true end
 end)
 
