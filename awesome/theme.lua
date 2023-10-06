@@ -105,7 +105,7 @@ theme.layout_mstab      = themes_path.."/layouts/mstab.png"
 theme.awesome_icon      = themes_path.."/awesome-icon.png"
 theme.menu_submenu_icon = themes_path.."/submenu.png"
 
-theme.wallpaper             = themes_path.."/mru.jpg"
+theme.wallpaper             = themes_path.."/squares.png"
 theme.taglist_squares       = false
 theme.titlebar_close_button = true
 theme.menu_height = dpi(25)
