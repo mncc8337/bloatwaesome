@@ -67,7 +67,7 @@ local function factory(args)
         settings()
     end
 
-    cpu.timer = helpers.newtimer("cpu", timeout, cpu.update, true, true)
+    helpers.newtimer("cpu", timeout, cpu.update)
 
     return cpu
 end

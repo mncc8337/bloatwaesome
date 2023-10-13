@@ -114,7 +114,7 @@ local function factory(args)
         settings()
     end
 
-    net.timer = helpers.newtimer("network", timeout, net.update, true, true)
+    helpers.newtimer("network", timeout, net.update)
 
     return net
 end

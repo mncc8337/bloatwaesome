@@ -43,7 +43,7 @@ local function factory(args)
         settings()
     end
 
-    mem.timer = helpers.newtimer("mem", timeout, mem.update, true, true)
+    helpers.newtimer("mem", timeout, mem.update)
 
     return mem
 end

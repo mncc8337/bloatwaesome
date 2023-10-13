@@ -49,7 +49,6 @@ local volume_slider = wibox.widget {
 }
 local volume_slider_popup = awful.popup {
     ontop = true,
-    y = taskbar_size,
     visible = false,
     --maximum_width = 220,
     maximum_height = 50,
@@ -65,22 +64,37 @@ local volume_slider_popup = awful.popup {
         right = 10, left = 10,
     }
 }
-local volume_slider_timer = gears.timer {
-    timeout = 0.1,
+local popup_placement_config = {
+    margins = {
+        top = taskbar_size,
+        right = beautiful.border_width + 1
+    }
+}
+awful.placement.top_right(volume_slider_popup, popup_placement_config)
+local close_popup_timer = gears.timer {
+    timeout = 1,
     single_shot = true,
     callback = function()
         volume_slider_popup.visible = false
     end
 }
-local volume_button_triggered_timer = gears.timer {
-    timeout = 1.5,
-    single_shot = true,
-    callback = function()
-        volume_slider_popup.visible = false
+local function show_volume_slider(position, timeout)
+    if position == "top right" then
+        awful.placement.top_right(volume_slider_popup, popup_placement_config)
+    elseif position == "top" then
+        awful.placement.top(volume_slider_popup, popup_placement_config)
     end
-}
-volume_slider_popup:connect_signal("mouse::enter", function() volume_slider_timer:stop() end)
-volume_slider_popup:connect_signal("mouse::leave", function() volume_slider_timer:again() end)
+    close_popup_timer:stop()
+    close_popup_timer.timeout = timeout
+    volume_slider_popup.visible = true
+    close_popup_timer:start()
+end
+volume_slider_popup.visible = true
+volume_slider_popup:connect_signal("mouse::enter", function() close_popup_timer:stop() end)
+volume_slider_popup:connect_signal("mouse::leave", function()
+    close_popup_timer.timeout = 0.1
+    close_popup_timer:again()
+end)
 local finish_update_volume = true
 volume_slider:connect_signal("property::value", function()
     if not finish_update_volume then return end
@@ -100,9 +114,11 @@ volumewidget:buttons(gears.table.join(awful.button({ }, 3, function()
     if c then
         c:kill()
         if mouse.current_widget == lain_alsa.widget then
-            volume_slider_popup.visible = true
+            show_volume_slider("top right", 0.1)
+            close_popup_timer:stop()
         end
     else
+        close_popup_timer:stop()
         if volume_slider_popup.visible then volume_slider_popup.visible = false end
         awful.spawn("pavucontrol")
     end
@@ -111,17 +127,29 @@ volumewidget:connect_signal("mouse::enter", function()
     local c = find_client_with_class("Pavucontrol")
     if c then return end
 
-    volume_slider_timer:stop()
     volume_slider.value = lain_alsa.last.level
-    volume_slider_popup.visible = true
-    --volume_slider_popup:move_next_to(mouse.current_widget_geometry)
+    show_volume_slider("top right", 0.1)
+    close_popup_timer:stop()
 end)
-volumewidget:connect_signal("mouse::leave", function() volume_slider_timer:again() end)
+volumewidget:connect_signal("mouse::leave", function()
+    close_popup_timer.timeout = 0.1
+    close_popup_timer:start()
+end)
+
+local function add_volume_level(num)
+    local sign = ''
+    if num > 0 then sign = '+' else sign = '-' end
+    awful.spawn.easy_async("pactl set-sink-volume "..alsa_device..' '..sign..math.abs(num)..'%', function() lain_alsa.update() end)
+    volume_slider.value = lain_alsa.last.level + num
+    show_volume_slider("top", 1.5)
+end
+local function toggle_mute()
+    awful.spawn.easy_async("pactl set-sink-mute "..alsa_device.." toggle", function() lain_alsa.update() end)
+    show_volume_slider("top", 1.5)
+end
 
 return {
-    lain_alsa = lain_alsa,
     volumewidget = volumewidget,
-    volume_slider = volume_slider,
-    volume_slider_popup = volume_slider_popup,
-    volume_button_triggered_timer = volume_button_triggered_timer,
+    add_volume_level = add_volume_level,
+    toggle_mute = toggle_mute,
 }

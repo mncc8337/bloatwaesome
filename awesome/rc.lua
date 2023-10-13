@@ -16,10 +16,17 @@ beautiful.init(".config/awesome/theme.lua")
 bling = require("bling")
 -- menubar.utils.lookup_icon(beautiful.icon_theme)
 
+-- debug only
+function notify(message, title)
+    naughty.notify({title = title, message = message})
+end
+
+awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
+
 -- number of tags
 tag_num = 4
 
-taskbar_size = 30
+taskbar_size = 32
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"

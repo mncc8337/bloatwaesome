@@ -25,7 +25,7 @@ local status = {
     no_loop = false,
 }
 local time = {
-    updating = false,
+    -- updating = false,
     elapsed = 0,
     total = 100
 }
@@ -349,10 +349,13 @@ local music_player = awful.popup {
         }
     }
 }
+
+local lock_visibility = false
 local music_player_timer = gears.timer {
     timeout = 0.1,
     single_shot = true,
     callback = function()
+        if lock_visibility then return end
         music_player.visible = false
     end
 }
@@ -388,6 +391,9 @@ local function show(near_mouse)
     if near_mouse then
         music_player:move_next_to(mouse.current_widget_geometry)
     end
+end
+local function toggle_lock_visibility()
+    lock_visibility = not lock_visibility
 end
 local function hide()
     music_player_timer:again()
@@ -432,4 +438,5 @@ return {
     set_detail = set_detail,
     set_elapsed_time = set_elapsed_time,
     set_total_time = set_total_time,
+    toggle_lock_visibility = toggle_lock_visibility,
 }

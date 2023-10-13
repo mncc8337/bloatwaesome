@@ -8,6 +8,12 @@ local lain_weather = lain.widget.weather {
     lon = longtitude,
     cnt = 1,
     timeout = 900,
+    icons_path = awesome_dir.."/openweathermap_icons/",
+    notification_preset = {
+        border_width = beautiful.border_width,
+        hover_timeout = 1,
+    },
+    showpopup = "off",
     settings = function()
         units = math.floor(weather_now["main"]["temp"]+.5)
         widget:set_markup(units .. "°C ")
@@ -51,6 +57,7 @@ local weatherwidget = wibox.widget {
         widget = wibox.container
     }
 }
+
 lain_weather.attach(weatherwidget)
 
 return weatherwidget

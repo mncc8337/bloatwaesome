@@ -42,7 +42,7 @@ local function factory(args)
         end)
     end
 
-    temp.timer = helpers.newtimer("thermal", timeout, temp.update, true, true)
+    helpers.newtimer("thermal", timeout, temp.update)
 
     return temp
 end

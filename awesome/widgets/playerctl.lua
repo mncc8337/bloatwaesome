@@ -5,22 +5,16 @@ local music_player = require("widgets.musicplayer")
 
 local player_off = true
 local media_length = 0
+local current_player = ""
 
 local musicico = markup.fg.color(color_blue, "󰝚  ")
-local art = wibox.widget {
-    image = ".config/awesome/fallback.png",
-    resize = true,
-    forced_height = dpi(80),
-    forced_width = dpi(80),
-    widget = wibox.widget.imagebox
-}
 
 local titlew = wibox.widget.textbox()
 titlew:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
 
 -- Get Song Info
-local notification_id = 0
 local playerctl = bling.signal.playerctl.lib()
+local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
     -- consider this is `player_off`
     if artist == '' or title == '' then
@@ -37,11 +31,14 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
     player_off = false
 
+    if album ~= "" then
+        album = ", "..album
+    end
+
     -- Set art widget
     if album_path == '' then
         album_path = ".config/awesome/fallback.png"
     end
-    art:set_image(gears.surface.load_uncached(album_path))
 
     local temp = artist.." - "..title
     if utf8.len(temp) > 45 then
@@ -49,23 +46,28 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
     titlew:set_markup(musicico..temp)
     music_player.set_title(title)
-    music_player.set_detail(artist)
+    music_player.set_detail(artist..album)
     music_player.set_cover(album_path)
 
     if new then
         local common =  {
-            title   = "now playing",
             timeout = 4,
-            text    = artist.." - "..title,
+            -- title = title,
+            message = "now playing\n"..
+                      "<span font = 'Dosis 18'><b>"..title.."</b></span>\n"..
+                      artist..album,
             icon        = album_path,
-            icon_size   = 100,
-            replaces_id = notification_id,
+            icon_size   = 120,
             border_width = beautiful.border_width
         }
-        notification_id = naughty.notify(common).id
+        if prev_notification ~= nil then
+            prev_notification:destroy()
+        end
+        prev_notification = naughty.notify(common)
     end
 end)
 playerctl:connect_signal("no_players", function()
+    current_player = ""
     titlew:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
     player_off = true
 end)
@@ -106,6 +108,8 @@ local playerctlwidget = wibox.widget {
     }
 }
 
+playerctlwidget:buttons(gears.table.join(awful.button({ }, 1, function() music_player.toggle_lock_visibility() end)))
+
 playerctlwidget:connect_signal("mouse::enter", function()
     if player_off then return end
     music_player.show(true)
@@ -114,34 +118,34 @@ playerctlwidget:connect_signal("mouse::leave", function() music_player.hide() en
 
 -- process music player signals
 awesome.connect_signal("music::position_changed", function(position)
-    awful.spawn("playerctl position "..(media_length * position / 100))
+    playerctl:set_position(media_length * position / 100)
 end)
 awesome.connect_signal("music::play_previous_song", function()
-    awful.spawn("playerctl previous")
+    playerctl:previous()
 end)
 awesome.connect_signal("music::play_next_song", function()
-    awful.spawn("playerctl next")
+    playerctl:next()
 end)
 awesome.connect_signal("music::play_song", function()
-    awful.spawn("playerctl play")
+    playerctl:play()
 end)
 awesome.connect_signal("music::pause_song", function()
-    awful.spawn("playerctl pause")
+    playerctl:pause()
 end)
 awesome.connect_signal("music::shuffle_on", function()
-    awful.spawn("playerctl shuffle on")
+    playerctl:set_shuffle(true)
 end)
 awesome.connect_signal("music::shuffle_off", function()
-    awful.spawn("playerctl shuffle off")
+    playerctl:set_shuffle(false)
 end)
 awesome.connect_signal("music::loop_playlist", function()
-    awful.spawn("playerctl loop playlist")
+    playerctl:set_loop_status("PLAYLIST")
 end)
 awesome.connect_signal("music::loop_track", function()
-    awful.spawn("playerctl loop track")
+    playerctl:set_loop_status("TRACK")
 end)
 awesome.connect_signal("music::no_loop", function()
-    awful.spawn("playerctl loop none")
+    playerctl:set_loop_status("NONE")
 end)
 
 return playerctlwidget

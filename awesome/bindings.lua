@@ -66,26 +66,12 @@ globalkeys = gears.table.join(
         end,
         {description = "toggle wibar", group = "awesome"}),
     -- VOLUME
-    awful.key({}, "XF86AudioRaiseVolume", function ()
-        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." +2%", function() alsa.lain_alsa.update() end)
-        alsa.volume_slider.value = alsa.lain_alsa.last.level + 2
-        alsa.volume_button_triggered_timer:again()
-        alsa.volume_slider_popup.visible = true
-    end,
+    awful.key({}, "XF86AudioRaiseVolume", function () alsa.add_volume_level(2) end,
     {description = "increase volume", group = "media"}),
-    awful.key({}, "XF86AudioLowerVolume", function ()
-        awful.spawn.easy_async("pactl set-sink-volume "..alsa_device.." -2%", function() alsa.lain_alsa.update() end)
-        alsa.volume_slider.value = alsa.lain_alsa.last.level - 2
-        alsa.volume_button_triggered_timer:again()
-        alsa.volume_slider_popup.visible = true
-    end,
+    awful.key({}, "XF86AudioLowerVolume", function () alsa.add_volume_level(-2) end,
     {description = "decrease volume", group = "media"}),
-    awful.key({}, "XF86AudioMute", function ()
-        awful.spawn.easy_async("pactl set-sink-mute "..alsa_device.." toggle", function() alsa.lain_alsa.update() end)
-        alsa.volume_button_triggered_timer:again()
-        alsa.volume_slider_popup.visible = true
-    end,
-    {description = "mute volume", group = "media"}),
+    awful.key({}, "XF86AudioMute", function () alsa.toggle_mute() end,
+    {description = "mute/unmute volume", group = "media"}),
     -- FILE MANAGER
     awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end, {description = "open file explorer", group = "launcher"}),
     -- PRINT

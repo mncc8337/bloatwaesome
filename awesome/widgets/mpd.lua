@@ -108,6 +108,8 @@ local mpdwidget = wibox.widget {
     }
 }
 
+mpdwidget:buttons(gears.table.join(awful.button({ }, 1, function() music_player.toggle_lock_visibility() end)))
+
 mpdwidget:connect_signal("mouse::enter", function()
     if mpd_off then return end
     music_player.show(true)

@@ -38,21 +38,10 @@ local function factory(args)
     local echo = string.format("printf \"%sstatus\\ncurrentsong\\nclose\\n\"", password)
     local cmd  = string.format("%s | curl --connect-timeout 1 -fsm 3 %s", echo, mpdh)
 
-    mpd_notification_preset = { message = "Now playing", timeout = 6 }
+    mpd_notification_preset = { title = "Now playing", timeout = 6 }
 
     helpers.set_map("current mpd track", nil)
-    
-    function mpd.show_notify()
-        if followtag then mpd_notification_preset.screen = focused() end
-        local common =  {
-            preset      = mpd_notification_preset,
-            icon        = ".config/awesome/mpd_cover.png",
-            icon_size   = cover_size,
-            replaces_id = mpd.id,
-            border_width = beautiful.border_width
-        }
-        mpd.id = naughty.notify(common).id
-    end
+
     function mpd.update()
         helpers.async({ shell, "-c", cmd }, function(f)
             mpd_now = {
@@ -108,15 +97,16 @@ local function factory(args)
             if mpd_now.state == "play" then
                 if notify == "on" and mpd_now.title ~= helpers.get_map("current mpd track") then
                     helpers.set_map("current mpd track", mpd_now.title)
-                    --[[
+
                     if followtag then mpd_notification_preset.screen = focused() end
 
                     local common =  {
                         preset      = mpd_notification_preset,
-                        icon        = ".config/awesome/mpd_cover.png",
+                        icon        = default_art,
                         icon_size   = cover_size,
                         replaces_id = mpd.id
                     }
+
                     if not string.match(mpd_now.file, "http.*://") then -- local file instead of http stream
                         local path   = string.format("%s/%s", music_dir, string.match(mpd_now.file, ".*/"))
                         local cover  = string.format("find '%s' -maxdepth 1 -type f | egrep -i -m1 '%s'",
@@ -129,8 +119,7 @@ local function factory(args)
                     else
                         mpd.id = naughty.notify(common).id
                     end
-                    mpd.id = naughty.notify(common).id
-                    ]]--
+
                 end
             elseif mpd_now.state ~= "pause" then
                 helpers.set_map("current mpd track", nil)

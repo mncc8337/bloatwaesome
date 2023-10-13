@@ -89,7 +89,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 --[[ taskbar ]]--
 awful.screen.connect_for_each_screen(function(s)
     -- volume slider poup position
-    widgets.alsa.volume_slider_popup.x = s.geometry.width - 336 - beautiful.border_width * 4
+    -- widgets.alsa.volume_slider_popup.x = widgets.alsa.volume_slider_popup.x - beautiful.border_width
 
     -- Wallpaper
     set_wallpaper(s)
@@ -235,7 +235,7 @@ awful.screen.connect_for_each_screen(function(s)
         },
         -- middle
         wibox.widget {
-            widget = wibox.widget.textclock,
+            widget = widgets.datetimewidget,
             valign = "center",
             align = "center",
             forced_width = 160,

@@ -15,14 +15,6 @@ separator = v_centered_widget(separator)
 
 widget_spacing = 10
 
--- require("widgets.mpd")
--- require("widgets.mem")
--- require("widgets.cpu")
--- require("widgets.temperature")
--- require("widgets.weather")
--- require("widgets.alsa")
--- require("widgets.focused_client_name")
-
 local musicwidget
 if music_player == "mpd" then
     musicwidget = require("widgets.mpd")
@@ -37,6 +29,7 @@ return {
     cpuwidget = require("widgets.cpu"),
     tempwidget = require("widgets.temperature"),
     weatherwidget = require("widgets.weather"),
+    datetimewidget = require("widgets.datetime"),
     alsa = require("widgets.alsa"),
     focused_client = require("widgets.focused_client_name"),
 }
