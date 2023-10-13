@@ -19,6 +19,9 @@ local current_album = ""
 local current_song = ""
 local mpd_off = true
 local mpd_paused = false
+local notification_preset = {}
+
+local function show_notify() end
 
 local lain_mpd = lain.widget.mpd {
     timeout = 1,
@@ -76,10 +79,11 @@ local lain_mpd = lain.widget.mpd {
         music_player.set_elapsed_time(mpd_now.elapsed)
         music_player.set_total_time(mpd_now.time)
 
-        mpd_notification_preset = {
-            title   = "now playing",
+        notification_preset = {
             timeout = 4,
-            text = mpd_now.artist.." - "..mpd_now.title..'\n'..detail1
+            message = "now playing\n"..
+                      "<span font = 'Dosis 18'><b>"..mpd_now.title.."</b></span>\n"..
+                      mpd_now.artist..detail1
         }
 
         local album = mpd_now.artist..mpd_now.album
@@ -92,12 +96,23 @@ local lain_mpd = lain.widget.mpd {
         end
         if song ~= current_song then
             current_song = song
-            lain_mpd.show_notify()
+            show_notify()
         end
     end,
 }
 lain_mpd.align = "center"
 lain_mpd.update()
+
+show_notify = function()
+    local common =  {
+        preset      = notification_preset,
+        icon        = ".config/awesome/mpd_cover.png",
+        icon_size   = 120,
+        replaces_id = lain_mpd.id,
+        border_width = beautiful.border_width
+    }
+    lain_mpd.id = naughty.notify(common).id
+end
 
 local mpdwidget = wibox.widget {
     widget = wibox.container.margin,
@@ -118,7 +133,7 @@ mpdwidget:connect_signal("mouse::leave", function() music_player.hide() end)
 
 awesome.connect_signal("music::cover_changed", function()
     music_player.set_cover(".config/awesome/mpd_cover.png")
-    if not music_player.is_visible() then lain_mpd.show_notify() end
+    show_notify()
 end)
 
 -- process music player signals
