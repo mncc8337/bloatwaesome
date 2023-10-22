@@ -402,7 +402,7 @@ local music_player_timer = gears.timer {
 music_player_popup:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
 music_player_popup:connect_signal("mouse::leave", function() music_player_timer:again() end)
 
-local function refresh()
+local function refresh_UI()
     if status.player_paused then
         togglebutton.markup = "󰐊"
     else
@@ -424,7 +424,7 @@ local function refresh()
     end
 end
 local function show(near_mouse)
-    refresh()
+    refresh_UI()
     music_player_timer:stop()
     music_player_popup.visible = true
     if near_mouse then
@@ -482,5 +482,6 @@ return {
     set_elapsed_time = set_elapsed_time,
     set_total_time = set_total_time,
     set_volume = set_volume,
+    refresh_UI = refresh_UI,
     toggle_lock_visibility = toggle_lock_visibility,
 }

@@ -73,6 +73,7 @@ playerctl:connect_signal("no_players", function()
 end)
 playerctl:connect_signal("playback_status", function(_, playing)
     music_player.status.player_paused = not playing
+    music_player.refresh_UI()
 end)
 playerctl:connect_signal("volume", function(_, value)
     music_player.set_volume(math.floor(value * 100))
@@ -97,9 +98,11 @@ playerctl:connect_signal("loop_status", function(_, loop_status)
         music_player.status.loop_track = false
         music_player.status.no_loop = true
     end
+    music_player.refresh_UI()
 end)
 playerctl:connect_signal("shuffle", function(_, shuffle)
     music_player.status.shuffle = shuffle
+    music_player.refresh_UI()
 end)
 
 local playerctlwidget = wibox.widget {
