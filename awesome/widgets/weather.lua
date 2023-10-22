@@ -1,5 +1,5 @@
 local lain = require("lain")
-require("openweathermap")
+require("config.openweathermap")
 
 local lain_weather = lain.widget.weather {
     APPID = API_key,

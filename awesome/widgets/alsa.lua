@@ -47,11 +47,12 @@ local volume_slider = wibox.widget {
     forced_width = 300,
     widget       = wibox.widget.slider,
 }
-local volume_slider_popup = awful.popup {
+local volume_slider_popup = wibox {
     ontop = true,
     visible = false,
-    --maximum_width = 220,
-    maximum_height = 50,
+    type = "splash",
+    width = 350,
+    height = 50,
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = wibox.widget {
@@ -70,7 +71,6 @@ local popup_placement_config = {
         right = beautiful.border_width + 1
     }
 }
-awful.placement.top_right(volume_slider_popup, popup_placement_config)
 local close_popup_timer = gears.timer {
     timeout = 1,
     single_shot = true,
@@ -89,7 +89,6 @@ local function show_volume_slider(position, timeout)
     volume_slider_popup.visible = true
     close_popup_timer:start()
 end
-volume_slider_popup.visible = true
 volume_slider_popup:connect_signal("mouse::enter", function() close_popup_timer:stop() end)
 volume_slider_popup:connect_signal("mouse::leave", function()
     close_popup_timer.timeout = 0.1

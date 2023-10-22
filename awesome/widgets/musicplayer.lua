@@ -1,3 +1,13 @@
+-- NOTE
+--[[
+    The progress bar needs patch (hasnt been merged yet)
+    https://github.com/awesomeWM/awesome/pull/2773/files
+    in order to set the media position properly.
+    If you cant apply this patch please set the variable
+    below to `false`, otherwise set it to `true`.
+]]--
+local patched_awesome = false
+
 ---- signals
 --[[
     music::position_changed, position
@@ -66,14 +76,16 @@ local music_progressbar_with_time = wibox.widget {
     },
     music_progressbar
 }
-music_progressbar:connect_signal("button::press", function()
-    time.updating = true
-end)
--- need patch (havent been merged yet) https://github.com/awesomeWM/awesome/pull/2773/files
-music_progressbar:connect_signal("button::release", function()
-    awesome.emit_signal("music::position_changed", music_progressbar.value)
-    time.updating = false
-end)
+
+if patched_awesome then
+    music_progressbar:connect_signal("button::press", function()
+        time.updating = true
+    end)
+    music_progressbar:connect_signal("button::release", function()
+        awesome.emit_signal("music::position_changed", music_progressbar.value)
+        time.updating = false
+    end)
+end
 
 -- update the time when sliding
 music_progressbar:connect_signal("property::value", function()
@@ -83,13 +95,30 @@ music_progressbar:connect_signal("property::value", function()
     end
 end)
 
+-- volume slider
+local volume_slider = wibox.widget.slider {
+    bar_height = 3,
+    forced_width = 1,
+    forced_height = 14,
+    bar_shape = gears.shape.rounded_rect,
+    bar_active_color = color_blue,
+    bar_color = color_surface0,
+    handle_color = color_base,
+    handle_shape = gears.shape.circle,
+    handle_border_color = color_blue,
+    handle_border_width = 2,
+    handle_width = 10,
+    maximum = 100,
+    minimum = 0,
+    value = 75,
+}
+
 ---- song info and art
 local song_title = wibox.widget.textbox("title N/A")
 local song_detail = wibox.widget.textbox("detail N/A")
 local coverico = wibox.widget.imagebox()
 coverico.clip_shape = round_rect(5)
--- coverico.forced_width = 149
-coverico.forced_height = 149
+coverico.forced_height = 150
 
 -- music player
 local prevbutton    = wibox.widget.textbox(" 󰒮")
@@ -321,33 +350,36 @@ local buttons = wibox.widget {
     forced_height = 35
 }
 
-local music_player = awful.popup {
+local music_player_widget = wibox.widget {
+    layout = wibox.layout.fixed.horizontal,
+    {
+        coverico,
+        widget = wibox.container.margin,
+        margins = 5,
+    },
+    {
+        {
+            layout = wibox.layout.fixed.vertical,
+            song_title,
+            song_detail,
+            music_progressbar_with_time,
+            buttons
+        },
+        widget = wibox.container.margin,
+        right = 5, top = 15,
+    }
+}
+
+local music_player_popup = awful.popup {
     ontop = true,
     visible = false,
-    --maximum_width = 300,
-    maximum_height = 159,
+    type = "splash",
+    maximum_height = 160,
+    -- width = 450,
     shape = round_rect(beautiful.round_corner_radius),
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
-    widget = {
-        layout = wibox.layout.fixed.horizontal,
-        {
-            coverico,
-            widget = wibox.container.margin,
-            margins = 5,
-        },
-        {
-            {
-                layout = wibox.layout.fixed.vertical,
-                song_title,
-                song_detail,
-                music_progressbar_with_time,
-                buttons
-            },
-            widget = wibox.container.margin,
-            right = 5, top = 15,
-        }
-    }
+    widget = music_player_widget,
 }
 
 local lock_visibility = false
@@ -356,12 +388,12 @@ local music_player_timer = gears.timer {
     single_shot = true,
     callback = function()
         if lock_visibility then return end
-        music_player.visible = false
+        music_player_popup.visible = false
     end
 }
 
-music_player:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
-music_player:connect_signal("mouse::leave", function() music_player_timer:again() end)
+music_player_popup:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
+music_player_popup:connect_signal("mouse::leave", function() music_player_timer:again() end)
 
 local function refresh()
     if status.player_paused then
@@ -387,9 +419,9 @@ end
 local function show(near_mouse)
     refresh()
     music_player_timer:stop()
-    music_player.visible = true
+    music_player_popup.visible = true
     if near_mouse then
-        music_player:move_next_to(mouse.current_widget_geometry)
+        music_player_popup:move_next_to(mouse.current_widget_geometry)
     end
 end
 local function toggle_lock_visibility()
@@ -429,6 +461,7 @@ local function set_total_time(_time)
 end
 
 return {
+    widget = music_player_widget,
     status = status,
     show = show,
     hide = hide,

@@ -1,3 +1,8 @@
+--[[
+    im not using mpd anymore
+    bug to be expected
+]]--
+
 local lain = require("lain")
 local markup = lain.util.markup
 local utf8 = require "utf8"

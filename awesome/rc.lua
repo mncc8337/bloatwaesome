@@ -9,10 +9,35 @@ naughty     = require("naughty")
 hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 
-require("error_handling")
+-- {{{ Error handling
+-- Check if awesome encountered an error during startup and fell back to
+-- another config (This code will only ever execute for the fallback config)
+if awesome.startup_errors then
+    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Oops, there were errors during startup!",
+                     text = awesome.startup_errors })
+end
+
+-- Handle runtime errors after startup
+do
+    local in_error = false
+    awesome.connect_signal("debug::error", function (err)
+        -- Make sure we don't go into an endless error loop
+        if in_error then return end
+        in_error = true
+
+        naughty.notify({ preset = naughty.config.presets.critical,
+                         title = "Oops, an error happened!",
+                         text = tostring(err) })
+        in_error = false
+    end)
+end
+-- }}}
+
+awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
 
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(".config/awesome/theme.lua")
+beautiful.init(awesome_dir.."/config/theme.lua")
 bling = require("bling")
 -- menubar.utils.lookup_icon(beautiful.icon_theme)
 
@@ -20,8 +45,6 @@ bling = require("bling")
 function notify(message, title)
     naughty.notify({title = title, message = message})
 end
-
-awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
 
 -- number of tags
 tag_num = 4
@@ -89,15 +112,15 @@ awful.layout.layouts = {
     awful.layout.suit.floating,
 }
 
-require("extension")
+require("misc")
 
 --[[ main widgets ]]--
 -- require("menu")
-require("taskbar")
+require("config.taskbar")
 
 --[[ key bindings ]]--
-require("bindings")
-require("rules")
+require("config.bindings")
+require("config.rules")
 
 --[[
 -- Enable sloppy focus, so that focus follows mouse.
