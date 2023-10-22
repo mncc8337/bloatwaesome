@@ -1,5 +1,8 @@
+-- NOTE
 --[[
+    DEPRECATED
     im not using mpd anymore
+    features are not up to date
     bug to be expected
 ]]--
 

@@ -120,7 +120,7 @@ theme.taglist_fg_not_focus= color_surface2
 theme.taglist_bg_urgent   = color_blue
 --theme.taglist_fg_urgent   = color_surface2
 --theme.taglist_fg_empty    = color_overlay0
-theme.taglist_spacing     = 2
+theme.taglist_spacing     = dpi(2)
 
 theme.tag_colors = {
     color_blue,
@@ -147,7 +147,7 @@ theme.tabbar_bg_normal = color_base
 theme.tabbar_fg_focus = color_base
 theme.tabbar_fg_normal = color_text
 theme.tabbar_position = "top"
-theme.tabbar_size = 40
+theme.tabbar_size = dpi(40)
 theme.tabbar_font = "Dosis Bold 12"
 theme.mstab_bar_ontop = true
 theme.tabbar_color_close = color_red

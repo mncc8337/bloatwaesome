@@ -2,7 +2,7 @@
 --[[
     The progress bar needs patch (hasnt been merged yet)
     https://github.com/awesomeWM/awesome/pull/2773/files
-    in order to set the media position properly.
+    in order to set the media position.
     If you cant apply this patch please set the variable
     below to `false`, otherwise set it to `true`.
 ]]--
@@ -10,6 +10,7 @@ local patched_awesome = false
 
 ---- signals
 --[[
+    music::volume_changed, value
     music::position_changed, position
 
     music::play_previous_song
@@ -55,11 +56,7 @@ local music_progressbar = wibox.widget.slider {
     bar_shape = gears.shape.rounded_rect,
     bar_active_color = color_blue,
     bar_color = color_surface0,
-    handle_color = color_base,
-    handle_shape = gears.shape.circle,
-    handle_border_color = color_blue,
-    handle_border_width = 2,
-    handle_width = 10,
+    handle_width = 0, -- no handle
     maximum = 100,
     minimum = 0,
     value = 75,
@@ -103,15 +100,16 @@ local volume_slider = wibox.widget.slider {
     bar_shape = gears.shape.rounded_rect,
     bar_active_color = color_blue,
     bar_color = color_surface0,
-    handle_color = color_base,
-    handle_shape = gears.shape.circle,
-    handle_border_color = color_blue,
-    handle_border_width = 2,
-    handle_width = 10,
+    bar_height = 4,
+    handle_width = 0, -- no handle
     maximum = 100,
     minimum = 0,
     value = 75,
 }
+
+volume_slider:connect_signal("property::value", function()
+    awesome.emit_signal("music::volume_changed", volume_slider.value)
+end)
 
 ---- song info and art
 local song_title = wibox.widget.textbox("title N/A")
@@ -367,6 +365,15 @@ local music_player_widget = wibox.widget {
         },
         widget = wibox.container.margin,
         right = 5, top = 15,
+    },
+    {
+        {
+            volume_slider,
+            widget = wibox.container.margin,
+            right = 10, left = 10,
+        },
+        widget = wibox.container.rotate,
+        direction = "east",
     }
 }
 
@@ -459,6 +466,9 @@ local function set_total_time(_time)
         text_time_total.text = formatted
     end
 end
+local function set_volume(val)
+    volume_slider.value = val
+end
 
 return {
     widget = music_player_widget,
@@ -471,5 +481,6 @@ return {
     set_detail = set_detail,
     set_elapsed_time = set_elapsed_time,
     set_total_time = set_total_time,
+    set_volume = set_volume,
     toggle_lock_visibility = toggle_lock_visibility,
 }
