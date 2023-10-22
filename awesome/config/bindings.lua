@@ -75,13 +75,13 @@ globalkeys = gears.table.join(
     -- FILE MANAGER
     awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end, {description = "open file explorer", group = "launcher"}),
     -- PRINT
-    awful.key({}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh full") end,
+    awful.key({}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full") end,
         {description = "print full screen", group = "media"}),
-    awful.key({modkey}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh full save") end,
+    awful.key({modkey}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full save") end,
         {description = "print full screen and save", group = "media"}),
-    awful.key({ "Shift" }, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh area") end,
+    awful.key({ "Shift" }, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area") end,
         {description = "print a part of screen", group = "media"}),
-    awful.key({modkey, "Shift"}, "Print", function () os.execute(". ~/.config/awesome/scripts/screenshot.sh area save") end,
+    awful.key({modkey, "Shift"}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area save") end,
         {description = "print a part of screen and save", group = "media"}),
     -- DEFAULT
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,

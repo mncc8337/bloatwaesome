@@ -1,7 +1,9 @@
 savedir=''
+prefix=''
 if [ "$2" = 'save' ]; then
     current_date=$(date +"%m-%d-%y_%H-%M-%S")
     savedir="$current_date.png"
+    prefix=" and saved to ~/Pictures/$current_date.png"
     cd ~/Pictures
 fi
 if [ "$1" = 'full' ]; then
@@ -9,3 +11,5 @@ if [ "$1" = 'full' ]; then
 elif [ "$1" = 'area' ]; then
     maim -s $savedir --hidecursor| xclip -selection clipboard -t image/png
 fi
+
+awesome-client "naughty.notify({title = \"Screen captured\", message = \"Image copied to clipboard$prefix\"})"
