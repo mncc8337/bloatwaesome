@@ -167,7 +167,7 @@ theme.notification_font = "Dosis 12"
 theme.notification_bg = color_base
 theme.notification_shape = round_rect(theme.round_corner_radius)
 theme.notification_border_color = theme.border_focus
-theme.notification_border_width = theme.border_width
+naughty.config.defaults.border_width = theme.border_width
 
 return theme
 

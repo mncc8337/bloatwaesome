@@ -58,7 +58,6 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
                       artist..album,
             icon        = album_path,
             icon_size   = 120,
-            border_width = beautiful.border_width
         }
         if prev_notification ~= nil then
             prev_notification:destroy()

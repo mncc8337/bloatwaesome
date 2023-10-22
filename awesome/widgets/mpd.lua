@@ -117,7 +117,6 @@ show_notify = function()
         icon        = ".config/awesome/mpd_cover.png",
         icon_size   = 120,
         replaces_id = lain_mpd.id,
-        border_width = beautiful.border_width
     }
     lain_mpd.id = naughty.notify(common).id
 end
