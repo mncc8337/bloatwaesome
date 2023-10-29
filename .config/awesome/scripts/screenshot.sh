@@ -12,4 +12,4 @@ elif [ "$1" = 'area' ]; then
     maim -s $savedir --hidecursor| xclip -selection clipboard -t image/png
 fi
 
-awesome-client "naughty.notify({title = \"Screen captured\", message = \"Image copied to clipboard$prefix\"})"
+notify-send "<b>Screen captured</b><br>Image copied to clipboard$prefix"
