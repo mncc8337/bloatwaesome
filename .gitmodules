@@ -4,3 +4,6 @@
 [submodule ".config/awesome/bling"]
 	path = .config/awesome/bling
 	url = https://github.com/BlingCorp/bling
+[submodule ".config/awesome/lain"]
+	path = .config/awesome/lain
+	url = https://github.com/lcpz/lain
