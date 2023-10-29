@@ -1,15 +1,14 @@
-gears       = require("gears")
-awful       = require("awful")
-beautiful   = require("beautiful")
+local gears     = require("gears")
+local awful     = require("awful")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
+local naughty   = require("naughty")
 require("awful.autofocus")
-wibox       = require("wibox")
-naughty     = require("naughty")
--- menubar     = require("menubar")
+require("remember-geometry")
 
-hotkeys_popup = require("awful.hotkeys_popup")
-require("awful.hotkeys_popup.keys")
-
--- local dpi = require("beautiful.xresources").apply_dpi
+awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
+beautiful.init(awesome_dir.."/config/theme.lua")
+local bling = require("bling")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -36,13 +35,6 @@ do
 end
 -- }}}
 
-awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
-
--- Themes define colours, icons, font and wallpapers.
-beautiful.init(awesome_dir.."/config/theme.lua")
-bling = require("bling")
--- menubar.utils.lookup_icon(beautiful.icon_theme)
-
 -- debug only
 function notify(message, title)
     naughty.notify({title = title, message = message})
@@ -52,42 +44,17 @@ end
 tag_num = 4
 
 taskbar_size = 32
+dashboard_width = 500
+profile_picture = "/home/mncc/avt.png"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
-editor = os.getenv("EDITOR") or "nvim"
-editor_cmd = terminal .. " -e " .. editor
 
 alsa_device = 0
-
--- "mpd" or "playerctl"
--- use "playerctl" for support for vlc, mpv, RhythmBox, web browsers, cmus, spotify and others
-music_player = "playerctl"
 
 -- Default modkey.
 modkey = "Mod4"
 altkey = "Mod1"
-
---[[ others ]]--
-require("remember-geometry")
---[[
-nice = require("nice")
-nice {
-    minimize_color = "#4cbb17",
-    maximize_color = "#ffb400",
-    no_titlebar_maximized = true,
-    titlebar_items = {
-        left = {
-            "floating", "ontop", "sticky"
-        },
-        middle = "title",
-        right = {
-        "minimize", "maximize", "close"
-        }
-    }
-}
-]]--
-
 
 --[[ layouts ]]--
 local machi = require("layout-machi")
@@ -95,7 +62,7 @@ local machi = require("layout-machi")
 local centered = bling.layout.centered
 local equal = bling.layout.equalarea
 local desk = bling.layout.desk
-local mstab = bling.layout.mstab
+-- local mstab = bling.layout.mstab
 machi.editor.nested_layouts = {
     ["0"] = desk,
     ["1"] = awful.layout.suit.spiral,
@@ -106,8 +73,7 @@ machi.editor.nested_layouts = {
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.spiral.dwindle,
-    mstab,
-    -- awful.layout.suit.max,
+    -- mstab,
     centered,
     equal,
     machi.default_layout,
@@ -116,13 +82,11 @@ awful.layout.layouts = {
 
 require("misc")
 
---[[ main widgets ]]--
--- require("menu")
 require("config.taskbar")
-
---[[ key bindings ]]--
 require("config.bindings")
 require("config.rules")
+
+require("dashboard")
 
 --[[
 -- Enable sloppy focus, so that focus follows mouse.
@@ -152,5 +116,7 @@ gears.timer {
 -- hide drop-down clients on start
 awful.spawn.easy_async("sleep 0.0001", function()
     local drop_term = find_client_with_name("drop-down-terminal")
-    if drop_term then drop_term.hidden = true end
+    if drop_term then
+        drop_term.hidden = true
+    end
 end)

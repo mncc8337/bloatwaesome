@@ -1,18 +1,20 @@
-local alsa = require("widgets").alsa
-local lain = require("lain")
+local gears         = require("gears")
+local awful         = require("awful")
+local lain          = require("lain")
+local hotkeys_popup = require("awful.hotkeys_popup")
 
 -- {{{ Mouse bindings
-root.buttons(gears.table.join(
-    -- awful.button({ }, 3, function () mymainmenu:toggle() end)
-    -- awful.button({ }, 4, awful.tag.viewnext)
-    -- awful.button({ }, 5, awful.tag.viewprev)
-))
+-- root.buttons(gears.table.join(
+--     awful.button({ }, 3, function () mymainmenu:toggle() end)
+--     awful.button({ }, 4, awful.tag.viewnext)
+--     awful.button({ }, 5, awful.tag.viewprev)
+-- ))
 -- }}}
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
     awful.key({altkey}, "n", function() awful.spawn(music_player.." next") end,
-        {description = "next song", group = "media"}),
+              {description = "next song", group = "media"}),
     awful.key({altkey}, "p", function()
             if music_player == "mpd" then
                 awful.spawn("mpc prev")
@@ -20,7 +22,7 @@ globalkeys = gears.table.join(
                 awful.spawn("playerctl previous")
             end
         end,
-        {description = "previous song", group = "media"}),
+    {description = "previous song", group = "media"}),
     awful.key({altkey}, "space", function()
             if music_player == "mpd" then
                 awful.spawn("mpc toggle")
@@ -28,61 +30,65 @@ globalkeys = gears.table.join(
                 awful.spawn("playerctl play-pause")
             end
         end,
-        {description = "pause/play song", group = "media"}),
-    awful.key({ modkey }, "F12", function() dropdownterminal() end,
-        {description = "spawn a drop-down terminal", group = "launcher"}),
+    {description = "pause/play song", group = "media"}),
+    awful.key({ modkey }, "F11", function() dropdownterminal() end,
+              {description = "spawn a drop-down terminal", group = "launcher"}),
     -- On the fly useless gaps change
     awful.key({ modkey, "Control" }, "F1", function () lain.util.useless_gaps_resize(1) end,
-        {description = "increase useless gaps size", group = "layout"}),
+            {description = "increase useless gaps size", group = "layout"}),
     awful.key({ modkey, "Control" }, "F2", function () lain.util.useless_gaps_resize(-1) end,
-        {description = "decrease useless gaps size", group = "layout"}),
+              {description = "decrease useless gaps size", group = "layout"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
         local already_minimized = true
         -- check if all client is minimized or not
-    for _, cl in ipairs(mouse.screen.selected_tag:clients()) do
-            local c = cl
-            if c then
-                if not c.minimized and c.name ~= "drop-down-terminal" then
-                    already_minimized = false
-                end
-            end
-        end
-
         for _, cl in ipairs(mouse.screen.selected_tag:clients()) do
-            local c = cl
-            if c then
-                -- if all clients are minimized then unminimize them, else minimized all clients
-                if c.name ~= "drop-down-terminal" then
-                    c.minimized = not already_minimized
+                local c = cl
+                if c then
+                    if not c.minimized and c.name ~= "drop-down-terminal" then
+                        already_minimized = false
+                    end
                 end
             end
-        end
-    end, {description = "(un)minimize all clients", group = "client"}),
-    awful.key({ modkey }, "b", function ()
-            for s in screen do
-                s.mywibox.visible = not s.mywibox.visible
+
+            for _, cl in ipairs(mouse.screen.selected_tag:clients()) do
+                local c = cl
+                if c then
+                    -- if all clients are minimized then unminimize them, else minimized all clients
+                    if c.name ~= "drop-down-terminal" then
+                        c.minimized = not already_minimized
+                    end
+                end
             end
         end,
-        {description = "toggle wibar", group = "awesome"}),
+    {description = "(un)minimize all clients", group = "client"}),
+    awful.key({ modkey }, "F12", function () awesome.emit_signal("dashboard::toggle") end,
+              {description = "toggle control center", group = "awesome"}),
+    awful.key({ modkey }, "b", function ()
+            for s in screen do
+                s.wibar.visible = not s.wibar.visible
+            end
+        end,
+    {description = "toggle wibar", group = "awesome"}),
     -- VOLUME
-    awful.key({}, "XF86AudioRaiseVolume", function () alsa.add_volume_level(2) end,
+    awful.key({}, "XF86AudioRaiseVolume", function () awesome.emit_signal("widget::increase_volume_level", 2) end,
     {description = "increase volume", group = "media"}),
-    awful.key({}, "XF86AudioLowerVolume", function () alsa.add_volume_level(-2) end,
+    awful.key({}, "XF86AudioLowerVolume", function () awesome.emit_signal("widget::increase_volume_level", -2) end,
     {description = "decrease volume", group = "media"}),
-    awful.key({}, "XF86AudioMute", function () alsa.toggle_mute() end,
+    awful.key({}, "XF86AudioMute", function () awesome.emit_signal("widget::toggle_mute") end,
     {description = "mute/unmute volume", group = "media"}),
     -- FILE MANAGER
-    awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end, {description = "open file explorer", group = "launcher"}),
+    awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end,
+    {description = "open file explorer", group = "launcher"}),
     -- PRINT
     awful.key({}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full") end,
-        {description = "print full screen", group = "media"}),
+    {description = "print full screen", group = "media"}),
     awful.key({modkey}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full save") end,
-        {description = "print full screen and save", group = "media"}),
+    {description = "print full screen and save", group = "media"}),
     awful.key({ "Shift" }, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area") end,
-        {description = "print a part of screen", group = "media"}),
+    {description = "print a part of screen", group = "media"}),
     awful.key({modkey, "Shift"}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area save") end,
-        {description = "print a part of screen and save", group = "media"}),
+    {description = "print a part of screen and save", group = "media"}),
     -- DEFAULT
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),

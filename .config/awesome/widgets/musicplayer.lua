@@ -6,12 +6,15 @@
     If you cant apply this patch please set the variable
     below to `false`, otherwise set it to `true`.
 ]]--
-local patched_awesome = false
+local patched_awesome = true
 
 ---- signals
 --[[
-    music::volume_changed, value
-    music::position_changed, position
+    signal name                 arguments       note
+
+                            --<< player calls >>--
+    music::volume_changed       value
+    music::position_changed     position
 
     music::play_previous_song
     music::play_next_song
@@ -25,7 +28,24 @@ local patched_awesome = false
     music::loop_playlist
     music::loop_track
     music::no_loop
+
+                            --<< client calls >>--
+    music::show_player          near_mouse      true/false
+    music::hide_player
+    music::refreshUI                            update UI elements
+
+    music::set_cover            path_to_file
+    music::set_title            title
+    music::set_detail           detail
+    music::set_elapsed_time     time            alsa update player progressbar
+    music::set_total_time       time
+    music::set_volume           volume
 ]]--
+
+local gears     = require("gears")
+local awful     = require("awful")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
 
 ---- global variables
 local status = {
@@ -62,9 +82,9 @@ local music_progressbar = wibox.widget.slider {
     value = 75,
 }
 local text_time_elapsed = wibox.widget.textbox("N/A")
-text_time_elapsed.font = "Dosis Bold 11"
+text_time_elapsed.font = beautiful.font_standard.." Bold 11"
 local text_time_total = wibox.widget.textbox("N/A")
-text_time_total.font = "Dosis Bold 11"
+text_time_total.font = beautiful.font_standard.." Bold 11"
 local music_progressbar_with_time = wibox.widget {
     layout = wibox.layout.align.vertical,
     {
@@ -94,13 +114,11 @@ end)
 
 -- volume slider
 local volume_slider = wibox.widget.slider {
-    bar_height = 3,
+    bar_height = 4,
     forced_width = 1,
     forced_height = 14,
-    bar_shape = gears.shape.rounded_rect,
     bar_active_color = color_blue,
     bar_color = color_surface0,
-    bar_height = 4,
     handle_width = 0, -- no handle
     maximum = 100,
     minimum = 0,
@@ -112,39 +130,41 @@ volume_slider:connect_signal("property::value", function()
 end)
 
 ---- song info and art
-local song_title = wibox.widget.textbox("title N/A")
-local song_detail = wibox.widget.textbox("detail N/A")
+local song_title = wibox.widget.textbox("No song")
+song_title.font = beautiful.font_standard.." bold 18"
+local song_detail = wibox.widget.textbox("hehe")
+song_detail.font = beautiful.font_standard.." 12"
 local coverico = wibox.widget.imagebox()
 coverico.clip_shape = round_rect(5)
 coverico.forced_height = 150
 
 -- music player
-local prevbutton    = wibox.widget.textbox(" 󰒮")
-prevbutton.font   = "sans 18"
+local prevbutton  = wibox.widget.textbox(" 󰒮")
+prevbutton.font   = beautiful.font_icon.." 16"
 prevbutton.align  = "left"
 prevbutton.valign = "center"
 prevbutton.forced_width  = 40
 
-local togglebutton  = wibox.widget.textbox("󰏤")
-togglebutton.font   = "sans 16"
+local togglebutton  = wibox.widget.textbox("󰐊")
+togglebutton.font   = beautiful.font_icon.." 16"
 togglebutton.align  = "center"
 togglebutton.valign = "center"
 togglebutton.forced_width  = 42
 
 local nextbutton    = wibox.widget.textbox("󰒭 ")
-nextbutton.font   = "sans 18"
+nextbutton.font   = beautiful.font_icon.." 16"
 nextbutton.align  = "right"
 nextbutton.valign = "center"
 nextbutton.forced_width  = 40
 
 local shufflebutton = wibox.widget.textbox("󰒞")
-shufflebutton.font = "sans 18"
+shufflebutton.font = beautiful.font_icon.." 18"
 shufflebutton.align = "center"
 shufflebutton.valign = "center"
 shufflebutton.forced_width = 22
 
 local loopbutton = wibox.widget.textbox("󰑖")
-loopbutton.font = "sans 18"
+loopbutton.font = beautiful.font_icon.." 18"
 loopbutton.align = "center"
 loopbutton.valign = "center"
 loopbutton.forced_width = 22
@@ -182,10 +202,10 @@ prevbutton:connect_signal("mouse::leave", function()
     prevbuttonw.bg = normal_color
     fake_togglebuttonl.bg = normal_color
 end)
-prevbutton:buttons(gears.table.join(awful.button({}, 1, function()
+prevbutton:buttons {awful.button({}, 1, function()
     togglebutton.markup = "󰏤"
     awesome.emit_signal("music::play_previous_song")
-end)))
+end)}
 
 local togglebuttonw = wibox.widget {
     togglebutton,
@@ -195,7 +215,7 @@ local togglebuttonw = wibox.widget {
 }
 togglebutton:connect_signal("mouse::enter", function() togglebuttonw.bg = focus_color end)
 togglebutton:connect_signal("mouse::leave", function() togglebuttonw.bg = color_surface1 end)
-togglebutton:buttons(gears.table.join(awful.button({}, 1, function()
+togglebutton:buttons {awful.button({}, 1, function()
     if status.player_paused then
         togglebutton.markup = "󰏤"
         awesome.emit_signal("music::play_song")
@@ -204,7 +224,7 @@ togglebutton:buttons(gears.table.join(awful.button({}, 1, function()
         awesome.emit_signal("music::pause_song")
     end
     local temp = gears.timer {
-        timeout = 1,
+        timeout = 0.5,
         single_shot = true,
         autostart = true,
         callback = function()
@@ -215,7 +235,7 @@ togglebutton:buttons(gears.table.join(awful.button({}, 1, function()
             end
         end
     }
-end)))
+end)}
 
 local nextbuttonw = wibox.widget {
     nextbutton,
@@ -231,10 +251,10 @@ nextbutton:connect_signal("mouse::leave", function()
     nextbuttonw.bg = normal_color
     fake_togglebuttonr.bg = normal_color
 end)
-nextbutton:buttons(gears.table.join(awful.button({}, 1, function()
+nextbutton:buttons {awful.button({}, 1, function()
     togglebutton.markup = "󰏤"
     awesome.emit_signal("music::play_next_song")
-end)))
+end)}
 
 local shufflebuttonw = wibox.widget {
     {
@@ -251,7 +271,7 @@ end)
 shufflebutton:connect_signal("mouse::leave", function()
     shufflebuttonw.fg = color_surface2
 end)
-shufflebutton:buttons(gears.table.join(awful.button({}, 1, function()
+shufflebutton:buttons {awful.button({}, 1, function()
     if status.shuffle then
         shufflebutton.text = "󰒞"
         awesome.emit_signal("music::shuffle_off")
@@ -260,7 +280,7 @@ shufflebutton:buttons(gears.table.join(awful.button({}, 1, function()
         awesome.emit_signal("music::shuffle_on")
     end
     local temp = gears.timer {
-        timeout = 1,
+        timeout = 0.5,
         single_shot = true,
         autostart = true,
         callback = function()
@@ -271,7 +291,7 @@ shufflebutton:buttons(gears.table.join(awful.button({}, 1, function()
             end
         end
     }
-end)))
+end)}
 
 local loopbuttonw = wibox.widget {
     {
@@ -288,7 +308,7 @@ end)
 loopbutton:connect_signal("mouse::leave", function()
     loopbuttonw.fg = color_surface2
 end)
-loopbutton:buttons(gears.table.join(awful.button({}, 1, function()
+loopbutton:buttons {awful.button({}, 1, function()
     if status.no_loop then
         loopbutton.text = "󰑖"
         awesome.emit_signal("music::loop_playlist")
@@ -300,7 +320,7 @@ loopbutton:buttons(gears.table.join(awful.button({}, 1, function()
         awesome.emit_signal("music::no_loop")
     end
     local temp = gears.timer {
-        timeout = 1,
+        timeout = 0.5,
         single_shot = true,
         autostart = true,
         callback = function()
@@ -313,7 +333,7 @@ loopbutton:buttons(gears.table.join(awful.button({}, 1, function()
             end
         end
     }
-end)))
+end)}
 
 local buttons = wibox.widget {
     layout = wibox.layout.stack,
@@ -349,16 +369,23 @@ local buttons = wibox.widget {
 }
 
 local music_player_widget = wibox.widget {
-    layout = wibox.layout.fixed.horizontal,
+    layout = wibox.layout.align.horizontal,
     {
         coverico,
         widget = wibox.container.margin,
-        margins = 5,
+        margins = 12,
     },
     {
         {
             layout = wibox.layout.fixed.vertical,
-            song_title,
+            {
+                layout = wibox.layout.scroll.horizontal,
+                step_function = wibox.container.scroll.step_functions.linear_increase,
+                max_size = 300,
+                extra_space = 300,
+                speed = 30,
+                song_title,
+            },
             song_detail,
             music_progressbar_with_time,
             buttons
@@ -381,7 +408,7 @@ local music_player_popup = awful.popup {
     ontop = true,
     visible = false,
     type = "splash",
-    maximum_height = 160,
+    maximum_height = 172,
     -- width = 450,
     shape = round_rect(beautiful.round_corner_radius),
     border_color = beautiful.border_focus,
@@ -389,12 +416,10 @@ local music_player_popup = awful.popup {
     widget = music_player_widget,
 }
 
-local lock_visibility = false
 local music_player_timer = gears.timer {
     timeout = 0.1,
     single_shot = true,
     callback = function()
-        if lock_visibility then return end
         music_player_popup.visible = false
     end
 }
@@ -402,7 +427,7 @@ local music_player_timer = gears.timer {
 music_player_popup:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
 music_player_popup:connect_signal("mouse::leave", function() music_player_timer:again() end)
 
-local function refresh_UI()
+awesome.connect_signal("music::refreshUI", function()
     if status.player_paused then
         togglebutton.markup = "󰐊"
     else
@@ -422,34 +447,29 @@ local function refresh_UI()
     elseif status.loop_track then
         loopbutton.text = "󰑘"
     end
-end
-local function show(near_mouse)
-    refresh_UI()
+end)
+awesome.connect_signal("music::show_player", function(near_mouse)
+    if dashboard_visible() then return end
+    awesome.emit_signal("music::refreshUI")
     music_player_timer:stop()
     music_player_popup.visible = true
     if near_mouse then
         music_player_popup:move_next_to(mouse.current_widget_geometry)
     end
-end
-local function toggle_lock_visibility()
-    lock_visibility = not lock_visibility
-end
-local function hide()
+end)
+awesome.connect_signal("music::hide_player", function()
     music_player_timer:again()
-end
-local function is_visible()
-    return music_player.visible
-end
-local function set_cover(path)
+end)
+awesome.connect_signal("music::set_cover", function(path)
     coverico.image = gears.surface.load_uncached(path)
-end
-local function set_title(_title)
-    song_title:set_markup("<span font='Dosis bold 18'>".._title.."</span>")
-end
-local function set_detail(_detail)
-    song_detail:set_markup("<span font='Dosis 12'>".._detail.."</span>")
-end
-local function set_elapsed_time(_time)
+end)
+awesome.connect_signal("music::set_title", function(_title)
+    song_title:set_markup(_title)
+end)
+awesome.connect_signal("music::set_detail", function(_detail)
+    song_detail:set_markup(_detail)
+end)
+awesome.connect_signal("music::set_elapsed_time", function(_time)
     if not time.updating then
         time.elapsed = _time
         local formatted = timeformat(_time)
@@ -458,30 +478,25 @@ local function set_elapsed_time(_time)
         -- also update the slider
         music_progressbar:set_value(time.elapsed / time.total * 100)
     end
-end
-local function set_total_time(_time)
+end)
+awesome.connect_signal("music::set_total_time", function(_time)
     if not time.updating then
         time.total = _time
         local formatted = timeformat(_time)
         text_time_total.text = formatted
     end
-end
-local function set_volume(val)
+end)
+awesome.connect_signal("music::set_volume", function(val)
     volume_slider.value = val
+end)
+local function is_visible()
+    return music_player.visible
 end
+
+awesome.emit_signal("music::set_cover", awesome_dir.."/fallback.png")
 
 return {
     widget = music_player_widget,
     status = status,
-    show = show,
-    hide = hide,
     is_visible = is_visible,
-    set_cover = set_cover,
-    set_title = set_title,
-    set_detail = set_detail,
-    set_elapsed_time = set_elapsed_time,
-    set_total_time = set_total_time,
-    set_volume = set_volume,
-    refresh_UI = refresh_UI,
-    toggle_lock_visibility = toggle_lock_visibility,
 }

@@ -1,4 +1,7 @@
-local _separator = wibox.widget {
+local gears = require("gears")
+local wibox = require("wibox")
+
+local separator = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
     shape = gears.shape.rounded_rect,
@@ -6,31 +9,20 @@ local _separator = wibox.widget {
     forced_height = 18,
     forced_width = 4,
 }
-local separator = wibox.widget {
-    widget = wibox.container.margin,
-    left = 3, right = 3,
-    _separator
-}
 separator = v_centered_widget(separator)
 
-widget_spacing = 10
-
-local musicwidget
-if music_player == "mpd" then
-    musicwidget = require("widgets.mpd")
-elseif music_player == "playerctl" then
-    musicwidget = require("widgets.playerctl")
-end
+local alsa = require("widgets.alsa")
 
 return {
     separator = separator,
-    musicwidget = musicwidget,
-    memwidget = require("widgets.mem"),
-    cpuwidget = require("widgets.cpu"),
-    tempwidget = require("widgets.temperature"),
-    weatherwidget = require("widgets.weather"),
-    datetimewidget = require("widgets.datetime"),
-    alsa = require("widgets.alsa"),
+    music = require("widgets.playerctl"),
+    musicplayer = require("widgets.musicplayer").widget,
+    mem = require("widgets.mem"),
+    cpu = require("widgets.cpu"),
+    temp = require("widgets.temperature"),
+    weather = require("widgets.weather"),
+    alsa = alsa.volumewidget,
+    volumeslider = alsa.volume_slider,
     focused_client = require("widgets.focused_client_name"),
 }
 

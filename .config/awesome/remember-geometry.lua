@@ -1,3 +1,5 @@
+local awful = require("awful")
+
 local floating_client_geometries = {}
 local prev_floating_client_geometries = {}
 local unmaximized_state = {}

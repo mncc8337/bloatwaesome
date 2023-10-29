@@ -1,11 +1,14 @@
-local lain = require("lain")
-require("config.openweathermap")
+local beautiful      = require("beautiful")
+local wibox          = require("wibox")
+
+local lain           = require("lain")
+local openweathermap = require("config.openweathermap")
 
 local lain_weather = lain.widget.weather {
-    APPID = API_key,
+    APPID = openweathermap.API_key,
     units = "metric",
-    lat = latitude,
-    lon = longtitude,
+    lat = openweathermap.latitude,
+    lon = openweathermap.longtitude,
     cnt = 1,
     timeout = 900,
     icons_path = awesome_dir.."/openweathermap_icons/",
@@ -16,7 +19,7 @@ local lain_weather = lain.widget.weather {
     showpopup = "off",
     settings = function()
         units = math.floor(weather_now["main"]["temp"]+.5)
-        widget:set_markup(units .. "°C ")
+        widget:set_markup(lain.util.markup.bold(units .. "°C "))
     end,
     notification_text_fun = function(wn)
         local  day = os.date("%a %d %H:%M", wn["dt"])
@@ -31,7 +34,7 @@ local lain_weather = lain.widget.weather {
         local visb = tostring(wn["visibility"]/1000)
         local sset = os.date("%H:%M", wn["sys"]["sunset"])
         local rise = os.date("%H:%M", wn["sys"]["sunrise"])
-        return "<span font='Dosis bold 12'>"..day.."</span>, "..desc..'\n'.."<span font='Dosis 12'>"..
+        return "<span font='"..beautiful.font_standard.." bold 12'>"..day.."</span>, "..desc..'\n'.."<span font='"..beautiful.font_standard.." 12'>"..
                " "..temp.."°C, * "..tfeel.."°C\n"..
                " "..pres.."hPa,  "..humi.."%\n"..
                "   "..wspe.."m/s,   "..wdeg.."°\n"..
@@ -43,21 +46,15 @@ lain_weather.widget.align = "center"
 lain_weather.update()
 
 local weatherwidget = wibox.widget {
-    widget = wibox.container.margin,
-    right = widget_spacing,
-    wibox.widget {
-        layout = wibox.layout.fixed.horizontal,
-        {
-            lain_weather.icon,
-            widget = wibox.container.margin,
-            right = -3,
-            left = -5
-        },
-        lain_weather,
-        widget = wibox.container
-    }
+    layout = wibox.layout.fixed.horizontal,
+    {
+        lain_weather.icon,
+        widget = wibox.container.margin,
+        right = -3,
+        left = -5
+    },
+    lain_weather,
+    widget = wibox.container
 }
-
-lain_weather.attach(weatherwidget)
 
 return weatherwidget

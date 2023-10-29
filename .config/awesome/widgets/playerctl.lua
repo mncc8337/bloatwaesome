@@ -1,16 +1,29 @@
-local dpi = require("beautiful.xresources").apply_dpi
-local markup = require("lain").util.markup
-local utf8 = require "utf8"
+local gears        = require("gears")
+local beautiful    = require("beautiful")
+local wibox        = require("wibox")
+local naughty      = require("naughty")
+local bling        = require("bling")
+
+local markup       = require("lain").util.markup
+local utf8         = require "utf8"
 local music_player = require("widgets.musicplayer")
 
 local player_off = true
 local media_length = 0
 local current_player = ""
 
-local musicico = markup.fg.color(color_blue, "󰝚  ")
+local musicico = wibox.widget.textbox(markup.fg.color(color_overlay0, "󰝛 "))
+musicico.font = beautiful.font_icon.." 12"
 
 local titlew = wibox.widget.textbox()
-titlew:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
+
+local function no_player_fallback()
+    awesome.emit_signal("music::set_title", "No song")
+    awesome.emit_signal("music::set_detail", "hehe")
+    awesome.emit_signal("music::set_total_time", 1)
+    awesome.emit_signal("music::set_elapsed_time", 0)
+    awesome.emit_signal("music:refreshUI")
+end
 
 -- Get Song Info
 local playerctl = bling.signal.playerctl.lib()
@@ -23,10 +36,12 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
             single_shot = true,
             autostart = true,
             callback = function()
-                titlew:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
+                musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
+                titlew.markup = ""
             end
         }
         player_off = true
+        no_player_fallback()
         return
     end
     player_off = false
@@ -37,24 +52,23 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
 
     -- Set art widget
     if album_path == '' then
-        album_path = ".config/awesome/fallback.png"
+        album_path = awesome_dir.."/fallback.png"
     end
 
     local temp = artist.." - "..title
-    if utf8.len(temp) > 45 then
-        temp = utf8.sub(temp, 1, 42) .. "..."
-    end
-    titlew:set_markup(musicico..temp)
-    music_player.set_title(title)
-    music_player.set_detail(artist..album)
-    music_player.set_cover(album_path)
+
+    musicico.markup = markup.fg.color(color_blue, "󰝚 ")
+    titlew.markup = temp
+    awesome.emit_signal("music::set_title", title)
+    awesome.emit_signal("music::set_detail", artist..album)
+    awesome.emit_signal("music::set_cover", album_path)
 
     if new then
         local common =  {
             timeout = 4,
             -- title = title,
             message = "now playing\n"..
-                      "<span font = 'Dosis 18'><b>"..title.."</b></span>\n"..
+                      "<span font = '"..beautiful.font_standard.." 18'><b>"..title.."</b></span>\n"..
                       artist..album,
             icon        = album_path,
             icon_size   = 120,
@@ -67,19 +81,21 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""
-    titlew:set_markup(markup.fg.color(color_overlay0, "󰝛 "))
+    musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
+    titlew.markup = ""
     player_off = true
+    no_player_fallback()
 end)
 playerctl:connect_signal("playback_status", function(_, playing)
     music_player.status.player_paused = not playing
-    music_player.refresh_UI()
+    awesome.emit_signal("music::refreshUI")
 end)
 playerctl:connect_signal("volume", function(_, value)
-    music_player.set_volume(math.floor(value * 100))
+    awesome.emit_signal("music::set_volume", math.floor(value * 100))
 end)
 playerctl:connect_signal("position", function(_, interval_sec, length_sec)
-    music_player.set_elapsed_time(math.floor(interval_sec + 0.5))
-    music_player.set_total_time(math.floor(length_sec + 0.5))
+    awesome.emit_signal("music::set_elapsed_time", math.floor(interval_sec + 0.5))
+    awesome.emit_signal("music::set_total_time", math.floor(length_sec + 0.5))
     media_length = length_sec
 end)
 -- playlist track none
@@ -97,29 +113,33 @@ playerctl:connect_signal("loop_status", function(_, loop_status)
         music_player.status.loop_track = false
         music_player.status.no_loop = true
     end
-    music_player.refresh_UI()
+    awesome.emit_signal("music::refreshUI")
 end)
 playerctl:connect_signal("shuffle", function(_, shuffle)
     music_player.status.shuffle = shuffle
-    music_player.refresh_UI()
+    awesome.emit_signal("music::refreshUI")
 end)
 
 local playerctlwidget = wibox.widget {
-    widget = wibox.container.margin,
-    right = widget_spacing,
-    wibox.widget {
-        layout = wibox.layout.fixed.horizontal,
-        titlew
-    }
+    layout = wibox.layout.fixed.horizontal,
+    musicico,
+    {
+        layout = wibox.container.scroll.horizontal,
+        step_function = wibox.container.scroll.step_functions.linear_increase,
+        max_size = 300,
+        extra_space = 300,
+        speed = 30,
+        titlew,
+    },
 }
-
-playerctlwidget:buttons(gears.table.join(awful.button({ }, 1, function() music_player.toggle_lock_visibility() end)))
 
 playerctlwidget:connect_signal("mouse::enter", function()
     if player_off then return end
-    music_player.show(true)
+    awesome.emit_signal("music::show_player", true)
 end)
-playerctlwidget:connect_signal("mouse::leave", function() music_player.hide() end)
+playerctlwidget:connect_signal("mouse::leave", function()
+    awesome.emit_signal("music::hide_player")
+end)
 
 -- process music player signals
 awesome.connect_signal("music::volume_changed", function(value)

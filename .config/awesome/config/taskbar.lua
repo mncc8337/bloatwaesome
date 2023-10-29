@@ -1,32 +1,8 @@
-local widgets = require("widgets")
-
-local lbl = awful.popup {
-    ontop = true,
-    visible = false,
-    --hide_on_right_click = true,
-    maximum_width = #awful.layout.layouts * 24,
-    maximum_height = #awful.layout.layouts * 24,
-    border_color = beautiful.border_focus,
-    border_width = beautiful.border_width,
-    widget = {
-        layout = wibox.layout.align.horizontal,
-        {
-            awful.widget.layoutlist {
-                screen = 1,
-                base_layout = wibox.layout.flex.vertical
-            },
-            margins = 5,
-            widget = wibox.container.margin
-        },
-    }
-}
---[[
-awesome.connect_signal()
--- hide popup when layout changed
-tag.connect_signal("property::layout", function()
-    lbl.visible = false
-end)
-]]--
+local gears     = require("gears")
+local awful     = require("awful")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
+local widgets   = require("widgets")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -88,9 +64,6 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 --[[ taskbar ]]--
 awful.screen.connect_for_each_screen(function(s)
-    -- volume slider poup position
-    -- widgets.alsa.volume_slider_popup.x = widgets.alsa.volume_slider_popup.x - beautiful.border_width
-
     -- Wallpaper
     set_wallpaper(s)
 
@@ -99,21 +72,13 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Create a promptbox for each screen
     --s.mypromptbox = awful.widget.prompt()
+
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(gears.table.join(
-                           awful.button({ }, 1, function ()
-                               if lbl.visible then lbl.visible = false
-                               else awful.layout.inc( 1) end
-                           end),
-                           awful.button({ }, 3, function ()
-                               lbl.visible = not lbl.visible
-                               if lbl.visible then
-                                   lbl:move_next_to(mouse.current_widget_geometry)
-                               end
-                           end),
-                           --awful.button({ }, 3, function () awful.layout.inc(-1) end),
+                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
+                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
@@ -124,16 +89,11 @@ awful.screen.connect_for_each_screen(function(s)
         widget_template = {
             {
                 {
-                    {
-                        id     = 'mytext_role',
-                        align = "center",
-                        valign = "center",
-                        widget = wibox.widget.textbox,
-                        font = "sans 16",
-                    },
-                    id = "offset",
-                    widget = wibox.container.margin,
-                    right = 7,
+                    id     = 'mytext_role',
+                    align = "center",
+                    valign = "center",
+                    widget = wibox.widget.textbox,
+                    font = beautiful.font_icon.." 18",
                 },
                 id = 'text_color',
                 forced_width = 30,
@@ -215,48 +175,47 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = taskbar_size})
+    s.wibar = awful.wibar({ position = "top", screen = s, height = taskbar_size})
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
+    s.wibar:setup {
         layout = wibox.layout.align.horizontal,
         expand = "none",
         -- left
         {
             layout = wibox.layout.fixed.horizontal,
-            centered_widget(s.mytaglist),
+            spacing = 5,
+            s.mytaglist,
             widgets.separator,
             s.mytasklist,
-            {
-                widget = wibox.container.margin,
-                left = 5,
-                widgets.focused_client,
-            }
+            widgets.focused_client,
         },
         -- middle
         wibox.widget {
-            widget = widgets.datetimewidget,
+            widget = wibox.widget.textclock,
+            font = beautiful.font_standard.." bold 12",
             valign = "center",
             align = "center",
-            forced_width = 160,
         },
         -- right
         {
             layout = wibox.layout.fixed.horizontal,
-            widgets.musicwidget,
-            widgets.memwidget,
-            widgets.tempwidget,
-            widgets.cpuwidget,
-            widgets.weatherwidget,
-            widgets.alsa.volumewidget,
+            spacing = 10,
+            widgets.music,
+            widgets.mem,
+            widgets.temp,
+            widgets.cpu,
+            widgets.weather,
+            widgets.alsa,
             {
-                widget = wibox.container.margin,
-                margins = 3,
                 {
                     layout = wibox.layout.align.horizontal,
+                    spacing = 5,
                     wibox.widget.systray(),
-                    s.mylayoutbox
-                }
+                    s.mylayoutbox,
+                },
+                widget = wibox.container.margin,
+                top = 4, bottom = 4, right = 4, left = -4,
             }
         }
     }

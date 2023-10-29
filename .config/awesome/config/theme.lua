@@ -1,8 +1,11 @@
+local gears        = require("gears")
+local naughty      = require("naughty")
+
 local theme_assets = require("beautiful.theme_assets")
-local xresources = require("beautiful.xresources")
-local dpi = xresources.apply_dpi
-local themes_path = awesome_dir.."/config"
---local sys_themes_path = require("gears.filesystem").get_themes_dir()
+local xresources   = require("beautiful.xresources")
+local dpi          = xresources.apply_dpi
+local themes_path  = awesome_dir.."/config/theme.lua"
+-- local sys_themes_path = require("gears.filesystem").get_themes_dir()
 
 -- machiatto
 -- color_rosewater = "#f4dbd6"
@@ -61,8 +64,11 @@ color_mantle    = "#181825"
 color_crust     = "#11111b"
 
 local theme = {}
-theme.font          = "Dosis Bold 12"
-theme.menu_font     = "Dosis Bold 14"
+theme.font_standard = "Roboto"
+theme.font_mono = "CaskaydiaCove Nerd Font"
+theme.font_icon = "Symbols Nerd Font"
+
+theme.font          = theme.font_standard.." 12"
 
 theme.bg_focus      = color_subtext0
 theme.bg_normal     = color_base
@@ -84,10 +90,10 @@ theme.tasklist_bg_minimize = color_surface0
 theme.tasklist_bg_urgent   = color_mauve
 
 theme.hotkeys_modifiers_fg = theme.blue
-theme.hotkeys_font = "JetbrainsMono Nerd Font 8"
-theme.hotkeys_description_font = "JetbrainsMono Nerd Font 8"
+theme.hotkeys_font = theme.font_mono.." 10"
+theme.hotkeys_description_font = theme.font_mono.." 10"
 
-theme.useless_gap   = dpi(3)
+theme.useless_gap   = dpi(15)
 theme.border_width  = dpi(2)
 theme.border_normal = color_surface0
 theme.border_focus  = color_lavender
@@ -108,10 +114,10 @@ theme.awesome_icon      = awesome_dir.."/awesome-icon.png"
 theme.wallpaper             = awesome_dir.."/wallpapers/squares.png"
 theme.taglist_squares       = false
 theme.titlebar_close_button = true
-theme.menu_height = dpi(25)
-theme.menu_width  = dpi(250)
-theme.menu_border_color = theme.border_focus
-theme.menu_bg_focus = theme.bg_minimize
+-- theme.menu_height = dpi(25)
+-- theme.menu_width  = dpi(250)
+-- theme.menu_border_color = theme.border_focus
+-- theme.menu_bg_focus = theme.bg_minimize
 
 theme.taglist_font  = "sans 18"
 theme.taglist_bg_focus    = color_base
@@ -130,31 +136,31 @@ theme.tag_colors = {
 }
 
 --[[ bling ]]--
-theme.window_switcher_widget_bg = theme.bg_normal
-theme.window_switcher_widget_border_color = theme.border_focus
-theme.window_switcher_name_font = "Dosis Bold 1"
-theme.window_switcher_name_normal_color = theme.fg_normal
-theme.window_switcher_name_focus_color = color_blue
+-- theme.window_switcher_widget_bg = theme.bg_normal
+-- theme.window_switcher_widget_border_color = theme.border_focus
+-- theme.window_switcher_name_font = theme.font_standard.." Bold 1"
+-- theme.window_switcher_name_normal_color = theme.fg_normal
+-- theme.window_switcher_name_focus_color = color_blue
 
-theme.mstab_bar_height = dpi(30)
-theme.mstab_bar_padding = dpi(5)
-theme.mstab_radius = dpi(2)
-theme.mstab_bar_disable = false
-theme.tabbar_disable = false
-theme.tabbar_style = "modern"
-theme.tabbar_bg_focus = color_overlay0
-theme.tabbar_bg_normal = color_base
-theme.tabbar_fg_focus = color_base
-theme.tabbar_fg_normal = color_text
-theme.tabbar_position = "top"
-theme.tabbar_size = dpi(40)
-theme.tabbar_font = "Dosis Bold 12"
-theme.mstab_bar_ontop = true
-theme.tabbar_color_close = color_red
-theme.tabbar_color_min   = color_green
-theme.tabbar_color_float = color_yellow
+-- theme.mstab_bar_height = dpi(30)
+-- theme.mstab_bar_padding = dpi(5)
+-- theme.mstab_radius = dpi(2)
+-- theme.mstab_bar_disable = false
+-- theme.tabbar_disable = false
+-- theme.tabbar_style = "modern"
+-- theme.tabbar_bg_focus = color_overlay0
+-- theme.tabbar_bg_normal = color_base
+-- theme.tabbar_fg_focus = color_base
+-- theme.tabbar_fg_normal = color_text
+-- theme.tabbar_position = "top"
+-- theme.tabbar_size = dpi(40)
+-- theme.tabbar_font = theme.font_standard.." Bold 12"
+-- theme.mstab_bar_ontop = true
+-- theme.tabbar_color_close = color_red
+-- theme.tabbar_color_min   = color_green
+-- theme.tabbar_color_float = color_yellow
 
-theme.icon_theme = "Papirus"
+-- theme.icon_theme = "Papirus"
 
 theme.round_corner_radius = 0
 round_rect = function(r)
@@ -163,7 +169,7 @@ round_rect = function(r)
     end
 end
 
-theme.notification_font = "Dosis 12"
+theme.notification_font = theme.font_standard.." 12"
 theme.notification_bg = color_base
 theme.notification_shape = round_rect(theme.round_corner_radius)
 theme.notification_border_color = theme.border_focus

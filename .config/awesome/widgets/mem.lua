@@ -1,32 +1,33 @@
-local lain = require("lain")
-local markup = lain.util.markup
+-- signals
+--[[
+    widget::memory, mem in MiB
+    widget::memory_percent, usage in percent
+]]--
 
-local mem_used = ""
-local memico = markup.fg.color(color_yellow, "󰘚  ")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
+
+local lain      = require("lain")
+local markup    = lain.util.markup
+
+local memico    = wibox.widget.textbox(markup.fg.color(color_yellow, " "))
+memico.font     = beautiful.font_icon.." 16"
+
 local lain_mem = lain.widget.mem {
     timeout = 3,
     settings = function()
-        widget:set_markup(memico..mem_now.perc.."%") -- mem_now.used.."MiB, "..
-        mem_used = mem_now.used.."MiB used"
+        widget:set_markup(markup.bold(mem_now.perc.."%"))
+        awesome.emit_signal("widget::memory", mem_now.used)
+        awesome.emit_signal("widget::memory_percent", mem_now.perc)
     end
 }
 lain_mem.widget.align = "center"
 lain_mem.update()
 
 local memwidget = wibox.widget {
-    widget = wibox.container.margin,
-    right = widget_spacing,
-    wibox.widget {
-        layout = wibox.layout.fixed.horizontal,
-        lain_mem,
-    }
-}
-
-local tooltip = awful.tooltip {
-    objects        = {memwidget},
-    timer_function = function()
-        return mem_used
-    end,
+    layout = wibox.layout.fixed.horizontal,
+    memico,
+    lain_mem,
 }
 
 return memwidget

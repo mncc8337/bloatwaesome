@@ -1,3 +1,6 @@
+local awful     = require("awful")
+local beautiful = require("beautiful")
+
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -32,7 +35,7 @@ awful.rules.rules = {
             skip_taskbar = true,
             placement = awful.placement.top_right,
             height = 500,
-            width = 800,
+            width = 885,
         }
     },
     -- Floating clients.
@@ -48,6 +51,7 @@ awful.rules.rules = {
           "Gpick",
           "Sxiv",
           "Nemo",
+          "Lxappearance",
   	    },
 
         -- Note that the name property shown in xprop might be set slightly after creation of the client
