@@ -9,7 +9,8 @@ local quote = wibox.widget {
     widget = wibox.widget.textbox(),
     align = "center",
     valign = "center",
-    font = beautiful.font_mono.." 12"
+    font = beautiful.font_mono.." 12",
+    forced_width = 165,
 }
 -- load quote config on start
 local config = read_json(awesome_dir.."config.json")

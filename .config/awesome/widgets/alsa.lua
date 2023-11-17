@@ -3,6 +3,8 @@
     widget::increase_volume_level, level
     widget::toggle_mute
     widget::show_volume_control, top or top_right, timeout
+
+    widget::volume_mute, true or false
 ]]--
 
 local gears     = require("gears")
@@ -18,6 +20,7 @@ local volume_level = 0
 local volumeico = wibox.widget.textbox()
 volumeico.font = beautiful.font_icon.." 16"
 
+local prev_status = "off"
 local lain_alsa = lain.widget.alsa {
     timeout = 2,
     settings = function()
@@ -33,6 +36,13 @@ local lain_alsa = lain.widget.alsa {
         if volume_now.status == "off" then
             volumeico.markup = '󰝟 '
         end
+
+        if prev_status ~= volume_now.status then
+            local status = volume_now.status == "off"
+            awesome.emit_signal("widget::volume_mute", status)
+        end
+        prev_status = volume_now.status
+
         widget.markup = markup.bold(volume_now.level..'%')
         volume_level = volume_now.level
     end
@@ -68,7 +78,7 @@ local volume_slider = wibox.widget {
 local volume_slider_popup = wibox {
     ontop = true,
     visible = false,
-    type = "splash",
+    type = "dock",
     width = 350,
     height = 50,
     border_color = beautiful.border_focus,
@@ -121,7 +131,7 @@ local volumewidget = wibox.widget {
     lain_alsa,
 }
 volumewidget:buttons {awful.button({ }, 3, function()
-    local c = find_client_with_class("Pavucontrol")
+    local c = find_client({class = "Pavucontrol"})
     if c then
         c:kill()
         if mouse.current_widget == lain_alsa.widget then
@@ -135,7 +145,7 @@ volumewidget:buttons {awful.button({ }, 3, function()
     end
 end)}
 volumewidget:connect_signal("mouse::enter", function()
-    local c = find_client_with_class("Pavucontrol")
+    local c = find_client({class = "Pavucontrol"})
     if c then return end
 
     _volume_slider.value = lain_alsa.last.level

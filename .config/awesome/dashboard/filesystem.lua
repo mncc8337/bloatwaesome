@@ -5,7 +5,7 @@ local lain = require("lain")
 
 local ui = require("dashboard.ui_elements")
 
-local chart_bundle = ui.create_arcchart("󰋊", color_red, color_crust)
+local chart_bundle = ui.create_arcchart("󰋊", color_maroon, color_crust)
 
 local fs_chart = chart_bundle.arc
 local lain_fs = lain.widget.fs {
@@ -21,6 +21,7 @@ lain_fs.align = "right"
 lain_fs.font = beautiful.font_mono.." bold 12"
 lain_fs.valign = "bottom"
 lain_fs.forced_height = 25
+awesome.connect_signal("dashboard::show", lain_fs.update)
 
 return ui.create_dashboard_panel(wibox.widget {
     layout = wibox.layout.align.vertical,

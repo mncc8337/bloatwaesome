@@ -27,32 +27,23 @@ function centered_widget(widget)
     return w
 end
 
-function find_client_with_name(name_)
+function find_client(rule)
     local dropdown = function(c)
-        return awful.rules.match(c, {name = name_})
+        return awful.rules.match(c, rule)
     end
-    local temp
+    local temp = nil
     for c in awful.client.iterate(dropdown) do
-         temp = c
-    end
-    return temp
-end
-function find_client_with_class(class_)
-    local dropdown = function(c)
-        return awful.rules.match(c, {class = class_})
-    end
-    local temp
-    for c in awful.client.iterate(dropdown) do
-         temp = c
+        temp = c
     end
     return temp
 end
 
---[[ drop down client ]]--
+--[[ drop down terminal ]]--
+-- over-complicated animation support
 local rubato = require("rubato")
 local term_current_action = "closed"
 local term = nil
-local timed = rubato.timed {
+local dropdown_term_timed = rubato.timed {
     duration = 0.3,
     intro = 0.1,
     override_dt = true,
@@ -69,39 +60,48 @@ local timed = rubato.timed {
     end
 }
 
-function dropdownterminal()
-    term = nil
-    term = find_client_with_name("drop-down-terminal")
+function dropdown_terminal_open()
+    term:move_to_tag(awful.tag.selected())
+    term.hidden = false
+    client.focus = term
+    term:raise()
+
+    term_current_action = "opening"
+    if awful.screen.focused().wibar.visible == true then
+        dropdown_term_timed.target = taskbar_size
+    else
+        dropdown_term_timed.target = 0
+    end
+end
+function dropdown_terminal_close()
+    term_current_action = "closing"
+    dropdown_term_timed.target = -term.height
+end
+
+function dropdown_terminal_toggle()
+    term = find_client({class = "drop-down-terminal"})
     if not term then
-        awful.spawn(terminal.." --title drop-down-terminal")
-        term_current_action = "opened"
+        local pid = awful.spawn(terminal.." --class drop-down-terminal")
+        local function init_term(c)
+            if c.class == "drop-down-terminal" then
+                term = c
+                term:connect_signal("unfocus", dropdown_terminal_close)
+
+                dropdown_term_timed.pos = -term.height
+                dropdown_term_timed.target = -term.height
+                dropdown_terminal_open()
+                client.disconnect_signal("manage", init_term)
+            end
+        end
+        client.connect_signal("manage", init_term)
     else
         if term_current_action == "opened" or term_current_action == "opening" then
-            term_current_action = "closing"
-            timed.target = -term.height
+            dropdown_terminal_close()
         elseif term_current_action == "closed" or term_current_action == "closing" then
-            term:move_to_tag(awful.tag.selected())
-            term.hidden = false
-
-            term_current_action = "opening"
-            if awful.screen.focused().wibar.visible == true then
-                timed.target = taskbar_size
-            else
-                timed.target = 0
-            end
-
-            client.focus = term
-            term:raise()
+            dropdown_terminal_open()
         end
     end
 end
-tag.connect_signal("property::selected", function()
-    if term ~= nil and not term.hidden then
-        term_current_action = "closed"
-        term.y = 0
-        term.hidden = true
-    end
-end)
 
 function utf8.sub(s, start_char_idx, end_char_idx)
     start_byte_idx = utf8.offset(s, start_char_idx)
@@ -109,16 +109,16 @@ function utf8.sub(s, start_char_idx, end_char_idx)
     return string.sub(s, start_byte_idx, end_byte_idx)
 end
 
-function round_rect(r)
+function rounded_rect(r)
     return function(cr, w, h)
         gears.shape.rounded_rect(cr, w, h, r)
     end
 end
 
-
 --[[ I/O ]]--
 local json = require("json")
 
+-- TODO: use lua func instead
 function save_to_file(text, file)
     awful.spawn.with_shell("printf '"..text.."' > "..file)
 end

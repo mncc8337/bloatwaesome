@@ -1,3 +1,6 @@
+-- TODO: make misc.lua optional
+require("misc")
+
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
@@ -40,47 +43,38 @@ function notify(message, title)
     naughty.notify({title = title, message = message})
 end
 
+-- TODO: move these into a config file
+--{{
 -- number of tags
 tag_num = 4
 
 taskbar_size = 32
 dashboard_width = 500
-profile_picture = "/home/mncc/avt.png"
+profile_picture = awesome_dir.."/avt.png"
 
--- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
+editor = "code"
 
+-- alsa device to control in widgets/alsa.lua
 alsa_device = 0
 
 -- Default modkey.
 modkey = "Mod4"
 altkey = "Mod1"
+-- }}
+
+--[[ bling things ]]--
+bling.module.flash_focus.enable()
 
 --[[ layouts ]]--
-local machi = require("layout-machi")
-
-local centered = bling.layout.centered
-local equal = bling.layout.equalarea
-local desk = bling.layout.desk
--- local mstab = bling.layout.mstab
-machi.editor.nested_layouts = {
-    ["0"] = desk,
-    ["1"] = awful.layout.suit.spiral,
-    ["2"] = awful.layout.suit.fair,
-    ["3"] = awful.layout.suit.fair.horizontal,
-}
-
 awful.layout.layouts = {
     awful.layout.suit.tile,
+    awful.layout.suit.tile.left,
     awful.layout.suit.spiral.dwindle,
-    -- mstab,
-    centered,
-    equal,
-    machi.default_layout,
+    bling.layout.mstab,
+    bling.layout.centered,
     awful.layout.suit.floating,
 }
-
-require("misc")
 
 require("config.taskbar")
 require("config.bindings")
@@ -88,12 +82,10 @@ require("config.rules")
 
 require("dashboard")
 
---[[
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
-]]--
+-- client.connect_signal("mouse::enter", function(c)
+--     c:emit_signal("request::activate", "mouse_enter", {raise = false})
+-- end)
 
 -- change border color when (un)focus
 client.connect_signal("focus", function(c)
@@ -114,9 +106,18 @@ gears.timer {
 }
 
 -- hide drop-down clients on start
-awful.spawn.easy_async("sleep 0.0001", function()
-    local drop_term = find_client_with_name("drop-down-terminal")
-    if drop_term then
-        drop_term.hidden = true
-    end
-end)
+gears.timer {
+    autostart = true, single_shot = true,
+    timeout = 0.01,
+    callback = function()
+        local drop_term = find_client({class = "drop-down-terminal"})
+        if drop_term then
+            drop_term:connect_signal("unfocus", dropdown_terminal_close)
+            drop_term.y = -drop_term.height
+            drop_term.hidden = true
+        end
+    end,
+}
+
+-- open dashboard
+awesome.emit_signal("dashboard::show")

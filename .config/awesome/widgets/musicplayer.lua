@@ -83,16 +83,10 @@ local music_progressbar = wibox.widget.slider {
 }
 local text_time_elapsed = wibox.widget.textbox("N/A")
 text_time_elapsed.font = beautiful.font_standard.." Bold 11"
+text_time_elapsed.valign = "top"
 local text_time_total = wibox.widget.textbox("N/A")
 text_time_total.font = beautiful.font_standard.." Bold 11"
-local music_progressbar_with_time = wibox.widget {
-    layout = wibox.layout.align.vertical,
-    {
-        layout = wibox.layout.align.horizontal,
-        text_time_elapsed, {widget = wibox.widget.textbox}, text_time_total
-    },
-    music_progressbar
-}
+text_time_total.valign = "top"
 
 if patched_awesome then
     music_progressbar:connect_signal("button::press", function()
@@ -135,8 +129,8 @@ song_title.font = beautiful.font_standard.." bold 18"
 local song_detail = wibox.widget.textbox("hehe")
 song_detail.font = beautiful.font_standard.." 12"
 local coverico = wibox.widget.imagebox()
-coverico.clip_shape = round_rect(5)
-coverico.forced_height = 150
+coverico.clip_shape = rounded_rect(5)
+coverico.forced_height = 120
 
 -- music player
 local prevbutton  = wibox.widget.textbox(" 󰒮")
@@ -191,7 +185,7 @@ fake_textr.forced_width = 24
 local prevbuttonw = wibox.widget {
     prevbutton,
     bg = normal_color,
-    shape = round_rect(8),
+    shape = rounded_rect(8),
     widget = wibox.container.background
 }
 prevbutton:connect_signal("mouse::enter", function()
@@ -240,7 +234,7 @@ end)}
 local nextbuttonw = wibox.widget {
     nextbutton,
     bg = normal_color,
-    shape = round_rect(8),
+    shape = rounded_rect(8),
     widget = wibox.container.background
 }
 nextbutton:connect_signal("mouse::enter", function()
@@ -387,8 +381,11 @@ local music_player_widget = wibox.widget {
                 song_title,
             },
             song_detail,
-            music_progressbar_with_time,
-            buttons
+            music_progressbar,
+            {
+                layout = wibox.layout.align.horizontal,
+                text_time_elapsed, buttons, text_time_total,
+            },
         },
         widget = wibox.container.margin,
         right = 5, top = 15,
@@ -407,10 +404,10 @@ local music_player_widget = wibox.widget {
 local music_player_popup = awful.popup {
     ontop = true,
     visible = false,
-    type = "splash",
+    type = "dock",
     maximum_height = 172,
     -- width = 450,
-    shape = round_rect(beautiful.round_corner_radius),
+    shape = rounded_rect(beautiful.round_corner_radius),
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = music_player_widget,

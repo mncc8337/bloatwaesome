@@ -49,47 +49,50 @@ local arccharts = wibox.widget {
     bg = color_crust,
 }
 
-local sys_resource_panel = wibox.widget {
-    layout = wibox.layout.stack,
-    cpu.graph, arccharts,
-}
-local arccharts_current_action = "opened"
-local arccharts_timed = rubato.timed {
-    duration = 0.3,
-    intro = 0.1,
-    override_dt = true,
-    easing = rubato.easing.quadratic,
-    subscribed = function(pos)
-        arccharts.opacity = pos
-        if pos == 1 and arccharts_current_action == "opening" then
-            arccharts_current_action = "opened"
-            cpu.graph.visible = false
-        elseif pos == 0 and arccharts_current_action == "closing" then
-            arccharts_current_action = "closed"
-        end
-    end
-}
+-- local sys_resource_panel = wibox.widget {
+--     layout = wibox.layout.stack,
+--     cpu.graph, arccharts,
+-- }
+-- local arccharts_current_action = "opened"
+-- local arccharts_timed = rubato.timed {
+--     duration = 0.3,
+--     intro = 0.1,
+--     override_dt = true,
+--     easing = rubato.easing.quadratic,
+--     subscribed = function(pos)
+--         arccharts.opacity = pos
+--         if pos == 1 and arccharts_current_action == "opening" then
+--             arccharts_current_action = "opened"
+--             cpu.graph.visible = false
+--         elseif pos == 0 and arccharts_current_action == "closing" then
+--             arccharts_current_action = "closed"
+--         end
+--     end
+-- }
 
 -- hide arccharts on click
-arccharts:connect_signal("button::press", function()
-    if arccharts_current_action == "opening" or arccharts_current_action == "opened" then
-        cpu.graph.visible = true
-        arccharts_current_action = "closing"
-        arccharts_timed.target = 0
-    elseif arccharts_current_action == "closing" or arccharts_current_action == "closed" then
-        arccharts_current_action = "opening"
-        arccharts_timed.target = 1
-    end
-end)
-arccharts_timed.target = 1
+-- arccharts:connect_signal("button::press", function()
+--     if arccharts_current_action == "opening" or arccharts_current_action == "opened" then
+--         cpu.graph.visible = true
+--         arccharts_current_action = "closing"
+--         arccharts_timed.target = 0
+--     elseif arccharts_current_action == "closing" or arccharts_current_action == "closed" then
+--         arccharts_current_action = "opening"
+--         arccharts_timed.target = 1
+--     end
+-- end)
+-- arccharts_timed.target = 1
 
-local tabspanel = require("dashboard.tabs")
+local power_panel = require("dashboard.power")
+local uptime_panel = require("dashboard.uptime")
+local options_panel = require("dashboard.options")
+local tabs_panel = require("dashboard.tabs")
 
 --[[ BASE ]]--
 local dashboard = wibox {
     ontop = true,
     visible = false,
-    type = "splash",
+    type = "dock",
     width = dashboard_width,
     height = awful.screen.focused().geometry.height,
     x = awful.screen.focused().geometry.width - dashboard_width,
@@ -103,13 +106,20 @@ dashboard:setup {
         clock,
         {
             layout = wibox.layout.align.horizontal,
-            profile_panel,
             quote_panel,
+            profile_panel,
         },
         music_panel,
         volume_slider_panel,
-        sys_resource_panel,
-        tabspanel,
+        {
+            layout = wibox.layout.align.horizontal,
+            power_panel,
+            uptime_panel,
+            options_panel,
+        },
+        -- sys_resource_panel,
+        arccharts,
+        tabs_panel,
     },
     widget = wibox.container.margin,
     margins = 4,
@@ -123,9 +133,7 @@ local mouse_event_timer = gears.timer {
     callback = function()
         local geometry = awful.screen.focused().geometry
         if (mouse.coords().x > geometry.width - 10 and
-           mouse.coords().y > geometry.height - 10) or
-           (mouse.coords().x > geometry.width - 10 and
-           mouse.coords().y < 10) then
+           mouse.coords().y > geometry.height - 10) then
             if previously_toggle then return end
             awesome.emit_signal("dashboard::toggle")
             previously_toggle = true
@@ -179,16 +187,16 @@ local function toggle_dashboard()
         dashboard_current_action = "closing"
         dashboard_timed.target = 0
     elseif dashboard_current_action == "closed" then
-        show_dashboard()
+        awesome.emit_signal("dashboard::show")
     elseif dashboard_current_action == "opened" then
-        hide_dashboard()
+        awesome.emit_signal("dashboard::hide")
     end
 end
 
 -- hide on click
 local function hide_dashboard_on_click()
     if dashboard_visible() and not prompt_running then
-        hide_dashboard()
+        awesome.emit_signal("dashboard::hide")
     end
 end
 awful.mouse.append_global_mousebinding(awful.button({}, 1, hide_dashboard_on_click))

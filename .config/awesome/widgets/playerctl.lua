@@ -27,6 +27,11 @@ end
 
 -- Get Song Info
 local playerctl = bling.signal.playerctl.lib()
+
+-- get artwprk for chromium browser
+local function find_web_art()
+end
+
 local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
     -- consider this is `player_off`

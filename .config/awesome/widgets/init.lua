@@ -24,24 +24,5 @@ return {
     alsa = alsa.volumewidget,
     volumeslider = alsa.volume_slider,
     focused_client = require("widgets.focused_client_name"),
+    --mykeyboardlayout = awful.widget.keyboardlayout()
 }
-
--- Keyboard map indicator and switcher
---mykeyboardlayout = awful.widget.keyboardlayout()
-
---[[
-bling.widget.window_switcher.enable {
-    type = "thumbnail",
-    hide_window_switcher_key = "Escape",
-    minimize_key = "n",
-    unminimize_key = "N",
-    kill_client_key = "q",
-    cycle_key = "Tab",
-    previous_key = "Right",
-    next_key = "Left",
-    vim_previous_key = "l",
-    vim_next_key = "h",
-    cycleClientsByIdx = awful.client.focus.byidx,
-    filterClients = awful.widget.tasklist.filter.currenttags,
-}
-]]--

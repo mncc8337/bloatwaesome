@@ -60,7 +60,6 @@ local function decorate_cell(widget, flag, date)
         shape = props.shape,
         fg = props.fg_color,
         bg = props.bg_color or default_bg,
-        forced_height = 34,
         widget = wibox.container.background,
         widget,
     }

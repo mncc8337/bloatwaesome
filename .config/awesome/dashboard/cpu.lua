@@ -18,12 +18,12 @@ local cpu_usage_text = wibox.widget {
 }
 
 --[[ graph ]]--
-local graph_bundle = ui.create_graph("CPU", color_blue, color_base, 100, 0)
+-- local graph_bundle = ui.create_graph("CPU", color_blue, color_base, 100, 0)
 
 awesome.connect_signal("widget::cpu_usage", function(usage)
     cpu_usage_text.markup = usage..'%'
     arc_bundle.set_value(usage)
-    graph_bundle.add_value(usage)
+    -- graph_bundle.add_value(usage)
 end)
 
 return {
@@ -50,5 +50,5 @@ return {
             left = 8, right = 8, bottom = 8,
         }
     }),
-    graph = ui.create_dashboard_panel(graph_bundle.graph),
+    -- graph = ui.create_dashboard_panel(graph_bundle.graph),
 }

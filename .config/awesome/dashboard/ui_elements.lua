@@ -1,6 +1,7 @@
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
+local markup    = require("lain").util.markup
 local rubato    = require("rubato")
 
 local function create_arcchart(icon, fg, bg)
@@ -107,7 +108,32 @@ local function create_dashboard_panel(_widget)
     }
 end
 
-local created_buttons = {}
+local function create_button(text, color, onclick)
+    local w = wibox.widget {
+        {
+            widget = wibox.widget.textbox,
+            markup = markup.fg.color(color, text),
+            font = beautiful.font_icon.." 16",
+            align = "center",
+            forced_width = 32,
+            forced_height = 32,
+        },
+        widget = wibox.container.background,
+        bg = color_surface0,
+    }
+
+    w:connect_signal("mouse::enter", function()
+        w.bg = color_crust
+    end)
+    w:connect_signal("mouse::leave", function()
+        w.bg = color_surface0
+    end)
+    w:buttons{awful.button({}, 1, onclick)}
+
+    return w
+end
+
+local created_tab_buttons = {}
 local function create_tab_button(text, name)
     local button = wibox.widget {
         {
@@ -140,7 +166,7 @@ local function create_tab_button(text, name)
     local function set_action(action)
         button:buttons{awful.button({}, 1, function()
             action()
-            for _, b in ipairs(created_buttons) do
+            for _, b in ipairs(created_tab_buttons) do
                 b.set_deactive()
             end
             set_active()
@@ -169,7 +195,7 @@ local function create_tab_button(text, name)
         set_deactive = set_deactive,
         set_action = set_action,
     }
-    table.insert(created_buttons, self)
+    table.insert(created_tab_buttons, self)
 
     return self
 end
@@ -224,6 +250,7 @@ return {
     create_arcchart = create_arcchart,
     create_graph = create_graph,
     create_dashboard_panel = create_dashboard_panel,
+    create_button = create_button,
     create_tab_button = create_tab_button,
     h_scrollable = h_scrollable,
 }

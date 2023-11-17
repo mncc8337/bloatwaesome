@@ -27,7 +27,7 @@ local buttons = wibox.widget {
 local layout = wibox.layout.align.vertical(wibox.widget {}, cal, buttons)
 
 local scrollable = ui.h_scrollable({calendar_tab, weather_tab, todo_tab},
-                                   dashboard_width - 16, awful.screen.focused().geometry.height - 715,
+                                   dashboard_width - 16, awful.screen.focused().geometry.height - 750,
                                    {top = 12, bottom = 5, left = 12, right = 12})
 layout:set_second(scrollable.widget)
 
@@ -57,6 +57,5 @@ wtbutton.set_action(function() scrollable.scroll_to(2) end)
 tdbutton.set_action(function() scrollable.scroll_to(3) end)
 
 local pan = wibox.widget {layout = layout}
-pan.forced_height = awful.screen.focused().geometry.height - 665
 
 return ui.create_dashboard_panel(pan)
