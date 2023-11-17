@@ -106,18 +106,14 @@ gears.timer {
 }
 
 -- hide drop-down clients on start
-gears.timer {
-    autostart = true, single_shot = true,
-    timeout = 0.01,
-    callback = function()
-        local drop_term = find_client({class = "drop-down-terminal"})
-        if drop_term then
-            drop_term:connect_signal("unfocus", dropdown_terminal_close)
-            drop_term.y = -drop_term.height
-            drop_term.hidden = true
-        end
-    end,
-}
+single_timer(0.01, function()
+    local drop_term = find_client({class = "drop-down-terminal"})
+    if drop_term then
+        drop_term:connect_signal("unfocus", dropdown_terminal_close)
+        drop_term.y = -drop_term.height
+        drop_term.hidden = true
+    end
+end):start()
 
 -- open dashboard
 awesome.emit_signal("dashboard::show")

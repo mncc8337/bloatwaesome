@@ -115,6 +115,14 @@ function rounded_rect(r)
     end
 end
 
+function single_timer(timeout, callback)
+    return gears.timer {
+        timeout = timeout,
+        single_shot = true,
+        callback = callback,
+    }
+end
+
 --[[ I/O ]]--
 local json = require("json")
 

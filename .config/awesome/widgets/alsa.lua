@@ -91,13 +91,9 @@ local popup_placement_config = {
         right = beautiful.border_width + 1
     }
 }
-local close_popup_timer = gears.timer {
-    timeout = 1,
-    single_shot = true,
-    callback = function()
-        volume_slider_popup.visible = false
-    end
-}
+local close_popup_timer = single_timer(1, function()
+    volume_slider_popup.visible = false
+end)
 local function show_volume_slider(position, timeout)
     if dashboard_visible() then return end
     if position == "top_right" then

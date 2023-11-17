@@ -36,15 +36,11 @@ local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
     -- consider this is `player_off`
     if artist == '' or title == '' then
-        local temp = gears.timer {
-            timeout = 0.01,
-            single_shot = true,
-            autostart = true,
-            callback = function()
-                musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
-                titlew.markup = ""
-            end
-        }
+        single_timer(0.01, function()
+            musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
+            titlew.markup = ""
+        end):start()
+
         player_off = true
         no_player_fallback()
         return

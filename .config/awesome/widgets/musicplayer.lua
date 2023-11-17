@@ -132,233 +132,126 @@ local coverico = wibox.widget.imagebox()
 coverico.clip_shape = rounded_rect(5)
 coverico.forced_height = 120
 
+local function ui_button_create(icon, width, normal_color, focus_color, action, font_size, align)
+    -- font_size and align are optional
+    -- action must have only 1 arg which is the textbox
+
+    local button  = wibox.widget.textbox(icon)
+    button.font   = beautiful.font_icon..' '.. (font_size or 20)
+    button.align  = align or "center"
+    button.valign = "center"
+    button.forced_width  = width
+
+    local buttonw = wibox.widget {
+        button,
+        fg = normal_color,
+        widget = wibox.container.background
+    }
+
+    button:connect_signal("mouse::enter", function() buttonw.fg = focus_color end)
+    button:connect_signal("mouse::leave", function() buttonw.fg = normal_color end)
+    button:buttons {awful.button({}, 1, function()
+        action(button)
+    end)}
+
+    return buttonw
+end
+
 -- music player
-local prevbutton  = wibox.widget.textbox(" 󰒮")
-prevbutton.font   = beautiful.font_icon.." 16"
-prevbutton.align  = "left"
-prevbutton.valign = "center"
-prevbutton.forced_width  = 40
+local recheck_delay = 0.3
 
-local togglebutton  = wibox.widget.textbox("󰐊")
-togglebutton.font   = beautiful.font_icon.." 16"
-togglebutton.align  = "center"
-togglebutton.valign = "center"
-togglebutton.forced_width  = 42
-
-local nextbutton    = wibox.widget.textbox("󰒭 ")
-nextbutton.font   = beautiful.font_icon.." 16"
-nextbutton.align  = "right"
-nextbutton.valign = "center"
-nextbutton.forced_width  = 40
-
-local shufflebutton = wibox.widget.textbox("󰒞")
-shufflebutton.font = beautiful.font_icon.." 18"
-shufflebutton.align = "center"
-shufflebutton.valign = "center"
-shufflebutton.forced_width = 22
-
-local loopbutton = wibox.widget.textbox("󰑖")
-loopbutton.font = beautiful.font_icon.." 18"
-loopbutton.align = "center"
-loopbutton.valign = "center"
-loopbutton.forced_width = 22
-
-local normal_color = color_surface0
-local focus_color  = color_subtext0
-
-local fake_textl = wibox.widget.textbox()
-local fake_togglebuttonl = wibox.widget {
-    fake_textl,
-    widget = wibox.container.background,
-    bg = normal_color
-}
-fake_textl.forced_width = 24
-
-local fake_textr = wibox.widget.textbox()
-local fake_togglebuttonr = wibox.widget {
-    fake_textr,
-    widget = wibox.container.background,
-    bg = normal_color
-}
-fake_textr.forced_width = 24
-
-local prevbuttonw = wibox.widget {
-    prevbutton,
-    bg = normal_color,
-    shape = rounded_rect(8),
-    widget = wibox.container.background
-}
-prevbutton:connect_signal("mouse::enter", function()
-    prevbuttonw.bg = focus_color
-    fake_togglebuttonl.bg = focus_color
-end)
-prevbutton:connect_signal("mouse::leave", function()
-    prevbuttonw.bg = normal_color
-    fake_togglebuttonl.bg = normal_color
-end)
-prevbutton:buttons {awful.button({}, 1, function()
-    togglebutton.markup = "󰏤"
-    awesome.emit_signal("music::play_previous_song")
-end)}
-
-local togglebuttonw = wibox.widget {
-    togglebutton,
-    bg = color_surface1,
-    shape = gears.shape.circle,
-    widget = wibox.container.background
-}
-togglebutton:connect_signal("mouse::enter", function() togglebuttonw.bg = focus_color end)
-togglebutton:connect_signal("mouse::leave", function() togglebuttonw.bg = color_surface1 end)
-togglebutton:buttons {awful.button({}, 1, function()
+local function toggle_press(w)
     if status.player_paused then
-        togglebutton.markup = "󰏤"
+        w.text = "󰏤"
         awesome.emit_signal("music::play_song")
     else
-        togglebutton.markup = "󰐊"
+        w.text = "󰐊"
         awesome.emit_signal("music::pause_song")
     end
-    local temp = gears.timer {
-        timeout = 0.5,
-        single_shot = true,
-        autostart = true,
-        callback = function()
-            if status.player_paused then
-                togglebutton.markup = "󰐊"
-            else
-                togglebutton.markup = "󰏤"
-            end
+    single_timer(recheck_delay, function()
+        if status.player_paused then
+            w.text = "󰐊"
+        else
+            w.text = "󰏤"
         end
-    }
-end)}
+    end):start()
+end
+local togglebutton = ui_button_create("󰐊", 42, color_surface2, color_text, toggle_press, 24)
 
-local nextbuttonw = wibox.widget {
-    nextbutton,
-    bg = normal_color,
-    shape = rounded_rect(8),
-    widget = wibox.container.background
-}
-nextbutton:connect_signal("mouse::enter", function()
-    nextbuttonw.bg = focus_color
-    fake_togglebuttonr.bg = focus_color
-end)
-nextbutton:connect_signal("mouse::leave", function()
-    nextbuttonw.bg = normal_color
-    fake_togglebuttonr.bg = normal_color
-end)
-nextbutton:buttons {awful.button({}, 1, function()
-    togglebutton.markup = "󰏤"
+local function refresh_toggle_button()
+    if status.player_paused then
+        togglebutton.widget.text = "󰐊"
+    else
+        togglebutton.widget.text = "󰏤"
+    end
+end
+
+local function prev_press(_)
+    togglebutton.widget.text = "󰏤"
+    awesome.emit_signal("music::play_previous_song")
+    single_timer(recheck_delay, refresh_toggle_button):start()
+end
+local prevbutton = ui_button_create("󰒮", 22, color_surface2, color_text, prev_press, _, "right")
+
+local function next_press(_)
+    togglebutton.widget.text = "󰏤"
     awesome.emit_signal("music::play_next_song")
-end)}
+    single_timer(recheck_delay, refresh_toggle_button):start()
+end
+local nextbutton = ui_button_create("󰒭", 22, color_surface2, color_text, next_press, _, "left")
 
-local shufflebuttonw = wibox.widget {
-    {
-        shufflebutton,
-        widget = wibox.container.margin,
-        left = 8 -- 5
-    },
-    fg = color_surface2,
-    widget = wibox.container.background
-}
-shufflebutton:connect_signal("mouse::enter", function()
-    shufflebuttonw.fg = color_subtext2
-end)
-shufflebutton:connect_signal("mouse::leave", function()
-    shufflebuttonw.fg = color_surface2
-end)
-shufflebutton:buttons {awful.button({}, 1, function()
+local function shuffle_press(w)
     if status.shuffle then
-        shufflebutton.text = "󰒞"
+        w.text = "󰒞"
         awesome.emit_signal("music::shuffle_off")
     else
-        shufflebutton.text = "󰒝"
+        w.text = "󰒝"
         awesome.emit_signal("music::shuffle_on")
     end
-    local temp = gears.timer {
-        timeout = 0.5,
-        single_shot = true,
-        autostart = true,
-        callback = function()
-            if status.shuffle then
-                shufflebutton.text = "󰒝"
-            else
-                shufflebutton.text = "󰒞"
-            end
+    single_timer(recheck_delay, function()
+        if status.shuffle then
+            w.text = "󰒝"
+        else
+            w.text = "󰒞"
         end
-    }
-end)}
+    end):start()
+end
+local shufflebutton = ui_button_create("󰒞", 22, color_surface0, color_text, shuffle_press)
 
-local loopbuttonw = wibox.widget {
-    {
-        loopbutton,
-        widget = wibox.container.margin,
-        right = 8,
-    },
-    fg = color_surface2,
-    widget = wibox.container.background
-}
-loopbutton:connect_signal("mouse::enter", function()
-    loopbuttonw.fg = color_subtext2
-end)
-loopbutton:connect_signal("mouse::leave", function()
-    loopbuttonw.fg = color_surface2
-end)
-loopbutton:buttons {awful.button({}, 1, function()
+local function loop_press(w)
     if status.no_loop then
-        loopbutton.text = "󰑖"
+        w.text = "󰑖"
         awesome.emit_signal("music::loop_playlist")
     elseif status.loop_playlist then
-        loopbutton.text = "󰑘"
+        w.text = "󰑘"
         awesome.emit_signal("music::loop_track")
     else
-        loopbutton.text = "󰑗"
+        w.text = "󰑗"
         awesome.emit_signal("music::no_loop")
     end
-    local temp = gears.timer {
-        timeout = 0.5,
-        single_shot = true,
-        autostart = true,
-        callback = function()
-            if status.no_loop then
-                loopbutton.text = "󰑗"
-            elseif status.loop_playlist then
-                loopbutton.text = "󰑖"
-            elseif status.loop_track then
-                loopbutton.text = "󰑘"
-            end
+    single_timer(recheck_delay, function()
+        if status.no_loop then
+            w.text = "󰑗"
+        elseif status.loop_playlist then
+            w.text = "󰑖"
+        elseif status.loop_track then
+            w.text = "󰑘"
         end
-    }
-end)}
+    end):start()
+end
+local loopbutton = ui_button_create("󰑖", 22, color_surface0, color_text, loop_press)
 
 local buttons = wibox.widget {
-    layout = wibox.layout.stack,
+    layout = wibox.layout.fixed.horizontal,
+    spacing = 10,
+    loopbutton,
     {
-        widget = wibox.container.place,
-        halign = "center",
-        {
-            layout = wibox.layout.fixed.horizontal,
-            expand = "none",
-            loopbuttonw,
-            {
-                widget = wibox.container.margin,
-                right = -6,
-                prevbuttonw,
-            },
-            fake_togglebuttonl,
-            {
-                widget = wibox.container.margin,
-                left = 3, right = 3,
-            },
-            fake_togglebuttonr,
-            {
-                widget = wibox.container.margin,
-                left = -6,
-                nextbuttonw,
-            },
-            shufflebuttonw,
-            forced_height = 25
-        },
+        layout = wibox.layout.fixed.horizontal,
+        prevbutton,
+        togglebutton,
+        nextbutton,
     },
-    h_centered_widget(togglebuttonw),
+    shufflebutton,
     forced_height = 35
 }
 
@@ -384,7 +277,9 @@ local music_player_widget = wibox.widget {
             music_progressbar,
             {
                 layout = wibox.layout.align.horizontal,
-                text_time_elapsed, buttons, text_time_total,
+                text_time_elapsed,
+                h_centered_widget(buttons),
+                text_time_total,
             },
         },
         widget = wibox.container.margin,
@@ -413,36 +308,28 @@ local music_player_popup = awful.popup {
     widget = music_player_widget,
 }
 
-local music_player_timer = gears.timer {
-    timeout = 0.1,
-    single_shot = true,
-    callback = function()
-        music_player_popup.visible = false
-    end
-}
+local music_player_timer = single_timer(0.1, function()
+    music_player_popup.visible = false
+end)
 
 music_player_popup:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
 music_player_popup:connect_signal("mouse::leave", function() music_player_timer:again() end)
 
 awesome.connect_signal("music::refreshUI", function()
-    if status.player_paused then
-        togglebutton.markup = "󰐊"
-    else
-        togglebutton.markup = "󰏤"
-    end
+    refresh_toggle_button()
 
     if status.shuffle then
-        shufflebutton.text = "󰒝"
+        shufflebutton.widget.text = "󰒝"
     else
-        shufflebutton.text = "󰒞"
+        shufflebutton.widget.text = "󰒞"
     end
 
     if status.no_loop then
-        loopbutton.text = "󰑗"
+        loopbutton.widget.text = "󰑗"
     elseif status.loop_playlist then
-        loopbutton.text = "󰑖"
+        loopbutton.widget.text = "󰑖"
     elseif status.loop_track then
-        loopbutton.text = "󰑘"
+        loopbutton.widget.text = "󰑘"
     end
 end)
 awesome.connect_signal("music::show_player", function(near_mouse)

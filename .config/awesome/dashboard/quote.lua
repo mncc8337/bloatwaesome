@@ -29,15 +29,10 @@ local function quote_edit(start)
         hooks = {
             {
                 {}, "Escape", function(_)
-                    gears.timer {
-                        timeout = 0.1,
-                        autostart = true,
-                        single_shot = true,
-                        callback = function()
-                            quote.markup = old_quote
-                            prompt_running = false
-                        end
-                    }
+                    single_timer(0.1, function()
+                        quote.markup = old_quote
+                        prompt_running = false
+                    end):start()
                 end
             },
             {
@@ -46,14 +41,9 @@ local function quote_edit(start)
                     if start ~= nil then
                         new = start..'\n'..new
                     end
-                    gears.timer {
-                        timeout = 0.1,
-                        autostart = true,
-                        single_shot = true,
-                        callback = function()
-                            quote_edit(new)
-                        end,
-                    }
+                    single_timer(0.1, function()
+                        quote_edit(new)
+                    end):start()
                 end
             },
         },
