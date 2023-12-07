@@ -17,10 +17,4 @@ client.connect_signal("property::name", function() update_fc_widget() end)
 client.connect_signal("focus", function(c) update_fc_widget() end)
 client.connect_signal("unfocus", function(c) update_fc_widget() end)
 
-return  wibox.widget {
-    layout = wibox.container.scroll.horizontal,
-    step_function = wibox.container.scroll.step_functions.linear_back_and_forth,
-    max_size = 300,
-    speed = 50,
-    focused_client,
-}
+return focused_client

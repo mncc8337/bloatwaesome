@@ -15,7 +15,7 @@ layoutbox.forced_height = 32
 
 local function crop_screen()
     awesome.emit_signal("dashboard::hide")
-    awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area save")
+    awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh area save")
 end
 
 local mute_button = ui.create_button("󰕾", color_yellow, function()

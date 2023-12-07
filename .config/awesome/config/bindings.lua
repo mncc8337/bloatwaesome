@@ -31,13 +31,8 @@ globalkeys = gears.table.join(
             end
         end,
     {description = "pause/play song", group = "media"}),
-    awful.key({ modkey }, "F11", function() dropdownterminal() end,
+    awful.key({ modkey }, "F11", function() dropdown_terminal_toggle() end,
               {description = "spawn a drop-down terminal", group = "launcher"}),
-    -- On the fly useless gaps change
-    awful.key({ modkey, "Control" }, "F1", function () lain.util.useless_gaps_resize(1) end,
-            {description = "increase useless gaps size", group = "layout"}),
-    awful.key({ modkey, "Control" }, "F2", function () lain.util.useless_gaps_resize(-1) end,
-              {description = "decrease useless gaps size", group = "layout"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
         local already_minimized = true
@@ -81,13 +76,17 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "e", function () awful.spawn("nemo") end,
     {description = "open file explorer", group = "launcher"}),
     -- PRINT
-    awful.key({}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full") end,
+    awful.key({}, "Print", function ()
+        awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh full") end,
     {description = "print full screen", group = "media"}),
-    awful.key({modkey}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh full save") end,
+    awful.key({modkey}, "Print", function ()
+        awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh full save") end,
     {description = "print full screen and save", group = "media"}),
-    awful.key({ "Shift" }, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area") end,
+    awful.key({ "Shift" }, "Print", function ()
+        awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh area") end,
     {description = "print a part of screen", group = "media"}),
-    awful.key({modkey, "Shift"}, "Print", function () awful.spawn.with_shell(". "..awesome_dir.."/scripts/screenshot.sh area save") end,
+    awful.key({modkey, "Shift"}, "Print", function ()
+        awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh area save") end,
     {description = "print a part of screen and save", group = "media"}),
     -- DEFAULT
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -113,13 +112,11 @@ globalkeys = gears.table.join(
     ),
     awful.key({ modkey,           }, "Tab",
         function ()
-            --awful.client.focus.byidx(-1)
-            awful.spawn("rofi -show window")
+            awful.client.focus.byidx(1)
         end,
-        {description = "open rofi windows", group = "launcher"}
+        {description = "switch between windows", group = "launcher"}
     ),
     awful.key({ modkey,           }, "w", function ()
-            -- mymainmenu:toggle()
             awful.spawn("rofi -show drun")
         end,
         {description = "show rofi main menu", group = "launcher"}),
@@ -157,13 +154,13 @@ globalkeys = gears.table.join(
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster( 1, nil, true) end,
               {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster(-1, nil, true) end,
               {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
     awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
@@ -213,6 +210,7 @@ clientkeys = gears.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,           }, "x",
         function (c)
+            if c.class == "drop-down-terminal" then c:disconnect_signal("unfocus", dropdown_terminal_close) end
             c:kill()
         end,
               {description = "close", group = "client"}),
@@ -220,10 +218,8 @@ clientkeys = gears.table.join(
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
-    --[[
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
-    ]]--
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
     awful.key({ modkey,           }, "n",

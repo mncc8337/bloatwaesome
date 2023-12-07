@@ -18,6 +18,7 @@ musicico.font = beautiful.font_icon.." 12"
 local titlew = wibox.widget.textbox()
 
 local function no_player_fallback()
+    awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
     awesome.emit_signal("music::set_title", "No song")
     awesome.emit_signal("music::set_detail", "hehe")
     awesome.emit_signal("music::set_total_time", 1)
@@ -25,12 +26,7 @@ local function no_player_fallback()
     awesome.emit_signal("music:refreshUI")
 end
 
--- Get Song Info
 local playerctl = bling.signal.playerctl.lib()
-
--- get artwprk for chromium browser
-local function find_web_art()
-end
 
 local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
@@ -51,33 +47,79 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         album = ", "..album
     end
 
-    -- Set art widget
-    if album_path == '' then
-        album_path = awesome_dir.."/fallback.png"
+    if player_name == "chromium" then
+        -- remove the ' - Topic' in artist name when playing youtube music
+        artist = artist:gsub("%s%-%sTopic", "")
+
+        -- if there is (probaly) artist name in title
+        if title:find("%s%-%s") then
+            -- youtube title often contain more information about artist
+            -- or this is a reup
+
+            temp_title = title:gsub("%s%-%s", "ඞ")
+            tokens = split_str(temp_title, "ඞ")
+
+            -- it should have 2 tokens
+            if #tokens == 2 then
+                -- assume that the title does not contain the artist name, else this will break
+                -- TODO: fix the above (impossible)
+
+                -- if there is artist name in token 1
+                if tokens[1]:find(artist) then
+                    -- then the title should be in token 2
+                    artist = tokens[1]
+                    title = tokens[2]
+                -- same of the above but in reverse
+                elseif tokens[2]:find(artist) then
+                    artist = tokens[2]
+                    title = tokens[1]
+                end
+            end
+        end
+
+        -- set fetched artwork (see https://github.com/mncc8337/chromium-artwork-fetcher)
+        album_path = awesome_dir.."artwork.png"
     end
 
-    local temp = artist.." - "..title
+    -- Set fallback art
+    if album_path == '' then
+        album_path = awesome_dir.."fallback.png"
+    end
+
+    local display = artist.." - "..title
+    if title:find("%s%-%s") then
+        display = title
+    end
 
     musicico.markup = markup.fg.color(color_blue, "󰝚 ")
-    titlew.markup = temp
+    titlew.markup = display
     awesome.emit_signal("music::set_title", title)
     awesome.emit_signal("music::set_detail", artist..album)
-    awesome.emit_signal("music::set_cover", album_path)
+
+    -- the chrome extension will automatically emit this signal when done fetching
+    if player_name ~= "chromium" then
+        awesome.emit_signal("music::set_cover", album_path)
+    end
 
     if new then
-        local common =  {
-            timeout = 4,
-            -- title = title,
-            message = "now playing\n"..
-                      "<span font = '"..beautiful.font_standard.." 18'><b>"..title.."</b></span>\n"..
-                      artist..album,
-            icon        = album_path,
-            icon_size   = 120,
-        }
-        if prev_notification ~= nil then
-            prev_notification:destroy()
-        end
-        prev_notification = naughty.notify(common)
+        local delay = 0
+        -- wait for the extension to done fetching the artwork
+        if player_name == "chromium" then delay = 1.0 end
+        single_timer(delay, function()
+            local common =  {
+                timeout = 4,
+                -- title = title,
+                message = "now playing\n"..
+                        "<span font = '"..beautiful.font_standard.." 18'><b>"..title.."</b></span>\n"..
+                        artist..album,
+                icon        = album_path,
+                icon_size   = 120,
+            }
+            if prev_notification ~= nil then
+                prev_notification:destroy()
+            end
+            prev_notification = naughty.notify(common)
+        end):start()
     end
 end)
 playerctl:connect_signal("no_players", function()

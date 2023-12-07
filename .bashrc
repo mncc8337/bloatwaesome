@@ -7,6 +7,8 @@
 
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"
+alias py="python3"
+alias fuck="thefuck"
 
 ITAN="\[$(tput sitm)\]"
 ITAF="\[$(tput ritm)\]"

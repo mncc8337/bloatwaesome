@@ -1,6 +1,7 @@
-local gears = require("gears")
-local awful = require("awful")
-local wibox = require("wibox")
+local gears     = require("gears")
+local awful     = require("awful")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
 
 --[[ centered thing ]]--
 function h_centered_widget(widget)
@@ -68,9 +69,11 @@ function dropdown_terminal_open()
 
     term_current_action = "opening"
     if awful.screen.focused().wibar.visible == true then
-        dropdown_term_timed.target = taskbar_size
+        dropdown_term_timed.target = taskbar_size + 10
+        term.x = awful.screen.focused().geometry.width - 890 - beautiful.useless_gap * 2
     else
         dropdown_term_timed.target = 0
+        term.x = awful.screen.focused().geometry.width - 890
     end
 end
 function dropdown_terminal_close()
@@ -121,6 +124,15 @@ function single_timer(timeout, callback)
         single_shot = true,
         callback = callback,
     }
+end
+
+function split_str(inputstr, sep)
+    local t = {}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        -- notify(str)
+        table.insert(t, str)
+    end
+    return t
 end
 
 --[[ I/O ]]--

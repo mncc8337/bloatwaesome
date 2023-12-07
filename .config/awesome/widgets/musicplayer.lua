@@ -130,7 +130,7 @@ local song_detail = wibox.widget.textbox("hehe")
 song_detail.font = beautiful.font_standard.." 12"
 local coverico = wibox.widget.imagebox()
 coverico.clip_shape = rounded_rect(5)
-coverico.forced_height = 120
+coverico.forced_height = 128
 
 local function ui_button_create(icon, width, normal_color, focus_color, action, font_size, align)
     -- font_size and align are optional
@@ -260,7 +260,7 @@ local music_player_widget = wibox.widget {
     {
         coverico,
         widget = wibox.container.margin,
-        margins = 12,
+        margins = 8,
     },
     {
         {
@@ -377,7 +377,8 @@ local function is_visible()
     return music_player.visible
 end
 
-awesome.emit_signal("music::set_cover", awesome_dir.."/fallback.png")
+-- set default art
+awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
 
 return {
     widget = music_player_widget,

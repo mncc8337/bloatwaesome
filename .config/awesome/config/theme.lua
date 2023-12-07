@@ -65,7 +65,7 @@ color_crust     = "#11111b"
 
 local theme = {}
 theme.font_standard = "Roboto"
-theme.font_mono = "CaskaydiaCove Nerd Font"
+theme.font_mono = "CaskaydiaCove NF"
 theme.font_icon = "Symbols Nerd Font"
 
 theme.font          = theme.font_standard.." 12"
@@ -84,34 +84,33 @@ theme.fg_minimize   = theme.fg_normal
 theme.tooltip_bg = color_base
 theme.layoutlist_bg_selected = color_surface1
 
-theme.tasklist_bg_normal   = color_overlay2
+theme.tasklist_bg_normal   = color_surface1
 theme.tasklist_bg_focus    = color_text
-theme.tasklist_bg_minimize = color_surface0
+theme.tasklist_bg_minimize = color_base
 theme.tasklist_bg_urgent   = color_mauve
 
 theme.hotkeys_modifiers_fg = theme.blue
 theme.hotkeys_font = theme.font_mono.." 10"
 theme.hotkeys_description_font = theme.font_mono.." 10"
 
-theme.useless_gap   = dpi(15)
+theme.useless_gap   = dpi(10)
 theme.border_width  = dpi(2)
 theme.border_normal = color_surface0
 theme.border_focus  = color_lavender
 theme.border_marked = color_yellow
 
 theme.layout_tile       = awesome_dir.."/layouts/tile.png"
+theme.layout_tileleft   = awesome_dir.."/layouts/tileleft.png"
 theme.layout_dwindle    = awesome_dir.."/layouts/dwindle.png"
 --theme.layout_max        = awesome_dir.."/layouts/max.png"
 theme.layout_floating   = awesome_dir.."/layouts/floating.png"
 theme.layout_centered   = awesome_dir.."/layouts/centered.png"
-theme.layout_equalarea  = awesome_dir.."/layouts/equalarea.png"
-theme.layout_machi      = awesome_dir.."/layouts/machi.png"
 theme.layout_mstab      = awesome_dir.."/layouts/mstab.png"
 
 theme.awesome_icon      = awesome_dir.."/awesome-icon.png"
 -- theme.menu_submenu_icon = awesome_dir.."/submenu.png"
 
-theme.wallpaper             = awesome_dir.."/wallpapers/squares.png"
+theme.wallpaper             = awesome_dir.."/wallpapers/dmc_lcd1.png"
 theme.taglist_squares       = false
 theme.titlebar_close_button = true
 -- theme.menu_height = dpi(25)
@@ -128,53 +127,52 @@ theme.taglist_bg_urgent   = color_blue
 --theme.taglist_fg_empty    = color_overlay0
 theme.taglist_spacing     = dpi(2)
 
+-- each tag have a unique color
 theme.tag_colors = {
     color_blue,
     color_red,
     color_green,
-    color_yellow
+    color_yellow,
+    color_flamingo,
+    color_lavender,
+    color_rosewater,
+    color_pink,
+    color_mauve,
+    color_maroon,
+    color_peach,
+    color_teal,
+    color_sky,
+    color_sapphire,
 }
 
 --[[ bling ]]--
--- theme.window_switcher_widget_bg = theme.bg_normal
--- theme.window_switcher_widget_border_color = theme.border_focus
--- theme.window_switcher_name_font = theme.font_standard.." Bold 1"
--- theme.window_switcher_name_normal_color = theme.fg_normal
--- theme.window_switcher_name_focus_color = color_blue
+-- prioritize vlc, deprioritize chromium
+theme.playerctl_player  = {"vlc", "%any", "chromium"}
 
--- theme.mstab_bar_height = dpi(30)
--- theme.mstab_bar_padding = dpi(5)
--- theme.mstab_radius = dpi(2)
--- theme.mstab_bar_disable = false
--- theme.tabbar_disable = false
--- theme.tabbar_style = "modern"
--- theme.tabbar_bg_focus = color_overlay0
--- theme.tabbar_bg_normal = color_base
--- theme.tabbar_fg_focus = color_base
--- theme.tabbar_fg_normal = color_text
--- theme.tabbar_position = "top"
--- theme.tabbar_size = dpi(40)
--- theme.tabbar_font = theme.font_standard.." Bold 12"
--- theme.mstab_bar_ontop = true
--- theme.tabbar_color_close = color_red
--- theme.tabbar_color_min   = color_green
--- theme.tabbar_color_float = color_yellow
+theme.flash_focus_start_opacity = 0.8
+theme.flash_focus_step = 0.01
+
+theme.mstab_bar_padding = dpi(5)
+theme.mstab_dont_resize_slaves = false
+theme.tabbar_style = "default"
+theme.tabbar_bg_focus = color_lavender
+theme.tabbar_bg_normal = color_base
+theme.tabbar_fg_focus = color_base
+theme.tabbar_fg_normal = color_text
+theme.tabbar_position = "top"
+theme.tabbar_size = dpi(30)
+theme.tabbar_font = theme.font_standard.." 12"
 
 -- theme.icon_theme = "Papirus"
 
 theme.round_corner_radius = 0
-round_rect = function(r)
-    return function(cr, w, h)
-        gears.shape.rounded_rect(cr, w, h, r)
-    end
-end
 
 theme.notification_font = theme.font_standard.." 12"
 theme.notification_bg = color_base
-theme.notification_shape = round_rect(theme.round_corner_radius)
+theme.notification_shape = rounded_rect(theme.round_corner_radius)
 theme.notification_border_color = theme.border_focus
+-- change theme.notification_border_width does nothing
 naughty.config.defaults.border_width = theme.border_width
+naughty.config.padding = theme.useless_gap * 2
 
 return theme
-
--- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80

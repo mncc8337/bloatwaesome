@@ -28,14 +28,15 @@ awful.rules.rules = {
     },
     -- drop-down terminal
     {
-        rule_any = {name = {"drop-down-terminal"}},
+        rule_any = {class = {"drop-down-terminal"}},
         properties = {
             floating = true,
             ontop = true,
             skip_taskbar = true,
-            placement = awful.placement.top_right,
+            sticky = true,
+            -- placement = awful.placement.top_right,
             height = 500,
-            width = 885,
+            -- width = 885,
         }
     },
     -- Floating clients.
@@ -101,7 +102,7 @@ client.connect_signal("manage", function (c)
     reconfig_border(c)
 
     if (c.floating or awful.layout.get(awful.screen.focused()) == awful.layout.suit.floating)
-       and c.class ~= "Pavucontrol" and c.name ~= "drop-down-terminal" then
+       and c.class ~= "Pavucontrol" and c.class ~= "drop-down-terminal" then
         awful.placement.centered(c, {honor_workarea = true})
     end
 end)

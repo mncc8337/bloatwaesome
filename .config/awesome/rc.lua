@@ -10,7 +10,7 @@ require("awful.autofocus")
 require("remember-geometry")
 
 awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
-beautiful.init(awesome_dir.."/config/theme.lua")
+beautiful.init(awesome_dir.."config/theme.lua")
 local bling = require("bling")
 
 -- {{{ Error handling
@@ -45,12 +45,15 @@ end
 
 -- TODO: move these into a config file
 --{{
--- number of tags
-tag_num = 4
 
+-- taskbar
+tag_num = 4
 taskbar_size = 32
+taskbar_default_opacity = 0.9
+taskbar_focus_opacity = 1.0
+
 dashboard_width = 500
-profile_picture = awesome_dir.."/avt.png"
+profile_picture = awesome_dir.."avt.png"
 
 terminal = "alacritty"
 editor = "code"

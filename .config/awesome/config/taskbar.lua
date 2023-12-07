@@ -3,6 +3,7 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local widgets   = require("widgets")
+local rubato    = require("rubato")
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -68,15 +69,19 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4" }, s, awful.layout.layouts[1])
+    local tag_table = {}
+    for i = 1, tag_num do
+        table.insert(tag_table, i..'') -- my way to convert int to string lol
+    end
+    awful.tag(tag_table, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     --s.mypromptbox = awful.widget.prompt()
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(gears.table.join(
+    s.layoutbox = awful.widget.layoutbox(s)
+    s.layoutbox:buttons(gears.table.join(
                            awful.button({ }, 1, function () awful.layout.inc( 1) end),
                            awful.button({ }, 3, function () awful.layout.inc(-1) end),
                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
@@ -156,26 +161,35 @@ awful.screen.connect_for_each_screen(function(s)
         },
         widget_template = {
             {
-                wibox.widget.base.make_widget(),
-                forced_height = 3,
-                id            = 'background_role',
-                widget        = wibox.container.background,
+                {
+                    {
+                        id     = 'icon_role',
+                        widget = wibox.widget.imagebox,
+                    },
+                    margins = 2,
+                    widget  = wibox.container.margin,
+                },
+                id     = 'background_role',
+                widget = wibox.container.background,
             },
-            {
-                centered_widget({id = 'clienticon', widget = awful.widget.clienticon}),
-                margins = 3,
-                widget  = wibox.container.margin
-            },
-            nil,
-            create_callback = function(self, c, index, objects) --luacheck: no unused args
-                self:get_children_by_id('clienticon')[1].client = c
-            end,
-            layout = wibox.layout.align.vertical,
+            widget = wibox.container.margin,
+            margins = 3,
         },
     }
 
     -- Create the wibox
-    s.wibar = awful.wibar({ position = "top", screen = s, height = taskbar_size})
+    s.wibar = awful.wibar {
+        position = "top",
+        screen = s,
+        height = taskbar_size,
+        margins = {
+            top = 5, bottom = -10, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2,
+        },
+        border_width = 2,
+        border_color = color_surface2,
+        shape = rounded_rect(5),
+        opacity = 0.0,
+    }
 
     -- Add widgets to the wibox
     s.wibar:setup {
@@ -185,10 +199,11 @@ awful.screen.connect_for_each_screen(function(s)
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
+            s.layoutbox,
             s.mytaglist,
             widgets.separator,
             s.mytasklist,
-            widgets.focused_client,
+            -- widgets.focused_client,
         },
         -- middle
         wibox.widget {
@@ -206,17 +221,34 @@ awful.screen.connect_for_each_screen(function(s)
             widgets.temp,
             widgets.cpu,
             widgets.weather,
+            {
+                wibox.widget.systray(),
+                widget = wibox.container.margin,
+                top = 4, bottom = 4,
+            },
             widgets.alsa,
             {
-                {
-                    layout = wibox.layout.align.horizontal,
-                    spacing = 5,
-                    wibox.widget.systray(),
-                    s.mylayoutbox,
-                },
                 widget = wibox.container.margin,
-                top = 4, bottom = 4, right = 4, left = -4,
-            }
+                right = 5, left = -10,
+            },
         }
     }
+
+    -- wibar fade in / out
+    local wibar_opacity = rubato.timed {
+        duration = 0.3,
+        intro = 0.1,
+        override_dt = true,
+        easing = rubato.easing.quadratic,
+        subscribed = function(opacity)
+            s.wibar.opacity = opacity
+        end
+    }
+    s.wibar:connect_signal("mouse::enter", function()
+        wibar_opacity.target = taskbar_focus_opacity
+    end)
+    s.wibar:connect_signal("mouse::leave", function()
+        wibar_opacity.target = taskbar_default_opacity
+    end)
+    wibar_opacity.target = taskbar_default_opacity
 end)
