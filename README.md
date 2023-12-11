@@ -34,5 +34,5 @@ for example `yay -S awesome-git`
 ![busy](screenshot/12-11-23_14-08-50.png)
 
 ## TODOS
-[ ] rework on dashboard look
-[ ] make weather tab
+- [ ] rework on dashboard look
+- [ ] make weather tab
