@@ -9,8 +9,8 @@ local wibox     = require("wibox")
 local lain      = require("lain")
 local markup    = lain.util.markup
 
-local cpuico = wibox.widget.textbox(markup.fg.color(color_blue, " "))
-cpuico.font = beautiful.font_icon.." 16"
+local cpuico = wibox.widget.textbox(markup.fg.color(beautiful.cpu_icon_color, " "))
+cpuico.font = beautiful.font_type.icon.." 16"
 
 
 local lain_cpu = lain.widget.cpu {

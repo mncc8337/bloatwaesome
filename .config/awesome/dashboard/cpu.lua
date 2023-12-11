@@ -6,12 +6,12 @@ local lain = require("lain")
 local ui = require("dashboard.ui_elements")
 
 --[[ arcchart ]]--
-local arc_bundle = ui.create_arcchart("", color_blue, color_crust)
+local arc_bundle = ui.create_arcchart("", beautiful.cpu_icon_color)
 
 local cpu_usage_text = wibox.widget {
     widget = wibox.widget.textbox,
     markup = "100%",
-    font = beautiful.font_mono.." bold 12",
+    font = beautiful.font_type.mono.." bold 12",
     align = "right",
     valign = "bottom",
     forced_height = 25,
@@ -40,7 +40,7 @@ return {
                 wibox.widget {
                     widget = wibox.widget.textbox,
                     markup = "CPU",
-                    font = beautiful.font_mono.." bold 10",
+                    font = beautiful.font_type.mono.." bold 10",
                     valign = "bottom",
                     forced_height = 25,
                 },

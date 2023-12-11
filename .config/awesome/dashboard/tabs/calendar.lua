@@ -5,25 +5,25 @@ local wibox     = require("wibox")
 local styles = {}
 
 styles.month = {
-	bg_color = color_base,
+	bg_color = beautiful.calendar_month_bg,
 }
 
 styles.normal = {
-	bg_color = color_crust,
-	fg_color = color_text,
+	bg_color = beautiful.calendar_normal_bg,
+	fg_color = beautiful.calendar_normal_fg,
 }
 
 styles.focus   = {
-	fg_color = color_crust,
-	bg_color = color_lavender,
+	bg_color = beautiful.calendar_focus_bg,
+	fg_color = beautiful.calendar_focus_fg,
 }
 
 styles.header = {
-	bg_color = color_surface0,
+	bg_color = beautiful.calendar_header_bg,
 }
 
 styles.weekday = {
-	fg_color = color_text,
+	fg_color = beautiful.calendar_weekday_fg,
 }
 
 local function decorate_cell(widget, flag, date)
@@ -52,7 +52,7 @@ local function decorate_cell(widget, flag, date)
 
     local d = {year = date.year, month = (date.month or 1), day = (date.day or 1)}
     local weekday = tonumber(os.date("%w", os.time(d)))
-    local default_bg = (weekday == 0 or weekday == 6) and color_surface2 or color_surface0
+    local default_bg = (weekday == 0 or weekday == 6) and beautiful.calendar_weekday_bg or beautiful.calendar_weekend_bg
 
     local props = styles[flag] or {}
 
@@ -68,7 +68,7 @@ end
 local cal = wibox.widget {
     widget = wibox.widget.calendar.month,
     date = os.date("*t"),
-	font = beautiful.font_mono,
+	font = beautiful.font_type.mono,
     spacing = 10,
     flex_height = false,
     long_weekdays = true,

@@ -34,7 +34,7 @@ local lain_weather = lain.widget.weather {
         local visb = tostring(wn["visibility"]/1000)
         local sset = os.date("%H:%M", wn["sys"]["sunset"])
         local rise = os.date("%H:%M", wn["sys"]["sunrise"])
-        return "<span font='"..beautiful.font_standard.." bold 12'>"..day.."</span>, "..desc..'\n'.."<span font='"..beautiful.font_standard.." 12'>"..
+        return "<span font='"..beautiful.font_type.standard.." bold 12'>"..day.."</span>, "..desc..'\n'.."<span font='"..beautiful.font_type.standard.." 12'>"..
                " "..temp.."°C, * "..tfeel.."°C\n"..
                " "..pres.."hPa,  "..humi.."%\n"..
                "   "..wspe.."m/s,   "..wdeg.."°\n"..

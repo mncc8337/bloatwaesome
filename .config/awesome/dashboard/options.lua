@@ -18,14 +18,14 @@ local function crop_screen()
     awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh area save")
 end
 
-local mute_button = ui.create_button("󰕾", color_yellow, function()
+local mute_button = ui.create_button("󰕾", beautiful.color.yellow, function()
     awesome.emit_signal("widget::toggle_mute")
 end)
 awesome.connect_signal("widget::volume_mute", function(mute)
     if mute then
-        mute_button.widget.markup = markup.fg.color(color_yellow, "󰝟")
+        mute_button.widget.markup = markup.fg.color(beautiful.color.yellow, "󰝟")
     else
-        mute_button.widget.markup = markup.fg.color(color_yellow, "󰕾")
+        mute_button.widget.markup = markup.fg.color(beautiful.color.yellow, "󰕾")
     end
 end)
 
@@ -36,14 +36,14 @@ local option_menu = wibox.widget {
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            ui.create_button("󰆞", color_sapphire, crop_screen),
+            ui.create_button("󰆞", beautiful.color.sapphire, crop_screen),
             layoutbox,
         },
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
             mute_button,
-            ui.create_button("󰒓", color_lavender, function() awful.spawn.with_shell(editor.." ~/.config/awesome/") end),
+            ui.create_button("󰒓", beautiful.color.lavender, function() awful.spawn.with_shell(editor.." ~/.config/awesome/") end),
         },
     },
     widget = wibox.container.margin,

@@ -74,18 +74,18 @@ local music_progressbar = wibox.widget.slider {
     forced_width = 1,
     forced_height = 14,
     bar_shape = gears.shape.rounded_rect,
-    bar_active_color = color_blue,
-    bar_color = color_surface0,
+    bar_active_color = beautiful.music_progressbar_fg,
+    bar_color = beautiful.music_progressbar_bg,
     handle_width = 0, -- no handle
     maximum = 100,
     minimum = 0,
     value = 75,
 }
 local text_time_elapsed = wibox.widget.textbox("N/A")
-text_time_elapsed.font = beautiful.font_standard.." Bold 11"
+text_time_elapsed.font = beautiful.font_type.standard.." Bold 11"
 text_time_elapsed.valign = "top"
 local text_time_total = wibox.widget.textbox("N/A")
-text_time_total.font = beautiful.font_standard.." Bold 11"
+text_time_total.font = beautiful.font_type.standard.." Bold 11"
 text_time_total.valign = "top"
 
 if patched_awesome then
@@ -111,8 +111,8 @@ local volume_slider = wibox.widget.slider {
     bar_height = 4,
     forced_width = 1,
     forced_height = 14,
-    bar_active_color = color_blue,
-    bar_color = color_surface0,
+    bar_active_color = beautiful.volumebar_fg,
+    bar_color = beautiful.volumebar_bg,
     handle_width = 0, -- no handle
     maximum = 100,
     minimum = 0,
@@ -125,9 +125,9 @@ end)
 
 ---- song info and art
 local song_title = wibox.widget.textbox("No song")
-song_title.font = beautiful.font_standard.." bold 18"
+song_title.font = beautiful.font_type.standard.." bold 18"
 local song_detail = wibox.widget.textbox("hehe")
-song_detail.font = beautiful.font_standard.." 12"
+song_detail.font = beautiful.font_type.standard.." 12"
 local coverico = wibox.widget.imagebox()
 coverico.clip_shape = rounded_rect(5)
 coverico.forced_height = 128
@@ -137,7 +137,7 @@ local function ui_button_create(icon, width, normal_color, focus_color, action, 
     -- action must have only 1 arg which is the textbox
 
     local button  = wibox.widget.textbox(icon)
-    button.font   = beautiful.font_icon..' '.. (font_size or 20)
+    button.font   = beautiful.font_type.icon..' '.. (font_size or 20)
     button.align  = align or "center"
     button.valign = "center"
     button.forced_width  = width
@@ -176,7 +176,7 @@ local function toggle_press(w)
         end
     end):start()
 end
-local togglebutton = ui_button_create("󰐊", 42, color_surface2, color_text, toggle_press, 24)
+local togglebutton = ui_button_create("󰐊", 42, beautiful.musicplayer_primary_button_normal, beautiful.musicplayer_button_focus, toggle_press, 24)
 
 local function refresh_toggle_button()
     if status.player_paused then
@@ -191,14 +191,14 @@ local function prev_press(_)
     awesome.emit_signal("music::play_previous_song")
     single_timer(recheck_delay, refresh_toggle_button):start()
 end
-local prevbutton = ui_button_create("󰒮", 22, color_surface2, color_text, prev_press, _, "right")
+local prevbutton = ui_button_create("󰒮", 22, beautiful.musicplayer_primary_button_normal, beautiful.musicplayer_button_focus, prev_press, _, "right")
 
 local function next_press(_)
     togglebutton.widget.text = "󰏤"
     awesome.emit_signal("music::play_next_song")
     single_timer(recheck_delay, refresh_toggle_button):start()
 end
-local nextbutton = ui_button_create("󰒭", 22, color_surface2, color_text, next_press, _, "left")
+local nextbutton = ui_button_create("󰒭", 22, beautiful.musicplayer_primary_button_normal, beautiful.musicplayer_button_focus, next_press, _, "left")
 
 local function shuffle_press(w)
     if status.shuffle then
@@ -216,7 +216,7 @@ local function shuffle_press(w)
         end
     end):start()
 end
-local shufflebutton = ui_button_create("󰒞", 22, color_surface0, color_text, shuffle_press)
+local shufflebutton = ui_button_create("󰒞", 22, beautiful.musicplayer_secondary_button_normal, beautiful.musicplayer_button_focus, shuffle_press)
 
 local function loop_press(w)
     if status.no_loop then
@@ -239,7 +239,7 @@ local function loop_press(w)
         end
     end):start()
 end
-local loopbutton = ui_button_create("󰑖", 22, color_surface0, color_text, loop_press)
+local loopbutton = ui_button_create("󰑖", 22, beautiful.musicplayer_secondary_button_normal, beautiful.musicplayer_button_focus, loop_press)
 
 local buttons = wibox.widget {
     layout = wibox.layout.fixed.horizontal,
@@ -306,6 +306,7 @@ local music_player_popup = awful.popup {
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = music_player_widget,
+    shape = rounded_rect(popup_roundness),
 }
 
 local music_player_timer = single_timer(0.1, function()

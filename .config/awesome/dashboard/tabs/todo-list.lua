@@ -1,4 +1,5 @@
-local wibox = require("wibox")
+local wibox     = require("wibox")
+local beautiful = require("beautiful")
 
 local td = wibox.widget.textbox("insert todo widget")
 td.align = "center"
@@ -6,5 +7,5 @@ td.align = "center"
 return wibox.widget {
     td,
     widget = wibox.container.background,
-    bg = color_crust,
+    bg = beautiful.dashboard_bg,
 }

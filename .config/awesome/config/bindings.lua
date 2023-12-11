@@ -31,8 +31,10 @@ globalkeys = gears.table.join(
             end
         end,
     {description = "pause/play song", group = "media"}),
-    awful.key({ modkey }, "F11", function() dropdown_terminal_toggle() end,
-              {description = "spawn a drop-down terminal", group = "launcher"}),
+    awful.key({ modkey }, "F11", function()
+            awesome.emit_signal("drop-down-term::toggle")
+        end,
+              {description = "open/close drop-down terminal", group = "launcher"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
         local already_minimized = true
@@ -210,7 +212,11 @@ clientkeys = gears.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,           }, "x",
         function (c)
-            if c.class == "drop-down-terminal" then c:disconnect_signal("unfocus", dropdown_terminal_close) end
+            if c.class == "drop-down-terminal" then
+                c:disconnect_signal("unfocus", function()
+                    awesome.emit_signal("drop-down-term::close")
+                end)
+            end
             c:kill()
         end,
               {description = "close", group = "client"}),

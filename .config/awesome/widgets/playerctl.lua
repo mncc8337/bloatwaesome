@@ -12,8 +12,8 @@ local player_off = true
 local media_length = 0
 local current_player = ""
 
-local musicico = wibox.widget.textbox(markup.fg.color(color_overlay0, "󰝛 "))
-musicico.font = beautiful.font_icon.." 12"
+local musicico = wibox.widget.textbox(markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 "))
+musicico.font = beautiful.font_type.icon.." 12"
 
 local titlew = wibox.widget.textbox()
 
@@ -33,7 +33,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     -- consider this is `player_off`
     if artist == '' or title == '' then
         single_timer(0.01, function()
-            musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
+            musicico.markup = markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 ")
             titlew.markup = ""
         end):start()
 
@@ -91,7 +91,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         display = title
     end
 
-    musicico.markup = markup.fg.color(color_blue, "󰝚 ")
+    musicico.markup = markup.fg.color(beautiful.music_icon_color_active, "󰝚 ")
     titlew.markup = display
     awesome.emit_signal("music::set_title", title)
     awesome.emit_signal("music::set_detail", artist..album)
@@ -110,7 +110,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
                 timeout = 4,
                 -- title = title,
                 message = "now playing\n"..
-                        "<span font = '"..beautiful.font_standard.." 18'><b>"..title.."</b></span>\n"..
+                        "<span font = '"..beautiful.font_type.standard.." 18'><b>"..title.."</b></span>\n"..
                         artist..album,
                 icon        = album_path,
                 icon_size   = 120,
@@ -124,7 +124,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""
-    musicico.markup = markup.fg.color(color_overlay0, "󰝛 ")
+    musicico.markup = markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 ")
     titlew.markup = ""
     player_off = true
     no_player_fallback()

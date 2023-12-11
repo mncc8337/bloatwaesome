@@ -5,7 +5,7 @@ local lain = require("lain")
 
 local ui = require("dashboard.ui_elements")
 
-local chart_bundle = ui.create_arcchart("󰋊", color_maroon, color_crust)
+local chart_bundle = ui.create_arcchart("󰋊", beautiful.filesys_icon_color)
 
 local fs_chart = chart_bundle.arc
 local lain_fs = lain.widget.fs {
@@ -18,7 +18,7 @@ local lain_fs = lain.widget.fs {
     end
 }
 lain_fs.align = "right"
-lain_fs.font = beautiful.font_mono.." bold 12"
+lain_fs.font = beautiful.font_type.mono.." bold 12"
 lain_fs.valign = "bottom"
 lain_fs.forced_height = 25
 awesome.connect_signal("dashboard::show", lain_fs.update)
@@ -36,7 +36,7 @@ return ui.create_dashboard_panel(wibox.widget {
             wibox.widget {
                 widget = wibox.widget.textbox,
                 markup = "DISK",
-                font = beautiful.font_mono.." bold 10",
+                font = beautiful.font_type.mono.." bold 10",
                 valign = "bottom",
                 forced_height = 25,
             },

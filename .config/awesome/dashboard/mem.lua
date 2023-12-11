@@ -6,12 +6,12 @@ local lain      = require("lain")
 local ui        = require("dashboard.ui_elements")
 
 --[[ arcchart ]]--
-local arc_bundle = ui.create_arcchart("", color_yellow, color_crust)
+local arc_bundle = ui.create_arcchart("", beautiful.mem_icon_color)
 
 local mem_used_text = wibox.widget {
     widget = wibox.widget.textbox,
     markup = "8GIG NOWAY",
-    font = beautiful.font_mono.." bold 12",
+    font = beautiful.font_type.mono.." bold 12",
     align = "right",
     valign = "bottom",
     forced_height = 25,
@@ -37,7 +37,7 @@ return ui.create_dashboard_panel(wibox.widget {
             wibox.widget {
                 widget = wibox.widget.textbox,
                 markup = "RAM",
-                font = beautiful.font_mono.." bold 10",
+                font = beautiful.font_type.mono.." bold 10",
                 valign = "bottom",
                 forced_height = 25,
             },

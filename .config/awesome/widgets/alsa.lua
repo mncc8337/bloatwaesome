@@ -18,7 +18,7 @@ local markup    = lain.util.markup
 local volume_level = 0
 
 local volumeico = wibox.widget.textbox()
-volumeico.font = beautiful.font_icon.." 16"
+volumeico.font = beautiful.font_type.icon.." 16"
 
 local prev_status = "off"
 local lain_alsa = lain.widget.alsa {
@@ -52,8 +52,8 @@ lain_alsa.update()
 
 local _volume_slider = wibox.widget {
     bar_height   = 10,
-    bar_color    = color_crust,
-    bar_active_color = color_blue,
+    bar_color    = beautiful.volumebar_bg,
+    bar_active_color = beautiful.volumebar_fg,
     -- handle_color = color_base,
     -- handle_shape = gears.shape.circle,
     -- handle_border_color = color_blue,
@@ -84,6 +84,7 @@ local volume_slider_popup = wibox {
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = volume_slider,
+    shape = rounded_rect(popup_roundness),
 }
 local popup_placement_config = {
     margins = {

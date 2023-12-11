@@ -25,7 +25,7 @@ local clock_update_timer = gears.timer {
     autostart = true,
     timeout = 1,
     callback = function()
-        clock.markup = os.date("<span font = '"..beautiful.font_mono.." 60'>%H:%M</span>")
+        clock.markup = os.date("<span font = '"..beautiful.font_type.mono.." 60'>%H:%M</span>")
     end
 }
 
@@ -39,14 +39,10 @@ local mem_panel = require("dashboard.mem")
 local cpu = require("dashboard.cpu")
 
 local arccharts = wibox.widget {
-    {
-        layout = wibox.layout.align.horizontal,
-        cpu.arcchart,
-        mem_panel,
-        fs_panel,
-    },
-    widget = wibox.container.background,
-    bg = color_crust,
+    layout = wibox.layout.align.horizontal,
+    cpu.arcchart,
+    mem_panel,
+    fs_panel,
 }
 
 -- local sys_resource_panel = wibox.widget {
@@ -96,7 +92,7 @@ local dashboard = wibox {
     width = dashboard_width,
     height = awful.screen.focused().geometry.height,
     x = awful.screen.focused().geometry.width - dashboard_width,
-    bg = color_crust,
+    bg = beautiful.dashboard_bg,
     screen = awful.screen.focused(),
 }
 dashboard:setup {
@@ -123,22 +119,6 @@ dashboard:setup {
     },
     widget = wibox.container.margin,
     margins = 4,
-}
-
--- toggle dashboard when mouse is on right corners
-local previously_toggle = false
-local mouse_event_timer = gears.timer {
-    autostart = true,
-    timeout = 0.5,
-    callback = function()
-        local geometry = awful.screen.focused().geometry
-        if (mouse.coords().x > geometry.width - 10 and
-           mouse.coords().y > geometry.height - 10) then
-            if previously_toggle then return end
-            awesome.emit_signal("dashboard::toggle")
-            previously_toggle = true
-           else previously_toggle = false end
-    end
 }
 
 -- a variable to track what the panel is doing

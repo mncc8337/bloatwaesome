@@ -9,8 +9,8 @@ local wibox     = require("wibox")
 local lain      = require("lain")
 local markup    = lain.util.markup
 
-local tempico = wibox.widget.textbox(markup.fg.color(color_red, " "))
-tempico.font  = beautiful.font_icon.." 16"
+local tempico = wibox.widget.textbox(markup.fg.color(beautiful.temp_icon_color, " "))
+tempico.font  = beautiful.font_type.icon.." 16"
 
 local lain_temp = lain.widget.temp {
     timeout = 15,

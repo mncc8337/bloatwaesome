@@ -49,8 +49,10 @@ end
 -- taskbar
 tag_num = 4
 taskbar_size = 32
-taskbar_default_opacity = 0.9
+taskbar_default_opacity = 0.85
 taskbar_focus_opacity = 1.0
+
+popup_roundness = 5
 
 dashboard_width = 500
 profile_picture = awesome_dir.."avt.png"
@@ -84,6 +86,16 @@ require("config.bindings")
 require("config.rules")
 
 require("dashboard")
+require("drop-down-term")
+
+-- config hot corners' action
+require("hot-corners")
+topright_action = function()
+    awesome.emit_signal("drop-down-term::toggle")
+end
+bottomright_action = function()
+    awesome.emit_signal("dashboard::toggle")
+end
 
 -- Enable sloppy focus, so that focus follows mouse.
 -- client.connect_signal("mouse::enter", function(c)
@@ -112,11 +124,24 @@ gears.timer {
 single_timer(0.01, function()
     local drop_term = find_client({class = "drop-down-terminal"})
     if drop_term then
-        drop_term:connect_signal("unfocus", dropdown_terminal_close)
+        drop_term:connect_signal("unfocus", function()
+            awesome.emit_signal("drop-down-term::close")
+        end)
         drop_term.y = -drop_term.height
         drop_term.hidden = true
     end
 end):start()
+
+wibox.connect_signal("button::press", function(w)
+    awesome.emit_signal("drop-down-term::close")
+
+    local mouse_on_dashboard = mouse.coords().x > awful.screen.focused().geometry.width - dashboard_width
+                               and dashboard_visible()
+    -- ignore if mouse click on dashboard
+    if not mouse_on_dashboard then
+        awesome.emit_signal("dashboard::hide")
+    end
+end)
 
 -- open dashboard
 awesome.emit_signal("dashboard::show")

@@ -9,13 +9,68 @@ local quote = wibox.widget {
     widget = wibox.widget.textbox(),
     align = "center",
     valign = "center",
-    font = beautiful.font_mono.." 12",
+    font = beautiful.font_type.mono.." 12",
     forced_width = 165,
 }
 -- load quote config on start
 local config = read_json(awesome_dir.."config.json")
 quote.markup = config["quote"]["content"]
 quote.align = config["quote"]["alignment"]
+
+local function _format(str)
+    local bold_opened = false -- `*`
+    local italic_opened = false -- `|`
+    local strike_opened = false -- `-`
+    local underline_opened = false -- `_`
+
+    local new_str = str .. ' '
+    local increased = 0
+
+    local function insert(stt, at)
+        new_str = new_str:sub(0, at + increased - 1) .. stt .. new_str:sub(at + increased + 1, #str + increased)
+        increased = increased + #stt - 1
+    end
+
+    for i = 1, #str do
+        local c = str:sub(i,i)
+        if c == '*' then
+            bold_opened = not bold_opened
+            if bold_opened then
+                insert("<b>", i)
+            else
+                insert("</b>", i)
+            end
+        elseif c =='|' then
+            italic_opened = not italic_opened
+            if italic_opened then
+                insert("<i>", i)
+            else
+                insert("</i>", i)
+            end
+        elseif c =='-' then
+            strike_opened = not strike_opened
+            if strike_opened then
+                insert("<s>", i)
+            else
+                insert("</s>", i)
+            end
+        elseif c =='_' then
+            underline_opened = not underline_opened
+            if underline_opened then
+                insert("<u>", i)
+            else
+                insert("</u>", i)
+            end
+        end
+    end
+
+    -- syntax error
+    if bold_opened or strike_opened or underline_opened or italic_opened then
+        return str
+    end
+
+    return new_str
+end
 
 local old_quote = ""
 local prompt_running = false
@@ -56,10 +111,12 @@ local function quote_edit(start)
                 if start ~= nil then
                     quote.markup = start..'\n'..text
                 end
+                quote.markup = _format(quote.markup)
                 
-                config["quote"]["content"] = quote.markup
+                config["quote"]["content"] = quote.markup:gsub('\n', "\\n")
                 save_json(config, awesome_dir.."config.json")
             end
+            quote.font = beautiful.font_type.mono.." 12"
             prompt_running = false
         end
     }

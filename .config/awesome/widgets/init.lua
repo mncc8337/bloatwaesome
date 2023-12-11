@@ -1,11 +1,12 @@
-local gears = require("gears")
-local wibox = require("wibox")
+local gears     = require("gears")
+local wibox     = require("wibox")
+local beautiful = require("beautiful")
 
 local separator = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
     shape = gears.shape.rounded_rect,
-    color = color_surface0,
+    color = beautiful.color.surface0,
     forced_height = 18,
     forced_width = 4,
 }

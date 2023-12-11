@@ -98,7 +98,7 @@ awful.screen.connect_for_each_screen(function(s)
                     align = "center",
                     valign = "center",
                     widget = wibox.widget.textbox,
-                    font = beautiful.font_icon.." 18",
+                    font = beautiful.font_type.icon.." 18",
                 },
                 id = 'text_color',
                 forced_width = 30,
@@ -111,10 +111,10 @@ awful.screen.connect_for_each_screen(function(s)
             -- Add support for hover colors and an index label
             create_callback = function(self, c3, index, objects) --luacheck: no unused args
                 self:connect_signal('mouse::enter', function()
-                    self.bg = beautiful.tag_colors[index]
+                    self.bg = beautiful.tag_color[index]
                 end)
                 self:connect_signal('mouse::leave', function()
-                   self.bg = color_base
+                   self.bg = beautiful.taglist_bg_focus
                 end)
 
                 self:get_children_by_id('mytext_role')[1].text = ""
@@ -126,7 +126,7 @@ awful.screen.connect_for_each_screen(function(s)
                             self:get_children_by_id('mytext_role')[1].text = ""
                         end
                         if tag.selected then
-                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_color[index]
                         end
                     end
                 end
@@ -142,7 +142,7 @@ awful.screen.connect_for_each_screen(function(s)
                             self:get_children_by_id('mytext_role')[1].text = ""
                         end
                         if tag.selected then
-                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_colors[index]
+                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_color[index]
                         end
                     end
                 end
@@ -156,24 +156,27 @@ awful.screen.connect_for_each_screen(function(s)
         filter   = awful.widget.tasklist.filter.currenttags,
         buttons  = tasklist_buttons,
         layout   = {
-            spacing = 3,
+            spacing = 5,
             layout  = wibox.layout.fixed.horizontal
+        },
+        style    = {
+            shape = rounded_rect(4),
         },
         widget_template = {
             {
-                {
+                centered_widget({
                     {
                         id     = 'icon_role',
                         widget = wibox.widget.imagebox,
                     },
                     margins = 2,
                     widget  = wibox.container.margin,
-                },
+                }),
                 id     = 'background_role',
                 widget = wibox.container.background,
             },
             widget = wibox.container.margin,
-            margins = 3,
+            top = 3, bottom = 3,
         },
     }
 
@@ -183,11 +186,11 @@ awful.screen.connect_for_each_screen(function(s)
         screen = s,
         height = taskbar_size,
         margins = {
-            top = 5, bottom = -10, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2,
+            top = 5, bottom = 10 - beautiful.useless_gap * 2, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2,
         },
         border_width = 2,
-        border_color = color_surface2,
-        shape = rounded_rect(5),
+        border_color = beautiful.border_normal,
+        shape = rounded_rect(popup_roundness),
         opacity = 0.0,
     }
 
@@ -208,7 +211,7 @@ awful.screen.connect_for_each_screen(function(s)
         -- middle
         wibox.widget {
             widget = wibox.widget.textclock,
-            font = beautiful.font_standard.." bold 12",
+            font = beautiful.font_type.standard.." bold 12",
             valign = "center",
             align = "center",
         },

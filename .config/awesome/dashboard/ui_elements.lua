@@ -4,19 +4,19 @@ local wibox     = require("wibox")
 local markup    = require("lain").util.markup
 local rubato    = require("rubato")
 
-local function create_arcchart(icon, fg, bg)
+local function create_arcchart(icon, fg)
     local icon_widget = wibox.widget {
         widget = wibox.widget.textbox,
         markup = icon,
         fg = fg,
         align = "center",
         valign = "center",
-        font = beautiful.font_icon.." 24"
+        font = beautiful.font_type.icon.." 24"
     }
     local arc = wibox.widget {
         widget = wibox.container.arcchart,
         colors = {fg},
-        bg = bg,
+        bg = beautiful.color.crust,
         forced_width = (dashboard_width - 80)/3,
         forced_height = (dashboard_width - 80)/3,
         thickness = 8,
@@ -33,11 +33,11 @@ local function create_arcchart(icon, fg, bg)
         arc_value = value
     end
     icon_widget:connect_signal("mouse::enter", function()
-        icon_widget.font = beautiful.font_mono.." 24"
+        icon_widget.font = beautiful.font_type.mono.." 24"
         icon_widget.markup = arc_value..'%'
     end)
     icon_widget:connect_signal("mouse::leave", function()
-        icon_widget.font = beautiful.font_icon.." 24"
+        icon_widget.font = beautiful.font_type.icon.." 24"
         icon_widget.markup = icon
     end)
 
@@ -84,7 +84,7 @@ local function create_graph(name, fg, bg, maxval, minval)
                     fg = fg,
                     align = "left",
                     valign = "top",
-                    font = beautiful.font_mono.." 16"
+                    font = beautiful.font_type.mono.." 16"
                 },
             },
         },
@@ -101,7 +101,7 @@ local function create_dashboard_panel(_widget)
         {
             _widget,
             widget = wibox.container.background,
-            bg = color_base,
+            bg = beautiful.bg_normal,
         },
         widget = wibox.container.margin,
         margins = 4,
@@ -113,20 +113,20 @@ local function create_button(text, color, onclick)
         {
             widget = wibox.widget.textbox,
             markup = markup.fg.color(color, text),
-            font = beautiful.font_icon.." 16",
+            font = beautiful.font_type.icon.." 16",
             align = "center",
             forced_width = 32,
             forced_height = 32,
         },
         widget = wibox.container.background,
-        bg = color_surface0,
+        bg = beautiful.button_normal,
     }
 
     w:connect_signal("mouse::enter", function()
-        w.bg = color_crust
+        w.bg = beautiful.button_focus
     end)
     w:connect_signal("mouse::leave", function()
-        w.bg = color_surface0
+        w.bg = beautiful.button_normal
     end)
     w:buttons{awful.button({}, 1, onclick)}
 
@@ -143,24 +143,23 @@ local function create_tab_button(text, name)
             valign = "center",
             forced_height = 15,
             forced_width = 90,
-            font = beautiful.font_icon.." 10",
+            font = beautiful.font_type.icon.." 10",
         },
         widget = wibox.container.background,
-        bg = color_surface0,
-        fg = color_text,
+        bg = beautiful.button_normal,
     }
 
-    local base_color = color_surface0
+    local base_color = beautiful.button_normal
 
     local function set_active()
-        base_color = color_lavender
+        base_color = beautiful.button_selected
         button.bg = base_color
-        button.fg = color_crust
+        button.fg = beautiful.fg_invert
     end
     local function set_deactive()
-        base_color = color_surface0
+        base_color = beautiful.button_normal
         button.bg = base_color
-        button.fg = color_text
+        button.fg = beautiful.fg_normal
     end
 
     local function set_action(action)
@@ -175,17 +174,17 @@ local function create_tab_button(text, name)
     end
 
     button:connect_signal("mouse::enter", function()
-        if base_color ~= color_lavender then
-            button.bg = color_crust
-            button.fg = color_text
+        if base_color ~= beautiful.button_selected then
+            button.bg = beautiful.button_focus
+            button.fg = beautiful.fg_normal
         end
     end)
     button:connect_signal("mouse::leave", function()
         button.bg = base_color
-        if base_color == color_lavender then
-            button.fg = color_crust
+        if base_color == beautiful.button_selected then
+            button.fg = beautiful.fg_invert
         else
-            button.fg = color_text
+            button.fg = beautiful.fg_normal
         end
     end)
 

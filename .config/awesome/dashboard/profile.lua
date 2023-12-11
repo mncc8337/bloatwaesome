@@ -11,7 +11,7 @@ profile_pic.forced_height = 100
 local name = io.popen("id -un"):read("*all")
 name = string.gsub(name, '\n', '')
 -- local host = io.popen([[cat /etc/hostname]]):read("*all")
-local p_name = wibox.widget.textbox("<span font='"..beautiful.font_mono.." 12'>"..'@'..name.."</span>")
+local p_name = wibox.widget.textbox("<span font='"..beautiful.font_type.mono.." 12'>"..'@'..name.."</span>")
 p_name.align = "center"
 p_name.valign = "center"
 p_name.forced_height = 20
@@ -32,7 +32,7 @@ local function fetch_component(icon, text, color)
         {
             {
                 widget = wibox.widget.textbox,
-                markup = markup.fg.color(color, "<span font='"..beautiful.font_icon.." 12'>"..icon.." </span>"),
+                markup = markup.fg.color(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>"),
             },
             widget = wibox.container.margin,
             left = 12,
@@ -40,7 +40,7 @@ local function fetch_component(icon, text, color)
         {
             {
                 widget = wibox.widget.textbox,
-                markup = markup.fg.color(color, "<span font = '"..beautiful.font_mono.." 12'>"..text.."</span>"),
+                markup = markup.fg.color(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>"),
                 halign = "right",
 
             },
@@ -50,8 +50,8 @@ local function fetch_component(icon, text, color)
     }
 end
 local function update_fetch_component(widget, icon, text, color)
-    widget.first.widget.markup = markup.fg.color(color, "<span font='"..beautiful.font_icon.." 12'>"..icon.." </span>")
-    widget.second.widget.markup = markup.fg.color(color, "<span font = '"..beautiful.font_mono.." 12'>"..text.."</span>")
+    widget.first.widget.markup = markup.fg.color(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>")
+    widget.second.widget.markup = markup.fg.color(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>")
 end
 
 local line_distro   = fetch_component("c", "a", "#ffffff")
@@ -64,10 +64,10 @@ local function update_info()
     local versio = io.popen("uname -r"):read("*all")
     local packag = io.popen("pacman -Qq | wc -l"):read("*all")
 
-    update_fetch_component(line_distro, "", distro, color_blue)
-    update_fetch_component(line_version, "", string.gsub(versio, '\n', ''), color_yellow)
-    update_fetch_component(line_packages, "󰏖", string.gsub(packag, '\n', ''), color_green)
-    update_fetch_component(line_wm, "", "AwesomeWM", color_red)
+    update_fetch_component(line_distro, "", distro, beautiful.color.blue)
+    update_fetch_component(line_version, "", string.gsub(versio, '\n', ''), beautiful.color.yellow)
+    update_fetch_component(line_packages, "󰏖", string.gsub(packag, '\n', ''), beautiful.color.green)
+    update_fetch_component(line_wm, "", "AwesomeWM", beautiful.color.red)
 end
 awesome.connect_signal("dashboard::show", update_info)
 
