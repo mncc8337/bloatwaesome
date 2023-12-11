@@ -23,8 +23,9 @@ my dots
 |ttf-cascadia-code-nerd|mono font                         |*   |
 |ttf-roboto            |system font                       |*   |
 |ttf-nerd-fonts-symbols|correctly display nerd font symbol|**  |
-_* : optional_
-_**: no need to install if your nerd font is working as intended_
+
+_* : optional_  
+_**: no need to install if your nerd font is working as intended_  
 Any packages above can be installed by using any AUR helper  
 for example `yay -S awesome-git`
 
