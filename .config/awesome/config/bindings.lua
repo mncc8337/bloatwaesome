@@ -213,11 +213,11 @@ clientkeys = gears.table.join(
     awful.key({ modkey,           }, "x",
         function (c)
             if c.class == "drop-down-terminal" then
-                c:disconnect_signal("unfocus", function()
-                    awesome.emit_signal("drop-down-term::close")
-                end)
+                -- just close it
+                awesome.emit_signal("drop-down-term::close")
+            else
+                c:kill()
             end
-            c:kill()
         end,
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,

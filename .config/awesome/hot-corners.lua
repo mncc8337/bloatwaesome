@@ -1,19 +1,17 @@
 local gears = require("gears")
 local awful = require("awful")
 
--- global so we can change it from different location
-topleft_action = function()
-    -- notify("topleft")
+local nothing = function()
+    -- notify("ngu")
 end
-topright_action = function()
-    -- notify("topright")
-end
-bottomleft_action = function()
-    -- notify("bottomleft")
-end
-bottomright_action = function()
-    -- notify("bottomright")
-end
+
+
+local corner_action = {
+    nothing,
+    nothing,
+    nothing,
+    nothing,
+}
 
 local hot_corners_size = 10
 
@@ -24,37 +22,50 @@ local daemon = gears.timer {
     timeout = 0.5,
     callback = function()
         local geometry = awful.screen.focused().geometry
-        if mouse.coords().x < hot_corners_size then
-            if mouse.coords().y < hot_corners_size then
-                if previously_toggle[1] then return end
-                topleft_action()
-                previously_toggle[1] = true
-            elseif mouse.coords().y > geometry.height - hot_corners_size then
-                if previously_toggle[2] then return end
-                bottomleft_action()
-                previously_toggle[2] = true
-            else
-                previously_toggle[1] = false
-                previously_toggle[2] = false
-            end
-        elseif mouse.coords().x > geometry.width - hot_corners_size then
-            if mouse.coords().y < hot_corners_size then
-                if previously_toggle[3] then return end
-                topright_action()
-                previously_toggle[3] = true
-            elseif mouse.coords().y > geometry.height - hot_corners_size then
-                if previously_toggle[4] then return end
-                bottomright_action()
-                previously_toggle[4] = true
-            else
-                previously_toggle[3] = false
-                previously_toggle[4] = false
-            end
-        else
-            previously_toggle[1] = false
-            previously_toggle[2] = false
-            previously_toggle[3] = false
-            previously_toggle[4] = false
+        local top = mouse.coords().y < hot_corners_size
+        local bottom = mouse.coords().y > geometry.height - hot_corners_size
+        local left = mouse.coords().y < hot_corners_size
+        local right = mouse.coords().x > geometry.width - hot_corners_size
+
+        local condition = {
+            top and left,
+            top and right,
+            bottom and left,
+            bottom and right
+        }
+        
+        for i = 1, 4 do
+            if condition[i] then
+                if not previously_toggle[i] then
+                    corner_action[i]()
+                    previously_toggle[i] = true
+                end
+            else previously_toggle[i] = false end
         end
     end
+}
+
+local function change_action_1(a)
+    corner_action[1] = a
+end
+local function change_action_2(a)
+    corner_action[2] = a
+end
+local function change_action_3(a)
+    corner_action[3] = a
+end
+local function change_action_4(a)
+    corner_action[4] = a
+end
+
+local function set_corner_size(s)
+    hot_corners_size = s
+end
+
+return {
+    topleft = change_action_1,
+    topright = change_action_2,
+    bottomleft = change_action_3,
+    bottomright = change_action_4,
+    set_corner_size = set_corner_size,
 }

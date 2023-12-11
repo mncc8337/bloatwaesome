@@ -89,13 +89,14 @@ require("dashboard")
 require("drop-down-term")
 
 -- config hot corners' action
-require("hot-corners")
-topright_action = function()
+local corner_action = require("hot-corners")
+
+corner_action.topright(function()
     awesome.emit_signal("drop-down-term::toggle")
-end
-bottomright_action = function()
+end)
+corner_action.bottomright(function()
     awesome.emit_signal("dashboard::toggle")
-end
+end)
 
 -- Enable sloppy focus, so that focus follows mouse.
 -- client.connect_signal("mouse::enter", function(c)
