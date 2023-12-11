@@ -230,10 +230,6 @@ awful.screen.connect_for_each_screen(function(s)
                 top = 4, bottom = 4,
             },
             widgets.alsa,
-            {
-                widget = wibox.container.margin,
-                right = 5, left = -10,
-            },
         }
     }
 
