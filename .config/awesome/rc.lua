@@ -122,14 +122,12 @@ gears.timer {
 }
 
 -- hide drop-down clients on start
+-- there must be some delay because of some stupid reason that idk
 single_timer(0.01, function()
     local drop_term = find_client({class = "drop-down-terminal"})
     if drop_term then
-        drop_term:connect_signal("unfocus", function()
-            awesome.emit_signal("drop-down-term::close")
-        end)
-        drop_term.y = -drop_term.height
         drop_term.hidden = true
+        awesome.emit_signal("drop-down-term::set-term", drop_term)
     end
 end):start()
 
@@ -143,6 +141,3 @@ wibox.connect_signal("button::press", function(w)
         awesome.emit_signal("dashboard::hide")
     end
 end)
-
--- open dashboard
-awesome.emit_signal("dashboard::show")

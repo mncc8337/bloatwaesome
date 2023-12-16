@@ -121,8 +121,8 @@ dashboard:setup {
     margins = 4,
 }
 
--- a variable to track what the panel is doing
-local dashboard_current_action = "closed"
+-- the direction of the dashboard
+local dashboard_opened = true
 
 local dashboard_timed = rubato.timed {
     duration = 0.3,
@@ -131,11 +131,8 @@ local dashboard_timed = rubato.timed {
     easing = rubato.easing.quadratic,
     subscribed = function(pos)
         dashboard.x = awful.screen.focused().geometry.width - pos
-        if pos == 0 and dashboard_current_action == "closing" then
+        if pos == 0 and not dashboard_opened then
             dashboard.visible = false
-            dashboard_current_action = "closed"
-        elseif pos == dashboard_width and dashboard_current_action == "opening" then
-            dashboard_current_action = "opened"
         end
     end
 }
@@ -144,31 +141,20 @@ function dashboard_visible()
     return dashboard.visible
 end
 local function hide_dashboard()
-    dashboard_current_action = "closing"
+    dashboard_opened = false
     dashboard_timed.target = 0
-    if mouse.current_widget == widgets.music then
-        awesome.emit_signal("music::show_player", true)
-    elseif mouse.current_widget == widgets.alsa then
-        awesome.emit_signal("widget::show_volume_control", "top_right", 0.1)
-    end
 end
 local function show_dashboard()
     dashboard.screen = awful.screen.focused()
     dashboard.visible = true
 
-    dashboard_current_action = "opening"
+    dashboard_opened = true
     dashboard_timed.target = dashboard_width
 end
 local function toggle_dashboard()
-    if dashboard_current_action == "closing" then
-        dashboard_current_action = "opening"
-        dashboard_timed.target = dashboard_width
-    elseif dashboard_current_action == "opening" then
-        dashboard_current_action = "closing"
-        dashboard_timed.target = 0
-    elseif dashboard_current_action == "closed" then
+    if not dashboard_opened then
         awesome.emit_signal("dashboard::show")
-    elseif dashboard_current_action == "opened" then
+    else
         awesome.emit_signal("dashboard::hide")
     end
 end

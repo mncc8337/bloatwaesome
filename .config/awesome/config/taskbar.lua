@@ -228,8 +228,10 @@ awful.screen.connect_for_each_screen(function(s)
                 wibox.widget.systray(),
                 widget = wibox.container.margin,
                 top = 4, bottom = 4,
+                left = -4, right = -4,
             },
             widgets.alsa,
+            wibox.widget {} -- placeholder
         }
     }
 

@@ -6,8 +6,10 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local rubato    = require("rubato")
 
-local term_current_action = "closed"
+local term_opened = false
 local term = nil
+local pid = -1
+
 local dropdown_term_timed = rubato.timed {
     duration = 0.3,
     intro = 0.1,
@@ -16,11 +18,8 @@ local dropdown_term_timed = rubato.timed {
     subscribed = function(pos)
         if term == nil then return end
         term.y = pos
-        if pos == -term.height and term_current_action == "closing" then
+        if pos == -term.height and not term_opened then
             term.hidden = true
-            term_current_action = "closed"
-        elseif pos == taskbar_size and term_current_action == "opening" then
-            term_current_action = "opened"
         end
     end
 }
@@ -31,7 +30,7 @@ local function dropdown_terminal_open()
     client.focus = term
     term:raise()
 
-    term_current_action = "opening"
+    term_opened = true
     if awful.screen.focused().wibar.visible == true then
         dropdown_term_timed.target = taskbar_size + 10
         term.x = awful.screen.focused().geometry.width - 890 - beautiful.useless_gap * 2
@@ -41,42 +40,47 @@ local function dropdown_terminal_open()
     end
 end
 local function dropdown_terminal_close()
-    if term then
-        term_current_action = "closing"
-        dropdown_term_timed.target = -term.height
+    local function check_func(stdout)
+        if stdout == '' then -- term died
+            term = nil
+        else
+            term_opened = false
+            dropdown_term_timed.target = -term.height
+        end
     end
+    -- check if term is alive or not
+    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", check_func)
 end
 
 local function dropdown_terminal_toggle()
-    term = find_client({class = "drop-down-terminal"})
-    if not term then
-        local pid = awful.spawn(terminal.." --class drop-down-terminal")
-        local function init_term(c)
-            if c.class == "drop-down-terminal" then
-                term = c
-                term:connect_signal("unfocus", function()
-                    awesome.emit_signal("drop-down-term::close")
-                end)
+    local function check_func(stdout)
+        if stdout == '' then -- term died
+            pid = awful.spawn(terminal.." --class drop-down-terminal")
+            local function init_term(c)
+                if c.class == "drop-down-terminal" then
+                    term = c
 
-                dropdown_term_timed.pos = -term.height
-                dropdown_term_timed.target = -term.height
+                    -- dropdown_term_timed.pos = -term.height
+                    dropdown_term_timed.target = -term.height
+                    awesome.emit_signal("drop-down-term::open")
+                    client.disconnect_signal("manage", init_term)
+                end
+            end
+            client.connect_signal("manage", init_term)
+        else
+            if term_opened then
+                awesome.emit_signal("drop-down-term::close")
+            else
                 awesome.emit_signal("drop-down-term::open")
-                client.disconnect_signal("manage", init_term)
             end
         end
-        client.connect_signal("manage", init_term)
-    else
-        if term_current_action == "opened" or term_current_action == "opening" then
-            awesome.emit_signal("drop-down-term::close")
-        elseif term_current_action == "closed" or term_current_action == "closing" then
-            awesome.emit_signal("drop-down-term::open")
-        end
     end
+    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", check_func)
 end
 
 -- close on click
 local function hide_term_on_click()
-    if term_current_action == "open" or term_current_action == "opening" then
+    if term_opened then
         awesome.emit_signal("drop-down-term::close")
     end
 end
@@ -87,6 +91,12 @@ client.connect_signal("button::press", function(c)
     end
 end)
 
+local function set_term(c)
+    term = c
+    pid = term.pid
+end
+
 awesome.connect_signal("drop-down-term::open", dropdown_terminal_open)
 awesome.connect_signal("drop-down-term::close", dropdown_terminal_close)
 awesome.connect_signal("drop-down-term::toggle", dropdown_terminal_toggle)
+awesome.connect_signal("drop-down-term::set-term", set_term)
