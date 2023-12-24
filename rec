@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# a simple bash script to record screen using FFmpeg
+# a simple shell script to record screen using FFmpeg
 # curently only support *.mkv output
 
 # default vals
@@ -18,7 +18,19 @@ h=$(echo $dim | cut -f2 -dx)
 for token in "$@"; do
     arg=$(echo $token | cut -f1 -d=)
     val=$(echo $token | cut -f2 -d=)
-    if [ $arg = "--audio" ] || [ $arg = "-a" ]; then
+
+    if [ $arg = "--help" ] || [ $arg = "-h" ]; then
+        printf "usage: rec [OPTION]...\n\n"
+        printf "OPTIONS:\n"
+        printf "    -h, --help                      print help then exit\n"
+        printf "    -a, --audio                     record audio\n"
+        printf "    -o, --output=<file>             specify the output file, only support *.mkv\n"
+        printf "    -f, --framerate=<rate>          set frame rate\n"
+        printf "    -r, --area                      select the area to be recorded\n"
+        printf "    -g, --geometry=<w>,<h>,<x>,<y>  set geometry of the record area\n\n"
+        printf "to stop recording press ctrl-c\n"
+        exit
+    elif [ $arg = "--audio" ] || [ $arg = "-a" ]; then
 	    audio_param="-f alsa -ac 2 -i pulse"
     elif [ $arg = "--output" ] || [ $arg = "-o" ]; then
         output=$val
