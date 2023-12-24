@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# a simple bash script to record screen using FFmpeg
+# curently only support *.mkv output
+
+# default vals
+audio_param=""
+framerate=60
+output="$HOME/Videos/$(date +"%m-%d-%y_%H-%M-%S").mkv"
+
+# default geometries
+x=0
+y=0
+dim=$(xdpyinfo | grep dimensions | sed -r 's/^[^0-9]*([0-9]+x[0-9]+).*$/\1/')
+w=$(echo $dim | cut -f1 -dx)
+h=$(echo $dim | cut -f2 -dx)
+
+for token in "$@"; do
+    arg=$(echo $token | cut -f1 -d=)
+    val=$(echo $token | cut -f2 -d=)
+    if [ $arg = "--audio" ] || [ $arg = "-a" ]; then
+	    audio_param="-f alsa -ac 2 -i pulse"
+    elif [ $arg = "--output" ] || [ $arg = "-o" ]; then
+        output=$val
+        # correct/add file extension
+        if [ "$(echo $output | cut -f2 -d.)" != "mkv" ]; then
+            output="$(echo $output | cut -f1 -d.).mkv"
+        fi
+    elif [ $arg = "--framerate" ] || [ $arg = "-f" ]; then
+        framerate=$val
+    elif [ $arg = "--area" ] || [ $arg = "-r" ]; then
+        geo=$(slop -f "%w %h %x %y") || exit 1
+	    read -r w h x y <<< $geo
+    elif [ $arg = "--geometry" ] || [ $arg = "-g" ]; then
+        w=$(echo $val | cut -f1 -d,)
+        h=$(echo $val | cut -f2 -d,)
+        x=$(echo $val | cut -f3 -d,)
+        y=$(echo $val | cut -f4 -d,)
+    fi
+done
+
+ffmpeg \
+    -s "$w"x"$h" \
+    -framerate $framerate \
+    -f x11grab -i :0.0+$x,$y \
+    $audio_param \
+    -c:v libx264 \
+    -crf 0 \
+    -preset ultrafast \
+    -y \
+    $output

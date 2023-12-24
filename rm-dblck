@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# remove db.lck
+
+sudo rm /var/lib/pacman/db.lck
