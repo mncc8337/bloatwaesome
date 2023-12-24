@@ -110,8 +110,9 @@ theme.font_type = {
     mono = "CaskaydiaCove NF",
     icon = "Symbols Nerd Font",
 }
+theme.font_size = 12
 
-theme.font          = theme.font_type.standard.." 12"
+theme.font          = theme.font_type.standard..' '..theme.font_size
 
 theme.bg_focus      = theme.color.subtext0
 theme.bg_normal     = theme.color.base
@@ -134,8 +135,8 @@ theme.tasklist_bg_minimize = theme.color.base
 theme.tasklist_bg_urgent   = theme.color.mauve
 
 theme.hotkeys_modifiers_fg = theme.color.blue
-theme.hotkeys_font = theme.font_type.mono.." 10"
-theme.hotkeys_description_font = theme.font_type.mono.." 10"
+theme.hotkeys_font = theme.font_type.mono..' '..theme.font_size
+theme.hotkeys_description_font = theme.font_type.mono..' '..theme.font_size
 
 theme.useless_gap   = dpi(10)
 theme.border_width  = dpi(2)
@@ -163,7 +164,7 @@ theme.titlebar_close_button = true
 -- theme.menu_border_color = theme.border_focus
 -- theme.menu_bg_focus = theme.bg_minimize
 
-theme.taglist_font  = "sans 18"
+-- theme.taglist_font  = "sans 20"
 theme.taglist_bg_focus    = theme.color.base
 theme.taglist_fg_not_focus = theme.color.surface2
 --theme.taglist_fg_occupied = theme.color.overlay1
@@ -206,13 +207,13 @@ theme.tabbar_fg_focus = theme.color.base
 theme.tabbar_fg_normal = theme.color.text
 theme.tabbar_position = "top"
 theme.tabbar_size = dpi(30)
-theme.tabbar_font = theme.font_type.standard.." 12"
+theme.tabbar_font = theme.font_type.standard..' '..theme.font_size
 
 -- theme.icon_theme = "Papirus"
 
 theme.round_corner_radius = 0
 
-theme.notification_font = theme.font_type.standard.." 12"
+theme.notification_font = theme.font_type.standard..' '..theme.font_size
 theme.notification_bg = theme.color.base
 theme.notification_shape = rounded_rect(theme.round_corner_radius)
 theme.notification_border_color = theme.border_focus

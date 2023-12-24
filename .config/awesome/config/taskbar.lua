@@ -98,7 +98,7 @@ awful.screen.connect_for_each_screen(function(s)
                     align = "center",
                     valign = "center",
                     widget = wibox.widget.textbox,
-                    font = beautiful.font_type.icon.." 18",
+                    font = beautiful.font_type.icon.." 20",
                 },
                 id = 'text_color',
                 forced_width = 30,
