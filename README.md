@@ -5,17 +5,20 @@ my dots
 - **Distro**: arch
 - **WM**: awesomewm
 - **Compositor**: [compfy](https://github.com/allusive-dev/compfy)
-- **Icons**: Papirus
-- **Cursor**: Bibata Modern Classic
-- **Application launcher**: [rofi](https://github.com/davatorium/rofi)
-- **Terminal**: Alacritty-git
+- **Icons**: [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
+- **Cursor**: [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor)
+- **Launcher**: [rofi](https://github.com/davatorium/rofi)
+- **Terminal**: [alacritty-git](https://github.com/alacritty/alacritty)
+- **Shell**: zsh
 
 ## Dependencies
 |package               |  purpose                         |note|
 |----------------------|----------------------------------|----|
 |awesome-git           |the WM                            |    |
+|zsh                   |the shell                      |    |
 |alacritty-git         |the terminal                      |    |
 |maim                  |screen shooting                   |    |
+|rofi                  |application launcher              |    |
 |cava-git              |audio visualizer                  |*   |
 |alsa-utils            |volume control                    |    |
 |playerctl             |music control                     |    |
@@ -23,6 +26,8 @@ my dots
 |ttf-cascadia-code-nerd|mono font                         |*   |
 |ttf-roboto            |system font                       |*   |
 |ttf-nerd-fonts-symbols|correctly display nerd font symbol|**  |
+|papirus-icon-theme    |icon theme                        |*   |
+|bibata-cursor-theme   |cursor theme                      |*   |
 
 _* : optional_  
 _**: no need to install if your nerd font is working as intended_  
