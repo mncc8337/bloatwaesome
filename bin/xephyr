@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# start Xephyr
+if [ -z $1 ] || [ -z $2 ]; then
+    echo "pls specify screen size or screen 'id'"
+    return
+fi
+
+# setxkbmap us -print | xkbcomp - $2
+Xephyr -ac -br -noreset -screen $1 :$2

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cwd=$(pwd)
+
+cd $1
+IFS=";"
+for file in $(find * | tr '\n' ';'); do
+    if [ -n $file ]; then
+        chmod +x $file
+    fi
+done
+
+cd $cwd
