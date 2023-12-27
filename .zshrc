@@ -22,16 +22,19 @@ COMPLETION_WAITING_DOTS="false"
 
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-HIST_STAMPS="dd/mm/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(sudo timer lol)
+plugins=(sudo lol git bgnotify fzf safe-paste z zsh-interactive-cd)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
 alias py="python3"
+alias neo-matrix="neo-matrix -D"
 
-$HOME/bin/panes
+export PATH="$HOME/bin:"$PATH
+
+crunchbang-mini

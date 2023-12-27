@@ -24,7 +24,7 @@ local buttons = wibox.widget {
     widget = wibox.container.margin,
     margins  = 5,
 }
-local layout = wibox.layout.align.vertical(wibox.widget {}, cal, buttons)
+local layout = wibox.layout.align.vertical(wibox.widget {}, wibox.widget {}, buttons)
 
 local scrollable = ui.h_scrollable({calendar_tab, weather_tab, todo_tab},
                                    dashboard_width - 16, awful.screen.focused().geometry.height - 750,

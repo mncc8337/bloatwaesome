@@ -219,6 +219,5 @@ theme.notification_shape = rounded_rect(theme.round_corner_radius)
 theme.notification_border_color = theme.border_focus
 -- change theme.notification_border_width does nothing
 naughty.config.defaults.border_width = theme.border_width
-naughty.config.padding = theme.useless_gap * 2
 
 return theme

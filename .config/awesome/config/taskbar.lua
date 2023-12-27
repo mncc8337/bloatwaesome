@@ -185,14 +185,16 @@ awful.screen.connect_for_each_screen(function(s)
         position = "top",
         screen = s,
         height = taskbar_size,
-        margins = {
-            top = 5, bottom = 10 - beautiful.useless_gap * 2, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2,
-        },
-        border_width = 2,
-        border_color = beautiful.border_normal,
-        shape = rounded_rect(popup_roundness),
-        opacity = 0.0,
     }
+    if floating_bar then
+        s.wibar.margins = {
+            top = 5, bottom = 10 - beautiful.useless_gap * 2, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2
+        }
+        s.wibar.border_width = 2
+        s.wibar.border_color = beautiful.border_normal
+        s.wibar.shape = rounded_rect(popup_roundness)
+        s.wibar.opacity = 0.0
+    end
 
     -- Add widgets to the wibox
     s.wibar:setup {

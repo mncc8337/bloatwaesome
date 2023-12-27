@@ -31,12 +31,13 @@ local function dropdown_terminal_open()
     term:raise()
 
     term_opened = true
+    local offset = term.width + beautiful.border_width * 2
     if awful.screen.focused().wibar.visible == true then
-        dropdown_term_timed.target = taskbar_size + 10
-        term.x = awful.screen.focused().geometry.width - 890 - beautiful.useless_gap * 2
+        dropdown_term_timed.target = taskbar_size + (floating_bar and 10 or 0)
+        term.x = awful.screen.focused().geometry.width - offset - (floating_bar and beautiful.useless_gap * 2 or 0)
     else
         dropdown_term_timed.target = 0
-        term.x = awful.screen.focused().geometry.width - 890
+        term.x = awful.screen.focused().geometry.width - offset
     end
 end
 local function dropdown_terminal_close()

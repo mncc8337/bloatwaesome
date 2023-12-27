@@ -49,8 +49,14 @@ end
 -- taskbar
 tag_num = 4
 taskbar_size = 32
+floating_bar = true
+-- only used when floating bar is on
 taskbar_default_opacity = 0.85
 taskbar_focus_opacity = 1.0
+
+if floating_bar then
+    naughty.config.padding = beautiful.useless_gap * 2
+end
 
 popup_roundness = 5
 
@@ -69,7 +75,7 @@ altkey = "Mod1"
 -- }}
 
 --[[ bling things ]]--
-bling.module.flash_focus.enable()
+-- bling.module.flash_focus.enable()
 
 --[[ layouts ]]--
 awful.layout.layouts = {

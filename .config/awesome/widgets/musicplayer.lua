@@ -19,8 +19,9 @@ local patched_awesome = true
     music::play_previous_song
     music::play_next_song
 
-    music::play_song
-    music::pause_song
+    music::play
+    music::pause
+    music::toggle
 
     music::shuffle_on
     music::shuffle_off
@@ -37,7 +38,7 @@ local patched_awesome = true
     music::set_cover            path_to_file
     music::set_title            title
     music::set_detail           detail
-    music::set_elapsed_time     time            alsa update player progressbar
+    music::set_elapsed_time     time            also update player progressbar
     music::set_total_time       time
     music::set_volume           volume
 ]]--
@@ -47,7 +48,6 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
----- global variables
 local status = {
     player_paused = false,
     shuffle = false,
@@ -163,10 +163,10 @@ local recheck_delay = 0.3
 local function toggle_press(w)
     if status.player_paused then
         w.text = "󰏤"
-        awesome.emit_signal("music::play_song")
+        awesome.emit_signal("music::play")
     else
         w.text = "󰐊"
-        awesome.emit_signal("music::pause_song")
+        awesome.emit_signal("music::pause")
     end
     single_timer(recheck_delay, function()
         if status.player_paused then

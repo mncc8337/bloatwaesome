@@ -13,28 +13,14 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-    awful.key({altkey}, "n", function() awful.spawn(music_player.." next") end,
-              {description = "next song", group = "media"}),
-    awful.key({altkey}, "p", function()
-            if music_player == "mpd" then
-                awful.spawn("mpc prev")
-            elseif music_player == "playerctl" then
-                awful.spawn("playerctl previous")
-            end
-        end,
+    awful.key({altkey}, "n", function() awesome.emit_signal("music::play_next_song") end,
+    {description = "next song", group = "media"}),
+    awful.key({altkey}, "p", function() awesome.emit_signal("music::play_previous_song") end,
     {description = "previous song", group = "media"}),
-    awful.key({altkey}, "space", function()
-            if music_player == "mpd" then
-                awful.spawn("mpc toggle")
-            elseif music_player == "playerctl" then
-                awful.spawn("playerctl play-pause")
-            end
-        end,
+    awful.key({altkey}, "space", function() awesome.emit_signal("music::toggle") end,
     {description = "pause/play song", group = "media"}),
-    awful.key({ modkey }, "F11", function()
-            awesome.emit_signal("drop-down-term::toggle")
-        end,
-              {description = "open/close drop-down terminal", group = "launcher"}),
+    awful.key({ modkey }, "F11", function() awesome.emit_signal("drop-down-term::toggle") end,
+    {description = "open/close drop-down terminal", group = "launcher"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
         local already_minimized = true

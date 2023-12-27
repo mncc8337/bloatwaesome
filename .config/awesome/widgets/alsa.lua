@@ -88,8 +88,8 @@ local volume_slider_popup = wibox {
 }
 local popup_placement_config = {
     margins = {
-        top = taskbar_size + 10,
-        right = beautiful.useless_gap * 2
+        top = taskbar_size + (floating_bar and 10 or 0),
+        right = (floating_bar and beautiful.useless_gap * 2 or 0)
     }
 }
 local close_popup_timer = single_timer(1, function()

@@ -87,7 +87,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
 
     local display = artist.." - "..title
-    if title:find("%s%-%s") then
+    if title:find("%s%-%s") and player_name == "chromium" then
         display = title
     end
 
@@ -197,11 +197,14 @@ end)
 awesome.connect_signal("music::play_next_song", function()
     playerctl:next()
 end)
-awesome.connect_signal("music::play_song", function()
+awesome.connect_signal("music::play", function()
     playerctl:play()
 end)
-awesome.connect_signal("music::pause_song", function()
+awesome.connect_signal("music::pause", function()
     playerctl:pause()
+end)
+awesome.connect_signal("music::toggle", function()
+    playerctl:play_pause()
 end)
 awesome.connect_signal("music::shuffle_on", function()
     playerctl:set_shuffle(true)
