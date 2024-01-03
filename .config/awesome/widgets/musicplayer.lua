@@ -43,6 +43,7 @@ local patched_awesome = true
     music::set_volume           volume
 ]]--
 
+local config       = require("config")
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
@@ -306,7 +307,7 @@ local music_player_popup = awful.popup {
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = music_player_widget,
-    shape = rounded_rect(popup_roundness),
+    shape = rounded_rect(config.popup_roundness),
 }
 
 local music_player_timer = single_timer(0.1, function()
@@ -379,7 +380,7 @@ local function is_visible()
 end
 
 -- set default art
-awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
+awesome.emit_signal("music::set_cover", config.awesome_dir.."fallback.png")
 
 return {
     widget = music_player_widget,

@@ -5,6 +5,7 @@
     dashboard::toggle
 ]]--
 
+local config    = require("config")
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
@@ -14,7 +15,7 @@ local widgets   = require("widgets")
 local lain      = require("lain")
 local markup    = lain.util.markup
 local ui        = require("dashboard.ui_elements")
-local rubato    = require("rubato")
+local rubato    = require("modules.rubato")
 
 --[[ WIDGETS ]]--
 local clock = wibox.widget.textbox()
@@ -89,9 +90,9 @@ local dashboard = wibox {
     ontop = true,
     visible = false,
     type = "dock",
-    width = dashboard_width,
+    width = config.dashboard_width,
     height = awful.screen.focused().geometry.height,
-    x = awful.screen.focused().geometry.width - dashboard_width,
+    x = awful.screen.focused().geometry.width - config.dashboard_width,
     bg = beautiful.dashboard_bg,
     screen = awful.screen.focused(),
 }
@@ -149,7 +150,7 @@ local function show_dashboard()
     dashboard.visible = true
 
     dashboard_opened = true
-    dashboard_timed.target = dashboard_width
+    dashboard_timed.target = config.dashboard_width
 end
 local function toggle_dashboard()
     if not dashboard_opened then

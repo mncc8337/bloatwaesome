@@ -1,10 +1,11 @@
 --[[ drop down terminal ]]--
 -- over-complicated animation support
 
+local config    = require("config")
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
-local rubato    = require("rubato")
+local rubato    = require("modules.rubato")
 
 local term_opened = false
 local term = nil
@@ -33,8 +34,8 @@ local function dropdown_terminal_open()
     term_opened = true
     local offset = term.width + beautiful.border_width * 2
     if awful.screen.focused().wibar.visible == true then
-        dropdown_term_timed.target = taskbar_size + (floating_bar and 10 or 0)
-        term.x = awful.screen.focused().geometry.width - offset - (floating_bar and beautiful.useless_gap * 2 or 0)
+        dropdown_term_timed.target = config.bar_size + (config.floating_bar and 10 or 0)
+        term.x = awful.screen.focused().geometry.width - offset - (config.floating_bar and beautiful.useless_gap * 2 or 0)
     else
         dropdown_term_timed.target = 0
         term.x = awful.screen.focused().geometry.width - offset
@@ -56,7 +57,7 @@ end
 local function dropdown_terminal_toggle()
     local function check_func(stdout)
         if stdout == '' then -- term died
-            pid = awful.spawn(terminal.." --class drop-down-terminal")
+            pid = awful.spawn(config.terminal.." --class drop-down-terminal")
             local function init_term(c)
                 if c.class == "drop-down-terminal" then
                     term = c

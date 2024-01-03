@@ -1,10 +1,11 @@
+local config    = require("config")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
 local markup    = require("lain").util.markup
 local ui        = require("dashboard.ui_elements")
 
-local profile_pic = wibox.widget.imagebox(profile_picture)
+local profile_pic = wibox.widget.imagebox(config.profile_picture)
 profile_pic.forced_width = 100
 profile_pic.forced_height = 100
 
@@ -78,7 +79,7 @@ local fetch = v_centered_widget(wibox.widget {
     line_version,
     line_packages,
     line_wm,
-    forced_width = dashboard_width - profile_pic.forced_width - 230, --3
+    forced_width = config.dashboard_width - profile_pic.forced_width - 230, --3
 })
 
 return ui.create_dashboard_panel(wibox.widget {

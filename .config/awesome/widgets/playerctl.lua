@@ -1,8 +1,9 @@
+local config       = require("config")
 local gears        = require("gears")
 local beautiful    = require("beautiful")
 local wibox        = require("wibox")
 local naughty      = require("naughty")
-local bling        = require("bling")
+local bling        = require("modules.bling")
 
 local markup       = require("lain").util.markup
 local utf8         = require "utf8"
@@ -18,7 +19,7 @@ musicico.font = beautiful.font_type.icon.." 12"
 local titlew = wibox.widget.textbox()
 
 local function no_player_fallback()
-    awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
+    awesome.emit_signal("music::set_cover", config.awesome_dir.."fallback.png")
     awesome.emit_signal("music::set_title", "No song")
     awesome.emit_signal("music::set_detail", "hehe")
     awesome.emit_signal("music::set_total_time", 1)
@@ -78,7 +79,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         end
 
         -- set fetched artwork (see https://github.com/mncc8337/chromium-artwork-fetcher)
-        album_path = awesome_dir.."artwork.png"
+        album_path = config.awesome_dir.."artwork.png"
     end
 
     -- Set fallback art

@@ -1,3 +1,4 @@
+local config       = require("config")
 local awful        = require("awful")
 local beautiful    = require("beautiful")
 local wibox        = require("wibox")
@@ -27,26 +28,26 @@ local buttons = wibox.widget {
 local layout = wibox.layout.align.vertical(wibox.widget {}, wibox.widget {}, buttons)
 
 local scrollable = ui.h_scrollable({calendar_tab, weather_tab, todo_tab},
-                                   dashboard_width - 16, awful.screen.focused().geometry.height - 750,
+                                   config.dashboard_width - 16, awful.screen.focused().geometry.height - 750,
                                    {top = 12, bottom = 5, left = 12, right = 12})
 layout:set_second(scrollable.widget)
 
--- load config
-local config = read_json(awesome_dir.."config.json")
+-- load saved
+local saved = read_json(config.awesome_dir.."saved.json")
 
 awesome.connect_signal("dashboard::change_tab", function(name)
-    config["dashboard"]["last_panel"] = name
-    save_json(config, awesome_dir.."config.json")
+    saved["dashboard"]["last_panel"] = name
+    save_json(saved, config.awesome_dir.."saved.json")
 end)
 
 -- load first tab on start
-if config["dashboard"]["last_panel"] == "calendar" then
+if saved["dashboard"]["last_panel"] == "calendar" then
     calbutton.set_active()
     scrollable.scroll_to(1)
-elseif config["dashboard"]["last_panel"] == "weather" then
+elseif saved["dashboard"]["last_panel"] == "weather" then
     wtbutton.set_active()
     scrollable.scroll_to(2)
-elseif config["dashboard"]["last_panel"] == "todo-list" then
+elseif saved["dashboard"]["last_panel"] == "todo-list" then
     tdbutton.set_active()
     scrollable.scroll_to(3)
 -- more here

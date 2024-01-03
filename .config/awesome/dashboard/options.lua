@@ -1,3 +1,4 @@
+local config    = require("config")
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
@@ -15,7 +16,7 @@ layoutbox.forced_height = 32
 
 local function crop_screen()
     awesome.emit_signal("dashboard::hide")
-    awful.spawn.with_shell(". "..awesome_dir.."scripts/screenshot.sh area save")
+    awful.spawn.with_shell(". "..config.awesome_dir.."scripts/screenshot.sh area save")
 end
 
 local mute_button = ui.create_button("󰕾", beautiful.color.yellow, function()
@@ -43,7 +44,7 @@ local option_menu = wibox.widget {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
             mute_button,
-            ui.create_button("󰒓", beautiful.color.lavender, function() awful.spawn.with_shell(editor.." ~/.config/awesome/") end),
+            ui.create_button("󰒓", beautiful.color.lavender, function() awful.spawn.with_shell(config.editor..' '..config.awesome_dir) end),
         },
     },
     widget = wibox.container.margin,

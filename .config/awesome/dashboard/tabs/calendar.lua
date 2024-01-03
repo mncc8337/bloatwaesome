@@ -1,3 +1,4 @@
+local config       = require("config")
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
@@ -47,7 +48,7 @@ local function decorate_cell(widget, flag, date)
     end
 
 	widget.align = "center"
-    widget.forced_width = (dashboard_width  - 8 - 24 - 60)/7
+    widget.forced_width = (config.dashboard_width  - 8 - 24 - 60)/7
 
 
     local d = {year = date.year, month = (date.month or 1), day = (date.day or 1)}

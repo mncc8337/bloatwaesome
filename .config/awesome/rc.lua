@@ -6,21 +6,6 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local naughty   = require("naughty")
-require("awful.autofocus")
-require("remember-geometry")
-
-awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]]
-beautiful.init(awesome_dir.."config/theme.lua")
-local bling = require("bling")
-
--- {{{ Error handling
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
-if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Oops, there were errors during startup!",
-                     text = awesome.startup_errors })
-end
 
 -- Handle runtime errors after startup
 do
@@ -37,42 +22,23 @@ do
     end)
 end
 -- }}}
-
--- debug only
-function notify(message, title)
-    naughty.notify({title = title, message = message})
+if awesome.startup_errors then
+    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Oops, there were errors during startup!",
+                     text = awesome.startup_errors })
 end
 
--- TODO: move these into a config file
---{{
+require("awful.autofocus")
+require("modules.remember-geometry")
 
--- taskbar
-tag_num = 4
-taskbar_size = 32
-floating_bar = true
--- only used when floating bar is on
-taskbar_default_opacity = 0.85
-taskbar_focus_opacity = 1.0
-
-if floating_bar then
+-- load config
+local config = require("config")
+beautiful.init(config.awesome_dir.."themes/"..config.theme..".lua")
+if config.floating_bar then
     naughty.config.padding = beautiful.useless_gap * 2
 end
 
-popup_roundness = 5
-
-dashboard_width = 500
-profile_picture = awesome_dir.."avt.png"
-
-terminal = "alacritty"
-editor = "code"
-
--- alsa device to control in widgets/alsa.lua
-alsa_device = 0
-
--- Default modkey.
-modkey = "Mod4"
-altkey = "Mod1"
--- }}
+local bling = require("modules.bling")
 
 --[[ bling things ]]--
 -- bling.module.flash_focus.enable()
@@ -87,9 +53,9 @@ awful.layout.layouts = {
     awful.layout.suit.floating,
 }
 
-require("config.taskbar")
-require("config.bindings")
-require("config.rules")
+require("taskbar")
+require("bindings")
+require("rules")
 
 require("dashboard")
 require("drop-down-term")
@@ -140,7 +106,7 @@ end):start()
 wibox.connect_signal("button::press", function(w)
     awesome.emit_signal("drop-down-term::close")
 
-    local mouse_on_dashboard = mouse.coords().x > awful.screen.focused().geometry.width - dashboard_width
+    local mouse_on_dashboard = mouse.coords().x > awful.screen.focused().geometry.width - config.dashboard_width
                                and dashboard_visible()
     -- ignore if mouse click on dashboard
     if not mouse_on_dashboard then

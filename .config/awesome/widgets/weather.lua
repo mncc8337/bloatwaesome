@@ -1,17 +1,17 @@
-local beautiful      = require("beautiful")
-local wibox          = require("wibox")
+local config    = require("config")
+local beautiful = require("beautiful")
+local wibox     = require("wibox")
 
-local lain           = require("lain")
-local openweathermap = require("config.openweathermap")
+local lain      = require("lain")
 
 local lain_weather = lain.widget.weather {
-    APPID = openweathermap.API_key,
+    APPID = config.openweathermap.API_key,
     units = "metric",
-    lat = openweathermap.latitude,
-    lon = openweathermap.longtitude,
+    lat = config.openweathermap.latitude,
+    lon = config.openweathermap.longtitude,
     cnt = 1,
     timeout = 900,
-    icons_path = awesome_dir.."openweathermap_icons/",
+    icons_path = config.awesome_dir.."openweathermap_icons/",
     notification_preset = {
         border_width = beautiful.border_width,
         hover_timeout = 1,

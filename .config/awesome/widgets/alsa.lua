@@ -6,7 +6,7 @@
 
     widget::volume_mute, true or false
 ]]--
-
+local config       = require("config")
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
@@ -84,12 +84,12 @@ local volume_slider_popup = wibox {
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = volume_slider,
-    shape = rounded_rect(popup_roundness),
+    shape = rounded_rect(config.popup_roundness),
 }
 local popup_placement_config = {
     margins = {
-        top = taskbar_size + (floating_bar and 10 or 0),
-        right = (floating_bar and beautiful.useless_gap * 2 or 0)
+        top = config.bar_size + (config.floating_bar and 10 or 0),
+        right = (config.floating_bar and beautiful.useless_gap * 2 or 0)
     }
 }
 local close_popup_timer = single_timer(1, function()
@@ -116,7 +116,7 @@ local finish_update_volume = true
 _volume_slider:connect_signal("property::value", function()
     if not finish_update_volume then return end
     finish_update_volume = false
-    awful.spawn.easy_async("pactl set-sink-volume "..alsa_device..' '.._volume_slider.value..'%', function()
+    awful.spawn.easy_async("pactl set-sink-volume "..config.alsa_device..' '.._volume_slider.value..'%', function()
         lain_alsa.update()
         finish_update_volume = true
     end)
@@ -157,12 +157,12 @@ end)
 awesome.connect_signal("widget::increase_volume_level", function(num)
     local sign = ''
     if num > 0 then sign = '+' else sign = '-' end
-    awful.spawn.easy_async("pactl set-sink-volume "..alsa_device..' '..sign..math.abs(num)..'%', function() lain_alsa.update() end)
+    awful.spawn.easy_async("pactl set-sink-volume "..config.alsa_device..' '..sign..math.abs(num)..'%', function() lain_alsa.update() end)
     _volume_slider.value = lain_alsa.last.level + num
     show_volume_slider("top", 1.5)
 end)
 awesome.connect_signal("widget::toggle_mute", function()
-    awful.spawn.easy_async("pactl set-sink-mute "..alsa_device.." toggle", function() lain_alsa.update() end)
+    awful.spawn.easy_async("pactl set-sink-mute "..config.alsa_device.." toggle", function() lain_alsa.update() end)
     show_volume_slider("top", 1.5)
 end)
 awesome.connect_signal("widget::show_volume_control", function(pos, timeout)

@@ -1,8 +1,9 @@
+local config       = require("config")
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local markup    = require("lain").util.markup
-local rubato    = require("rubato")
+local rubato    = require("modules.rubato")
 
 local function create_arcchart(icon, fg)
     local icon_widget = wibox.widget {
@@ -17,8 +18,8 @@ local function create_arcchart(icon, fg)
         widget = wibox.container.arcchart,
         colors = {fg},
         bg = beautiful.color.crust,
-        forced_width = (dashboard_width - 80)/3,
-        forced_height = (dashboard_width - 80)/3,
+        forced_width = (config.dashboard_width - 80)/3,
+        forced_height = (config.dashboard_width - 80)/3,
         thickness = 8,
         min_value = 0,
         max_value = 100,

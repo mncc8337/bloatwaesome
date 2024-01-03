@@ -67,7 +67,7 @@ function split_str(inputstr, sep)
 end
 
 --[[ I/O ]]--
-local json = require("json")
+local json = require("modules.json")
 
 -- TODO: use lua func instead
 function save_to_file(text, file)

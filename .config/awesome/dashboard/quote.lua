@@ -1,3 +1,4 @@
+local config       = require("config")
 local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
@@ -13,9 +14,9 @@ local quote = wibox.widget {
     forced_width = 165,
 }
 -- load quote config on start
-local config = read_json(awesome_dir.."config.json")
-quote.markup = config["quote"]["content"]
-quote.align = config["quote"]["alignment"]
+local saveinfo = read_json(config.awesome_dir.."saved.json")
+quote.markup = saveinfo["quote"]["content"]
+quote.align = saveinfo["quote"]["alignment"]
 
 local function _format(str)
     local bold_opened = false -- `*`
@@ -113,8 +114,8 @@ local function quote_edit(start)
                 end
                 quote.markup = _format(quote.markup)
                 
-                config["quote"]["content"] = quote.markup:gsub('\n', "\\n")
-                save_json(config, awesome_dir.."config.json")
+                saveinfo["quote"]["content"] = quote.markup:gsub('\n', "\\n")
+                save_json(saveinfo, config.awesome_dir.."saved.json")
             end
             quote.font = beautiful.font_type.mono.." 12"
             prompt_running = false
@@ -145,8 +146,8 @@ quotepanel:connect_signal("button::press", function()
         end
         quote.align = quote_alignment
 
-        config["quote"]["alignment"] = quote_alignment
-        save_json(config, awesome_dir.."config.json")
+        saveinfo["quote"]["alignment"] = quote_alignment
+        save_json(saveinfo, config.awesome_dir.."saved.json")
     end
 end)
 
