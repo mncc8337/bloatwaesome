@@ -6,7 +6,7 @@
 # default vals
 audio_param=""
 framerate=60
-output="$HOME/Videos/$(date +"%m-%d-%y_%H-%M-%S").mkv"
+output="$HOME/Videos/$(date +"%Y-%m-%d %H-%M-%S").mkv"
 
 # default geometries
 x=0
@@ -60,4 +60,4 @@ ffmpeg \
     -crf 0 \
     -preset ultrafast \
     -y \
-    $output
+    "$output"
