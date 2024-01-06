@@ -5,7 +5,7 @@ return {
         latitude = 69,
         longtitude = 420,
     },
-    theme = "monochrome", -- catppuccin, monochrome
+    theme = "catppuccin", -- catppuccin, monochrome
 
     tag_num = 4, -- should be no more than 12
     bar_size = 28,

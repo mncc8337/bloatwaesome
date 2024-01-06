@@ -26,11 +26,16 @@ HIST_STAMPS="mm/dd/yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(sudo lol git bgnotify fzf safe-paste z zsh-interactive-cd)
+plugins=(thefuck lol git fzf zsh-interactive-cd)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
+# set tty font
+if [[ -n $(tty | grep tty) ]]; then
+  setfont /usr/share/kbd/consolefonts/ter-u12n.psf.gz
+fi
 
 alias py="python3"
 alias neo-matrix="neo-matrix -D"

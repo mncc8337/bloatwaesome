@@ -17,13 +17,15 @@ local altkey = config.altkey
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-    awful.key({altkey}, "n", function() awesome.emit_signal("music::play_next_song") end,
+    awful.key({}, "XF86AudioNext", function() awesome.emit_signal("music::play_next_song") end,
     {description = "next song", group = "media"}),
-    awful.key({altkey}, "p", function() awesome.emit_signal("music::play_previous_song") end,
+    awful.key({}, "XF86AudioPrev", function() awesome.emit_signal("music::play_previous_song") end,
     {description = "previous song", group = "media"}),
-    awful.key({altkey}, "space", function() awesome.emit_signal("music::toggle") end,
+    awful.key({}, "XF86AudioPlay", function() awesome.emit_signal("music::toggle") end,
     {description = "pause/play song", group = "media"}),
-    awful.key({ modkey }, "F11", function() awesome.emit_signal("drop-down-term::toggle") end,
+    awful.key({}, "XF86AudioStop", function() awesome.emit_signal("music::pause") end,
+    {description = "pause song", group = "media"}),
+    awful.key({ altkey }, "F11", function() awesome.emit_signal("drop-down-term::toggle") end,
     {description = "open/close drop-down terminal", group = "launcher"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
@@ -49,7 +51,7 @@ globalkeys = gears.table.join(
             end
         end,
     {description = "(un)minimize all clients", group = "client"}),
-    awful.key({ modkey }, "F12", function () awesome.emit_signal("dashboard::toggle") end,
+    awful.key({ altkey }, "F12", function () awesome.emit_signal("dashboard::toggle") end,
               {description = "toggle control center", group = "awesome"}),
     awful.key({ modkey }, "b", function ()
             for s in screen do

@@ -28,6 +28,10 @@ if awesome.startup_errors then
                      text = awesome.startup_errors })
 end
 
+function notify(msg, title)
+    naughty.notify {message = msg, title = title}
+end
+
 require("awful.autofocus")
 require("modules.remember-geometry")
 
