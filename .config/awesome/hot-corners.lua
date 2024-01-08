@@ -24,7 +24,7 @@ local daemon = gears.timer {
         local geometry = awful.screen.focused().geometry
         local top = mouse.coords().y < hot_corners_size
         local bottom = mouse.coords().y > geometry.height - hot_corners_size
-        local left = mouse.coords().y < hot_corners_size
+        local left = mouse.coords().x < hot_corners_size
         local right = mouse.coords().x > geometry.width - hot_corners_size
 
         local condition = {

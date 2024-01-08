@@ -25,8 +25,12 @@ globalkeys = gears.table.join(
     {description = "pause/play song", group = "media"}),
     awful.key({}, "XF86AudioStop", function() awesome.emit_signal("music::pause") end,
     {description = "pause song", group = "media"}),
+    awful.key({ altkey }, "F12", function () awesome.emit_signal("dashboard::toggle") end,
+    {description = "toggle dashboard", group = "awesome"}),
     awful.key({ altkey }, "F11", function() awesome.emit_signal("drop-down-term::toggle") end,
-    {description = "open/close drop-down terminal", group = "launcher"}),
+    {description = "toggle drop-down terminal", group = "awesome"}),
+    awful.key({ altkey }, "F10", function() awesome.emit_signal("timeweather::toggle") end,
+    {description = "toggle time and weather", group = "awesome"}),
     -- minimize all client
     awful.key({modkey}, "d", function()
         local already_minimized = true
@@ -51,14 +55,12 @@ globalkeys = gears.table.join(
             end
         end,
     {description = "(un)minimize all clients", group = "client"}),
-    awful.key({ altkey }, "F12", function () awesome.emit_signal("dashboard::toggle") end,
-              {description = "toggle control center", group = "awesome"}),
-    awful.key({ modkey }, "b", function ()
-            for s in screen do
-                s.wibar.visible = not s.wibar.visible
-            end
-        end,
-    {description = "toggle wibar", group = "awesome"}),
+    -- awful.key({ modkey }, "b", function ()
+    --         for s in screen do
+    --             s.wibar.visible = not s.wibar.visible
+    --         end
+    --     end,
+    -- {description = "toggle wibar", group = "awesome"}),
     -- VOLUME
     awful.key({}, "XF86AudioRaiseVolume", function () awesome.emit_signal("widget::increase_volume_level", 2) end,
     {description = "increase volume", group = "media"}),

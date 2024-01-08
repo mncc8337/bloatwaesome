@@ -61,19 +61,21 @@ theme.button_normal = theme.color.surface0
 theme.button_focus = theme.color.crust
 theme.button_selected = theme.color.lavender
 
-theme.calendar_month_bg = theme.color.base
-
-theme.calendar_normal_bg = theme.color.crust
-theme.calendar_normal_fg = theme.color.text
+theme.calendar_normal_bg = theme.color.base
+theme.calendar_normal_fg = theme.color.subtext0
 
 theme.calendar_focus_bg = theme.color.lavender
 theme.calendar_focus_fg = theme.color.crust
 
-theme.calendar_header_bg = theme.color.surface0
+theme.calendar_header_bg = theme.color.base
+theme.calendar_header_fg = theme.color.text
 
+theme.calendar_weekday_bg = theme.color.base
 theme.calendar_weekday_fg = theme.color.text
-theme.calendar_weekday_bg = theme.color.surface2
-theme.calendar_weekend_bg = theme.color.surface0
+
+theme.calendar_day_normal_bg = theme.color.base
+theme.calendar_day_hover_bg = theme.color.surface0
+theme.calendar_day_focus_bg = theme.color.overlay1
 
 theme.dashboard_bg = theme.color.crust
 

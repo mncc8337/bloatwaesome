@@ -1,9 +1,11 @@
+-- DEPRECATED
+
 local config    = require("config")
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local markup    = require("lain").util.markup
-local ui        = require("dashboard.ui_elements")
+local ui        = require("ui_elements")
 
 -- awful.screen.focused()
 local layoutbox = awful.widget.layoutbox(awful.screen.focused())

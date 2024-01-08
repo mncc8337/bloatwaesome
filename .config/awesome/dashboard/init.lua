@@ -6,84 +6,44 @@
 ]]--
 
 local config    = require("config")
-local gears     = require("gears")
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local widgets   = require("widgets")
-local lain      = require("lain")
-local markup    = lain.util.markup
-local ui        = require("dashboard.ui_elements")
-local rubato    = require("modules.rubato")
+local musicplayer = require("musicplayer")
+local widgets    = require("widgets")
+local ui         = require("ui_elements")
+local rubato     = require("modules.rubato")
 
 --[[ WIDGETS ]]--
-local clock = wibox.widget.textbox()
-clock.align = "center"
-clock.valign = "center"
-clock.forced_height = 80
-local clock_update_timer = gears.timer {
-    autostart = true,
-    timeout = 1,
-    callback = function()
-        clock.markup = os.date("<span font = '"..beautiful.font_type.mono.." 60'>%H:%M</span>")
-    end
+local clock = wibox.widget {
+    widget = wibox.widget.textclock,
+    format = "%H:%M",
+    font = beautiful.font_type.mono.." 60",
+    align = "center",
+    valign = "center",
+    height = 80,
 }
 
 local profile_panel = require("dashboard.profile")
 local quote_panel = require("dashboard.quote")
-local music_panel = ui.create_dashboard_panel(widgets.musicplayer)
+local music_panel = ui.create_dashboard_panel(musicplayer)
 local volume_slider_panel = ui.create_dashboard_panel(widgets.volumeslider)
 
 local fs_panel = require("dashboard.filesystem")
 local mem_panel = require("dashboard.mem")
-local cpu = require("dashboard.cpu")
+local cpu_panel = require("dashboard.cpu")
 
 local arccharts = wibox.widget {
-    layout = wibox.layout.align.horizontal,
-    cpu.arcchart,
+    layout = wibox.layout.fixed.horizontal,
+    cpu_panel,
+    cpu_panel,
     mem_panel,
     fs_panel,
 }
 
--- local sys_resource_panel = wibox.widget {
---     layout = wibox.layout.stack,
---     cpu.graph, arccharts,
--- }
--- local arccharts_current_action = "opened"
--- local arccharts_timed = rubato.timed {
---     duration = 0.3,
---     intro = 0.1,
---     override_dt = true,
---     easing = rubato.easing.quadratic,
---     subscribed = function(pos)
---         arccharts.opacity = pos
---         if pos == 1 and arccharts_current_action == "opening" then
---             arccharts_current_action = "opened"
---             cpu.graph.visible = false
---         elseif pos == 0 and arccharts_current_action == "closing" then
---             arccharts_current_action = "closed"
---         end
---     end
--- }
-
--- hide arccharts on click
--- arccharts:connect_signal("button::press", function()
---     if arccharts_current_action == "opening" or arccharts_current_action == "opened" then
---         cpu.graph.visible = true
---         arccharts_current_action = "closing"
---         arccharts_timed.target = 0
---     elseif arccharts_current_action == "closing" or arccharts_current_action == "closed" then
---         arccharts_current_action = "opening"
---         arccharts_timed.target = 1
---     end
--- end)
--- arccharts_timed.target = 1
-
 local power_panel = require("dashboard.power")
 local uptime_panel = require("dashboard.uptime")
-local options_panel = require("dashboard.options")
-local tabs_panel = require("dashboard.tabs")
 
 --[[ BASE ]]--
 local dashboard = wibox {
@@ -91,32 +51,43 @@ local dashboard = wibox {
     visible = false,
     type = "dock",
     width = config.dashboard_width,
-    height = awful.screen.focused().geometry.height,
+    --       title   profile-panel  power-menu  music-player  volume  arcchart            spacing
+    height = 30    + 137          + 79        + 144         + 50    + ui.arc_size + 46  + 8 * 7,
     x = awful.screen.focused().geometry.width - config.dashboard_width,
+    y = config.bar_size,
     bg = beautiful.dashboard_bg,
     screen = awful.screen.focused(),
+    shape = rounded_rect(config.popup_roundness),
+    border_width = beautiful.border_width,
+    border_color = beautiful.border_focus,
 }
+
 dashboard:setup {
     {
         layout = wibox.layout.fixed.vertical,
-        id = "widgets",
-        clock,
+        ui.create_dashboard_panel(wibox.widget {
+            widget = wibox.widget.textbox(),
+            markup = "<b>Dashboard</b>",
+            align = "center",
+            valign = "center",
+            forced_height = 30,
+        }),
         {
             layout = wibox.layout.align.horizontal,
             quote_panel,
             profile_panel,
         },
-        music_panel,
-        volume_slider_panel,
         {
             layout = wibox.layout.align.horizontal,
-            power_panel,
+            expand = "inside",
+            wibox.widget {},
             uptime_panel,
-            options_panel,
+            power_panel,
+            -- options_panel,
         },
-        -- sys_resource_panel,
+        music_panel,
+        volume_slider_panel,
         arccharts,
-        tabs_panel,
     },
     widget = wibox.container.margin,
     margins = 4,
@@ -131,26 +102,26 @@ local dashboard_timed = rubato.timed {
     override_dt = true,
     easing = rubato.easing.quadratic,
     subscribed = function(pos)
-        dashboard.x = awful.screen.focused().geometry.width - pos
+        dashboard.x = dashboard.screen.geometry.width - pos
         if pos == 0 and not dashboard_opened then
             dashboard.visible = false
         end
     end
 }
 
-function dashboard_visible()
-    return dashboard.visible
-end
 local function hide_dashboard()
     dashboard_opened = false
     dashboard_timed.target = 0
 end
 local function show_dashboard()
     dashboard.screen = awful.screen.focused()
+    local h = dashboard.screen.geometry.height
+    dashboard.y = config.bar_size + (config.floating_bar and beautiful.border_width * 2 + config.screen_spacing or 0) + config.screen_spacing
+
     dashboard.visible = true
 
     dashboard_opened = true
-    dashboard_timed.target = config.dashboard_width
+    dashboard_timed.target = config.dashboard_width + (config.floating_bar and beautiful.useless_gap * 2 or config.screen_spacing)
 end
 local function toggle_dashboard()
     if not dashboard_opened then
@@ -162,7 +133,7 @@ end
 
 -- hide on click
 local function hide_dashboard_on_click()
-    if dashboard_visible() and not prompt_running then
+    if dashboard.visible and not prompt_running then
         awesome.emit_signal("dashboard::hide")
     end
 end
@@ -172,3 +143,5 @@ client.connect_signal("button::press", hide_dashboard_on_click)
 awesome.connect_signal("dashboard::show", show_dashboard)
 awesome.connect_signal("dashboard::hide", hide_dashboard)
 awesome.connect_signal("dashboard::toggle", toggle_dashboard)
+
+return dashboard

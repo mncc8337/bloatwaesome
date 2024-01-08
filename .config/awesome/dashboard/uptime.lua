@@ -1,6 +1,6 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
-local ui        = require("dashboard.ui_elements")
+local ui        = require("ui_elements")
 
 local uptime = wibox.widget {
     widget = wibox.widget.textbox(),

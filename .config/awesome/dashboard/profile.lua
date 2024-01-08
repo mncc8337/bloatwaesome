@@ -3,7 +3,7 @@ local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
 local markup    = require("lain").util.markup
-local ui        = require("dashboard.ui_elements")
+local ui        = require("ui_elements")
 
 local profile_pic = wibox.widget.imagebox(config.profile_picture)
 profile_pic.forced_width = 100
@@ -12,11 +12,16 @@ profile_pic.forced_height = 100
 local name = io.popen("id -un"):read("*all")
 name = string.gsub(name, '\n', '')
 -- local host = io.popen([[cat /etc/hostname]]):read("*all")
-local p_name = wibox.widget.textbox("<span font='"..beautiful.font_type.mono.." 12'>"..'@'..name.."</span>")
-p_name.align = "center"
-p_name.valign = "center"
-p_name.forced_height = 20
-p_name.forced_width = profile_pic.forced_width
+local p_name = wibox.widget{
+    widget = wibox.widget.textbox,
+    markup = '@'..name,
+    font = beautiful.font_type.mono.." 12",
+    align = "center",
+    valign = "center",
+    forced_height = 20,
+    forced_width = profile_pic.forced_width,
+}
+
 local profile = wibox.widget {
     {
         layout = wibox.layout.align.vertical,
@@ -79,7 +84,6 @@ local fetch = v_centered_widget(wibox.widget {
     line_version,
     line_packages,
     line_wm,
-    forced_width = config.dashboard_width - profile_pic.forced_width - 230, --3
 })
 
 return ui.create_dashboard_panel(wibox.widget {

@@ -34,7 +34,6 @@ awful.rules.rules = {
             ontop = true,
             skip_taskbar = true,
             sticky = true,
-            -- placement = awful.placement.top_right,
             height = 500,
             width = 850,
         }
@@ -50,7 +49,7 @@ awful.rules.rules = {
           "Arandr",
           "Blueman-manager",
           "Gpick",
-          "Sxiv",
+          "Nsxiv",
           "Nemo",
           "Lxappearance",
   	    },

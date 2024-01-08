@@ -4,14 +4,14 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local ui        = require("dashboard.ui_elements")
+local ui        = require("ui_elements")
 
 local quote = wibox.widget {
     widget = wibox.widget.textbox(),
     align = "center",
     valign = "center",
     font = beautiful.font_type.mono.." 12",
-    forced_width = 165,
+    forced_width = 131,
 }
 -- load quote config on start
 local saveinfo = read_json(config.awesome_dir.."saved.json")

@@ -44,9 +44,17 @@ function utf8.sub(s, start_char_idx, end_char_idx)
     return string.sub(s, start_byte_idx, end_byte_idx)
 end
 
-function rounded_rect(r)
-    return function(cr, w, h)
-        gears.shape.rounded_rect(cr, w, h, r)
+function rounded_rect(size, corners)
+    if corners then
+        return function(cr, width, height)
+            gears.shape.partially_rounded_rect(cr, width, height,
+                                               corners.topleft, corners.topright, corners.bottomright, corners.bottomleft,
+                                               size)
+        end
+    else
+        return function(cr, width, height)
+            gears.shape.rounded_rect(cr, width, height, size)
+        end
     end
 end
 

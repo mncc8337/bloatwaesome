@@ -187,7 +187,10 @@ awful.screen.connect_for_each_screen(function(s)
     }
     if config.floating_bar then
         s.wibar.margins = {
-            top = 5, bottom = 10 - beautiful.useless_gap * 2, left = beautiful.useless_gap * 2, right = beautiful.useless_gap * 2
+            top = config.screen_spacing,
+            bottom = 10 - beautiful.useless_gap * 2,
+            left = beautiful.useless_gap * 2,
+            right = beautiful.useless_gap * 2
         }
         s.wibar.border_width = 2
         s.wibar.border_color = beautiful.border_normal
@@ -209,12 +212,7 @@ awful.screen.connect_for_each_screen(function(s)
             -- widgets.focused_client,
         },
         -- middle
-        wibox.widget {
-            widget = wibox.widget.textclock,
-            font = beautiful.font_type.standard.." bold 12",
-            valign = "center",
-            align = "center",
-        },
+        widgets.clock,
         -- right
         {
             layout = wibox.layout.fixed.horizontal,
@@ -223,7 +221,6 @@ awful.screen.connect_for_each_screen(function(s)
             widgets.mem,
             widgets.temp,
             widgets.cpu,
-            widgets.weather,
             {
                 wibox.widget.systray(),
                 widget = wibox.container.margin,

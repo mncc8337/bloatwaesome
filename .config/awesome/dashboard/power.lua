@@ -2,7 +2,7 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local markup    = require("lain").util.markup
-local ui        = require("dashboard.ui_elements")
+local ui        = require("ui_elements")
 
 local power_menu = wibox.widget {
     {
@@ -11,14 +11,14 @@ local power_menu = wibox.widget {
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            ui.create_button("󰐥", beautiful.color.red, function() awful.spawn("systemctl poweroff") end),
-            ui.create_button("󰜉", beautiful.color.green, function() awful.spawn("systemctl reboot") end),
+            ui.create_button_bg("󰐥", beautiful.color.red, function() awful.spawn("systemctl poweroff") end),
+            ui.create_button_bg("󰜉", beautiful.color.green, function() awful.spawn("systemctl reboot") end),
         },
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            ui.create_button("󰤄", beautiful.color.blue, function() awful.spawn("systemctl suspend") end),
-            ui.create_button("󰍃", beautiful.color.rosewater, function() awesome.quit() end),
+            ui.create_button_bg("󰤄", beautiful.color.blue, function() awful.spawn("systemctl suspend") end),
+            ui.create_button_bg("󰍃", beautiful.color.rosewater, function() awesome.quit() end),
         },
     },
     widget = wibox.container.margin,

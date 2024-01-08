@@ -96,7 +96,6 @@ local close_popup_timer = single_timer(1, function()
     volume_slider_popup.visible = false
 end)
 local function show_volume_slider(position, timeout)
-    if dashboard_visible() then return end
     if position == "top_right" then
         awful.placement.top_right(volume_slider_popup, popup_placement_config)
     elseif position == "top" then

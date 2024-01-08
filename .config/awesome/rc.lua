@@ -15,17 +15,21 @@ do
         if in_error then return end
         in_error = true
 
-        naughty.notify({ preset = naughty.config.presets.critical,
-                         title = "Oops, an error happened!",
-                         text = tostring(err) })
+        naughty.notify {
+            preset = naughty.config.presets.critical,
+            title = "Oops, an error happened!",
+            text = tostring(err)
+        }
         in_error = false
     end)
 end
 -- }}}
 if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Oops, there were errors during startup!",
-                     text = awesome.startup_errors })
+    naughty.notify {
+        preset = naughty.config.presets.critical,
+        title = "Oops, there were errors during startup!",
+        text = awesome.startup_errors
+    }
 end
 
 function notify(msg, title)
@@ -40,6 +44,8 @@ local config = require("config")
 beautiful.init(config.awesome_dir.."themes/"..config.theme..".lua")
 if config.floating_bar then
     naughty.config.padding = beautiful.useless_gap * 2
+else
+    naughty.config.padding = config.bar_screen_space
 end
 
 local bling = require("modules.bling")
@@ -61,6 +67,7 @@ require("taskbar")
 require("bindings")
 require("rules")
 
+require("timeweather")
 require("dashboard")
 require("drop-down-term")
 
@@ -68,10 +75,10 @@ require("drop-down-term")
 local corner_action = require("hot-corners")
 
 corner_action.topright(function()
-    awesome.emit_signal("drop-down-term::toggle")
-end)
-corner_action.bottomright(function()
     awesome.emit_signal("dashboard::toggle")
+end)
+corner_action.topleft(function()
+    awesome.emit_signal("drop-down-term::toggle")
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -109,11 +116,4 @@ end):start()
 
 wibox.connect_signal("button::press", function(w)
     awesome.emit_signal("drop-down-term::close")
-
-    local mouse_on_dashboard = mouse.coords().x > awful.screen.focused().geometry.width - config.dashboard_width
-                               and dashboard_visible()
-    -- ignore if mouse click on dashboard
-    if not mouse_on_dashboard then
-        awesome.emit_signal("dashboard::hide")
-    end
 end)

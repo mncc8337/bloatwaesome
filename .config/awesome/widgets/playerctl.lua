@@ -7,7 +7,7 @@ local bling        = require("modules.bling")
 
 local markup       = require("lain").util.markup
 local utf8         = require "utf8"
-local music_player = require("widgets.musicplayer")
+local music_player = require("musicplayer")
 
 local player_off = true
 local media_length = 0
@@ -121,7 +121,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
             end
             prev_notification = naughty.notify(common)
         end):start()
-    end
+end
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""

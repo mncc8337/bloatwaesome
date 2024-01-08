@@ -33,13 +33,10 @@ local function dropdown_terminal_open()
 
     term_opened = true
     local offset = term.width + beautiful.border_width * 2
-    if awful.screen.focused().wibar.visible == true then
-        dropdown_term_timed.target = config.bar_size + (config.floating_bar and 10 or 0)
-        term.x = awful.screen.focused().geometry.width - offset - (config.floating_bar and beautiful.useless_gap * 2 or 0)
-    else
-        dropdown_term_timed.target = 0
-        term.x = awful.screen.focused().geometry.width - offset
-    end
+    dropdown_term_timed.target = config.bar_size
+                                 + config.screen_spacing
+                                 + (config.floating_bar and config.screen_spacing + beautiful.border_width * 2 or 0)
+    term.x = (config.floating_bar and beautiful.useless_gap * 2 or config.screen_spacing)
 end
 local function dropdown_terminal_close()
     local function check_func(stdout)
