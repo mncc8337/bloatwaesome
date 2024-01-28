@@ -4,7 +4,6 @@ cwd=$(pwd)
 if [ "$2" = 'save' ]; then
     savedir="$(date +"%Y-%m-%d %H-%M-%S").png"
     prefix=" and saved to ~/Pictures/$savedir"
-    savedir="\"$savedir\""
     cd ~/Pictures
 fi
 if [ "$1" = 'full' ]; then

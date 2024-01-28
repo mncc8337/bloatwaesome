@@ -27,29 +27,26 @@ function centered_widget(widget)
     return w
 end
 
+-- get the first client that match the rule
 function find_client(rule)
-    local dropdown = function(c)
+    local cl = function(c)
         return awful.rules.match(c, rule)
     end
-    local temp = nil
-    for c in awful.client.iterate(dropdown) do
-        temp = c
-    end
-    return temp
-end
 
-function utf8.sub(s, start_char_idx, end_char_idx)
-    start_byte_idx = utf8.offset(s, start_char_idx)
-    end_byte_idx = utf8.offset(s, end_char_idx + 1) - 1
-    return string.sub(s, start_byte_idx, end_byte_idx)
+    for c in awful.client.iterate(cl) do
+        return c
+    end
+    return nil
 end
 
 function rounded_rect(size, corners)
     if corners then
         return function(cr, width, height)
-            gears.shape.partially_rounded_rect(cr, width, height,
-                                               corners.topleft, corners.topright, corners.bottomright, corners.bottomleft,
-                                               size)
+            gears.shape.partially_rounded_rect(
+                cr, width, height,
+                corners.topleft, corners.topright, corners.bottomright, corners.bottomleft,
+                size
+            )
         end
     else
         return function(cr, width, height)
@@ -66,18 +63,16 @@ function single_timer(timeout, callback)
     }
 end
 
-function split_str(inputstr, sep)
-    local t = {}
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        table.insert(t, str)
-    end
-    return t
+-- run func(pid) if a process is running
+function process_running(name, func)
+    awful.spawn.easy_async_with_shell("pgrep -f "..name, function(stdout)
+        if stdout ~= '' then func(stdout:gsub('\n', '')) end
+    end)
 end
 
 --[[ I/O ]]--
 local json = require("modules.json")
 
--- TODO: use lua func instead
 function save_to_file(text, file)
     awful.spawn.with_shell("printf '"..text.."' > "..file)
 end

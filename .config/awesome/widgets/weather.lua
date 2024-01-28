@@ -4,6 +4,8 @@ local wibox     = require("wibox")
 
 local lain      = require("lain")
 
+local awesome_dir = require("gears").filesystem.get_configuration_dir()
+
 local lain_weather = lain.widget.weather {
     APPID = config.openweathermap.API_key,
     units = "metric",
@@ -11,7 +13,7 @@ local lain_weather = lain.widget.weather {
     lon = config.openweathermap.longtitude,
     cnt = 1,
     timeout = 900,
-    icons_path = config.awesome_dir.."openweathermap_icons/",
+    icons_path = awesome_dir.."openweathermap_icons/",
     notification_preset = {
         border_width = beautiful.border_width,
         hover_timeout = 1,

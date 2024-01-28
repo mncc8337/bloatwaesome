@@ -1,17 +1,20 @@
-local config       = require("config")
 local gears        = require("gears")
 local beautiful    = require("beautiful")
 local wibox        = require("wibox")
 local naughty      = require("naughty")
 local bling        = require("modules.bling")
+local rubato       = require("modules.rubato")
 
 local markup       = require("lain").util.markup
 local utf8         = require "utf8"
-local music_player = require("musicplayer")
+local music_player = require("ui.musicplayer")
+local ui           = require("ui.ui_elements")
+local awesome_dir = gears.filesystem.get_configuration_dir()
 
 local player_off = true
 local media_length = 0
 local current_player = ""
+local current_art = ""
 
 local musicico = wibox.widget.textbox(markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 "))
 musicico.font = beautiful.font_type.icon.." 12"
@@ -19,7 +22,7 @@ musicico.font = beautiful.font_type.icon.." 12"
 local titlew = wibox.widget.textbox()
 
 local function no_player_fallback()
-    awesome.emit_signal("music::set_cover", config.awesome_dir.."fallback.png")
+    awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
     awesome.emit_signal("music::set_title", "No song")
     awesome.emit_signal("music::set_detail", "hehe")
     awesome.emit_signal("music::set_total_time", 1)
@@ -44,6 +47,8 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
     player_off = false
 
+    current_player = player_name
+
     if album ~= "" then
         album = ", "..album
     end
@@ -58,7 +63,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
             -- or this is a reup
 
             temp_title = title:gsub("%s%-%s", "ඞ")
-            tokens = split_str(temp_title, "ඞ")
+            tokens = gears.string.split(temp_title, "ඞ")
 
             -- it should have 2 tokens
             if #tokens == 2 then
@@ -79,7 +84,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         end
 
         -- set fetched artwork (see https://github.com/mncc8337/chromium-artwork-fetcher)
-        album_path = config.awesome_dir.."artwork.png"
+        album_path = awesome_dir.."artwork.png"
     end
 
     -- Set fallback art
@@ -100,6 +105,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     -- the chrome extension will automatically emit this signal when done fetching
     if player_name ~= "chromium" then
         awesome.emit_signal("music::set_cover", album_path)
+        current_art = album_path
     end
 
     if new then
@@ -164,26 +170,66 @@ playerctl:connect_signal("shuffle", function(_, shuffle)
     awesome.emit_signal("music::refreshUI")
 end)
 
+local scrl_title = wibox.widget {
+    layout = wibox.container.scroll.horizontal,
+    step_function = wibox.container.scroll.step_functions.linear_increase,
+    max_size = 300,
+    extra_space = 100,
+    speed = 30,
+    titlew,
+}
+
+local buttons = wibox.widget {
+    widget = wibox.container.margin,
+    top = 5,
+    bottom = 5,
+    wibox.widget {
+        layout = wibox.layout.fixed.horizontal,
+        -- im lazy
+        music_player.prevbutton,
+        music_player.togglebutton,
+        music_player.nextbutton,
+    }
+}
+
+local buttons_anim = rubato.timed {
+    duration = 0.3,
+    intro = 0.15,
+    override_dt = true,
+    easing = rubato.easing.quadratic,
+    subscribed = function(pos)
+        buttons.forced_width = pos
+    end
+}
+
 local playerctlwidget = wibox.widget {
     layout = wibox.layout.fixed.horizontal,
     musicico,
-    {
-        layout = wibox.container.scroll.horizontal,
-        step_function = wibox.container.scroll.step_functions.linear_increase,
-        max_size = 300,
-        extra_space = 300,
-        speed = 30,
-        titlew,
-    },
+    buttons,
+    scrl_title,
 }
-
 playerctlwidget:connect_signal("mouse::enter", function()
-    if player_off then return end
-    awesome.emit_signal("music::show_player", true)
+    -- avoid flickering
+    if titlew:get_preferred_size() < 300.0 then
+        scrl_title:pause()
+    end
+    buttons_anim.target = 42 + 22*2
 end)
 playerctlwidget:connect_signal("mouse::leave", function()
-    awesome.emit_signal("music::hide_player")
+    buttons_anim.target = 0
+    -- avoid flickering
+    if titlew:get_preferred_size() < 300.0 then
+        scrl_title:continue()
+    end
 end)
+
+-- playerctlwidget:connect_signal("mouse::enter", function()
+--     if player_off then return end
+--     awesome.emit_signal("music::show_player", true)
+-- end)
+-- playerctlwidget:connect_signal("mouse::leave", function()
+--     awesome.emit_signal("music::hide_player")
+-- end)
 
 -- process music player signals
 awesome.connect_signal("music::volume_changed", function(value)
@@ -221,6 +267,14 @@ awesome.connect_signal("music::loop_track", function()
 end)
 awesome.connect_signal("music::no_loop", function()
     playerctl:set_loop_status("NONE")
+end)
+
+-- yes
+awesome.connect_signal("dashboard::show", function()
+    awesome.emit_signal("music::set_cover", current_art)
+end)
+awesome.connect_signal("music::show_player", function()
+    awesome.emit_signal("music::set_cover", current_art)
 end)
 
 return playerctlwidget

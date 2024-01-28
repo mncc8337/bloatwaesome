@@ -46,12 +46,8 @@ return {
     separator = separator,
     thin_separator = thin_separator,
     music = require("widgets.playerctl"),
-    mem = require("widgets.mem"),
-    cpu = require("widgets.cpu"),
-    temp = require("widgets.temperature"),
     clock = clock,
     alsa = alsa.volumewidget,
     volumeslider = alsa.volume_slider,
-    focused_client = require("widgets.focused_client_name"),
     --mykeyboardlayout = awful.widget.keyboardlayout()
 }

@@ -1,0 +1,31 @@
+ncmpcpp_directory = ~/.config/ncmpcpp
+lyrics_directory = ~/.lyrics
+
+mpd_host = localhost
+mpd_port = 6600
+#mpd_password = ""
+#mpd_connection_timeout = 5
+
+mpd_music_dir = ~/Music
+
+# VISUALIZER
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_output_name = "my_fifo"
+visualizer_in_stereo = "no"
+visualizer_type = "ellipse"
+visualizer_fps = "60"
+visualizer_look = ●▮
+visualizer_color = "33,39,63,75,81,99,117,153,189"
+
+# COLORS
+main_window_color = "blue"
+color1 = "white"
+color2 = "blue"
+
+progressbar_look = -*
+
+now_playing_prefix = $(red)$r$b
+now_playing_suffix = $/b$/r$(end)
+
+current_item_prefix = $(blue)$r$b
+current_item_suffix = $/b$/r$(end)

@@ -41,7 +41,8 @@ require("modules.remember-geometry")
 
 -- load config
 local config = require("config")
-beautiful.init(config.awesome_dir.."themes/"..config.theme..".lua")
+local theme = require("theme")
+theme.load(config.theme)
 if config.floating_bar then
     naughty.config.padding = beautiful.useless_gap * 2
 else
@@ -63,16 +64,13 @@ awful.layout.layouts = {
     awful.layout.suit.floating,
 }
 
-require("taskbar")
+require("signals")
 require("bindings")
 require("rules")
-
-require("timeweather")
-require("dashboard")
-require("drop-down-term")
+require("ui")
 
 -- config hot corners' action
-local corner_action = require("hot-corners")
+local corner_action = require("modules.hot-corners")
 
 corner_action.topright(function()
     awesome.emit_signal("dashboard::toggle")
@@ -104,16 +102,12 @@ gears.timer {
     callback = function() collectgarbage() end
 }
 
--- hide drop-down clients on start
+-- hide drop-down client on start
 -- there must be some delay because of some stupid reason that idk
-single_timer(0.01, function()
+single_timer(0.000001, function()
     local drop_term = find_client({class = "drop-down-terminal"})
     if drop_term then
         drop_term.hidden = true
         awesome.emit_signal("drop-down-term::set-term", drop_term)
     end
 end):start()
-
-wibox.connect_signal("button::press", function(w)
-    awesome.emit_signal("drop-down-term::close")
-end)

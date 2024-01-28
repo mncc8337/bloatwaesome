@@ -1,5 +1,4 @@
 return {
-    awesome_dir = debug.getinfo(1, 'S').source:match[[^@(.*/).*$]],
     openweathermap = {
         API_key = "open weather API key",
         latitude = 69,
@@ -10,6 +9,10 @@ return {
     tag_num = 4, -- should be no more than 12
     bar_size = 28,
     floating_bar = true,
+    -- the space between bar (or dashboard and drop-down terminal if not floating bar) and screen border
+    screen_spacing = 5,
+    -- recommend: 12 if not floating bar
+    --             5 if     floating bar
 
     terminal = "alacritty",
     editor = "code",
@@ -21,7 +24,4 @@ return {
 
     -- alsa device to control
     alsa_device = 0,
-
-    popup_roundness = 5,
-    dashboard_width = 500,
 }
