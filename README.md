@@ -38,7 +38,3 @@ for example `yay -S awesome-git`
 ## Screenshots
 ![free](screenshot/12-11-23_14-02-24.png)
 ![busy](screenshot/12-11-23_14-08-50.png)
-
-## TODOS
-- [ ] rework on dashboard look
-- [ ] make weather tab
