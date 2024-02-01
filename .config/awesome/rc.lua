@@ -55,14 +55,14 @@ local bling = require("modules.bling")
 -- bling.module.flash_focus.enable()
 
 --[[ layouts ]]--
-awful.layout.layouts = {
+awful.layout.append_default_layouts({
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.spiral.dwindle,
     bling.layout.mstab,
     bling.layout.centered,
     awful.layout.suit.floating,
-}
+})
 
 require("signals")
 require("bindings")

@@ -223,7 +223,7 @@ local music_player_widget = wibox.widget {
         {
             layout = wibox.layout.fixed.vertical,
             {
-                layout = wibox.layout.scroll.horizontal,
+                layout = wibox.container.scroll.horizontal,
                 step_function = wibox.container.scroll.step_functions.linear_increase,
                 max_size = 300,
                 extra_space = 300,
@@ -304,7 +304,8 @@ awesome.connect_signal("music::refreshUI", function()
     end
 end)
 awesome.connect_signal("music::set_cover", function(path)
-    coverico.image = gears.surface.load_uncached(path)
+    -- coverico.image = gears.surface.load_uncached(path)
+    coverico.image = path
 end)
 awesome.connect_signal("music::set_title", function(_title)
     song_title:set_markup(_title)

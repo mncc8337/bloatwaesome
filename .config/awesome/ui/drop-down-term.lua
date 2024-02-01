@@ -26,7 +26,7 @@ local dropdown_term_timed = rubato.timed {
 }
 
 local function dropdown_terminal_open()
-    term:move_to_tag(awful.tag.selected())
+    term:move_to_tag(awful.screen.focused().selected_tag)
     term.hidden = false
     client.focus = term
     term:raise()
@@ -39,20 +39,19 @@ local function dropdown_terminal_open()
     term.x = (config.floating_bar and beautiful.useless_gap * 2 or config.screen_spacing)
 end
 local function dropdown_terminal_close()
-    local function check_func(_pid)
+    -- check if term is alive or not
+    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", function(_pid)
         if _pid == '' then -- term died
             term = nil
         else
             term_opened = false
             dropdown_term_timed.target = -term.height
         end
-    end
-    -- check if term is alive or not
-    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", check_func)
+    end)
 end
 
 local function dropdown_terminal_toggle()
-    local function check_func(_pid)
+    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", function(_pid)
         if _pid == '' then -- term died
             pid = awful.spawn(config.terminal.." --class drop-down-terminal")
             local function init_term(c)
@@ -73,8 +72,7 @@ local function dropdown_terminal_toggle()
                 awesome.emit_signal("drop-down-term::open")
             end
         end
-    end
-    awful.spawn.easy_async_with_shell("ps -p "..pid.." > /dev/null && echo sussybaka", check_func)
+    end)
 end
 
 -- close on click

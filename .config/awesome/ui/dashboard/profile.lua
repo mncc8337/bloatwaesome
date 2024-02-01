@@ -1,6 +1,7 @@
 local config    = require("config")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
+local awful     = require("awful")
 
 local markup    = require("lain").util.markup
 local ui        = require("ui.ui_elements")
@@ -9,18 +10,20 @@ local profile_pic = wibox.widget.imagebox(config.profile_picture)
 profile_pic.forced_width = 100
 profile_pic.forced_height = 100
 
-local name = io.popen("id -un"):read("*all")
-name = string.gsub(name, '\n', '')
--- local host = io.popen([[cat /etc/hostname]]):read("*all")
-local p_name = wibox.widget{
+local p_name = wibox.widget {
     widget = wibox.widget.textbox,
-    markup = '@'..name,
     font = beautiful.font_type.mono.." 12",
     align = "center",
     valign = "center",
     forced_height = 20,
     forced_width = profile_pic.forced_width,
 }
+
+-- update name
+awful.spawn.easy_async("id -un", function(name)
+    name = string.gsub(name, '\n', '')
+    p_name.markup = '@'..name
+end)
 
 local profile = wibox.widget {
     {
@@ -64,16 +67,18 @@ local line_distro   = fetch_component("c", "a", "#ffffff")
 local line_version  = fetch_component("c", "a", "#ffffff")
 local line_packages = fetch_component("c", "a", "#ffffff")
 local line_wm       = fetch_component("c", "a", "#ffffff")
+update_fetch_component(line_wm, "", "AwesomeWM", beautiful.color.red)
 
 local function update_info()
-    local distro = io.popen(". /etc/os-release && printf \"$NAME\""):read("*all")
-    local versio = io.popen("uname -r"):read("*all")
-    local packag = io.popen("pacman -Qq | wc -l"):read("*all")
-
-    update_fetch_component(line_distro, "", distro, beautiful.color.blue)
-    update_fetch_component(line_version, "", string.gsub(versio, '\n', ''), beautiful.color.yellow)
-    update_fetch_component(line_packages, "󰏖", string.gsub(packag, '\n', ''), beautiful.color.green)
-    update_fetch_component(line_wm, "", "AwesomeWM", beautiful.color.red)
+    awful.spawn.easy_async_with_shell(". /etc/os-release && printf \"$NAME\"", function(distro)
+        update_fetch_component(line_distro, "", string.gsub(distro, '\n', ''), beautiful.color.blue)
+    end)
+    awful.spawn.easy_async("uname -r", function(version)
+        update_fetch_component(line_version, "", string.gsub(version, '\n', ''), beautiful.color.yellow)
+    end)
+    awful.spawn.easy_async_with_shell("pacman -Qq | wc -l", function(package)
+        update_fetch_component(line_packages, "󰏖", string.gsub(package, '\n', ''), beautiful.color.green)
+    end)
 end
 awesome.connect_signal("dashboard::show", update_info)
 

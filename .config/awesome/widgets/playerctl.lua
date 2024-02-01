@@ -109,9 +109,10 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
 
     if new then
-        local delay = 0
+        local delay = 0.0
         -- wait for the extension to done fetching the artwork
         if player_name == "chromium" then delay = 1.0 end
+
         single_timer(delay, function()
             local common =  {
                 timeout = 4,
@@ -208,7 +209,10 @@ local playerctlwidget = wibox.widget {
     buttons,
     scrl_title,
 }
+-- show controls when hovering
 playerctlwidget:connect_signal("mouse::enter", function()
+    if player_off then return end
+
     -- avoid flickering
     if titlew:get_preferred_size() < 300.0 then
         scrl_title:pause()
@@ -216,6 +220,8 @@ playerctlwidget:connect_signal("mouse::enter", function()
     buttons_anim.target = 42 + 22*2
 end)
 playerctlwidget:connect_signal("mouse::leave", function()
+    if player_off then return end
+
     buttons_anim.target = 0
     -- avoid flickering
     if titlew:get_preferred_size() < 300.0 then
