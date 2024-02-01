@@ -1,5 +1,7 @@
 # dotfiles
-my dots
+my _dots_
+### Current
+![free](screenshot/2024-02-01_20-55-03.png)
 
 ## Details
 - **Distro**: arch
@@ -34,7 +36,3 @@ _* : optional_
 _**: no need to install if your nerd font is working as intended_  
 Any packages above can be installed by using any AUR helper  
 for example `yay -S awesome-git`
-
-## Screenshots
-![free](screenshot/12-11-23_14-02-24.png)
-![busy](screenshot/12-11-23_14-08-50.png)
