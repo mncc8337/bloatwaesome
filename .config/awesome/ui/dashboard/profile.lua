@@ -3,7 +3,6 @@ local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local awful     = require("awful")
 
-local markup    = require("lain").util.markup
 local ui        = require("ui.ui_elements")
 
 local profile_pic = wibox.widget.imagebox(config.profile_picture)
@@ -21,8 +20,7 @@ local p_name = wibox.widget {
 
 -- update name
 awful.spawn.easy_async("id -un", function(name)
-    name = string.gsub(name, '\n', '')
-    p_name.markup = '@'..name
+    p_name.markup = '@'..name:sub(1, -2)
 end)
 
 local profile = wibox.widget {
@@ -41,7 +39,7 @@ local function fetch_component(icon, text, color)
         {
             {
                 widget = wibox.widget.textbox,
-                markup = markup.fg.color(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>"),
+                markup = markup_fg(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>"),
             },
             widget = wibox.container.margin,
             left = 12,
@@ -49,7 +47,7 @@ local function fetch_component(icon, text, color)
         {
             {
                 widget = wibox.widget.textbox,
-                markup = markup.fg.color(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>"),
+                markup = markup_fg(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>"),
                 halign = "right",
 
             },
@@ -59,8 +57,8 @@ local function fetch_component(icon, text, color)
     }
 end
 local function update_fetch_component(widget, icon, text, color)
-    widget.first.widget.markup = markup.fg.color(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>")
-    widget.second.widget.markup = markup.fg.color(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>")
+    widget.first.widget.markup = markup_fg(color, "<span font='"..beautiful.font_type.icon.." 12'>"..icon.." </span>")
+    widget.second.widget.markup = markup_fg(color, "<span font = '"..beautiful.font_type.mono.." 12'>"..text.."</span>")
 end
 
 local line_distro   = fetch_component("c", "a", "#ffffff")
@@ -71,13 +69,13 @@ update_fetch_component(line_wm, "", "AwesomeWM", beautiful.color.red)
 
 local function update_info()
     awful.spawn.easy_async_with_shell(". /etc/os-release && printf \"$NAME\"", function(distro)
-        update_fetch_component(line_distro, "", string.gsub(distro, '\n', ''), beautiful.color.blue)
+        update_fetch_component(line_distro, "", distro:sub(1, -2), beautiful.color.blue)
     end)
     awful.spawn.easy_async("uname -r", function(version)
-        update_fetch_component(line_version, "", string.gsub(version, '\n', ''), beautiful.color.yellow)
+        update_fetch_component(line_version, "", version:sub(1, -2), beautiful.color.yellow)
     end)
     awful.spawn.easy_async_with_shell("pacman -Qq | wc -l", function(package)
-        update_fetch_component(line_packages, "󰏖", string.gsub(package, '\n', ''), beautiful.color.green)
+        update_fetch_component(line_packages, "󰏖", package:sub(1, -2), beautiful.color.green)
     end)
 end
 awesome.connect_signal("dashboard::show", update_info)

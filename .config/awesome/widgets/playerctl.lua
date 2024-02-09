@@ -5,7 +5,6 @@ local naughty      = require("naughty")
 local bling        = require("modules.bling")
 local rubato       = require("modules.rubato")
 
-local markup       = require("lain").util.markup
 local utf8         = require "utf8"
 local music_player = require("ui.musicplayer")
 local ui           = require("ui.ui_elements")
@@ -14,16 +13,16 @@ local awesome_dir = gears.filesystem.get_configuration_dir()
 local player_off = true
 local media_length = 0
 local current_player = ""
-local current_art = ""
+local current_art = awesome_dir.."fallback.png"
 
-local musicico = wibox.widget.textbox(markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 "))
+local musicico = wibox.widget.textbox(markup_fg(beautiful.music_icon_color_inactive, "󰝛 "))
 musicico.font = beautiful.font_type.icon.." 12"
 
 local titlew = wibox.widget.textbox()
 
 local function no_player_fallback()
     awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
-    awesome.emit_signal("music::set_title", "No song")
+    awesome.emit_signal("music::set_title", "Nothing to see")
     awesome.emit_signal("music::set_detail", "hehe")
     awesome.emit_signal("music::set_total_time", 1)
     awesome.emit_signal("music::set_elapsed_time", 0)
@@ -37,7 +36,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     -- consider this is `player_off`
     if artist == '' or title == '' then
         single_timer(0.01, function()
-            musicico.markup = markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 ")
+            musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
             titlew.markup = ""
         end):start()
 
@@ -48,65 +47,65 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     player_off = false
 
     current_player = player_name
-
-    if album ~= "" then
-        album = ", "..album
-    end
-
+    
     if player_name == "chromium" then
         -- remove the ' - Topic' in artist name when playing youtube music
         artist = artist:gsub("%s%-%sTopic", "")
-
+        
         -- if there is (probaly) artist name in title
         if title:find("%s%-%s") then
             -- youtube title often contain more information about artist
             -- or this is a reup
-
+            
             temp_title = title:gsub("%s%-%s", "ඞ")
             tokens = gears.string.split(temp_title, "ඞ")
-
+            
             -- it should have 2 tokens
             if #tokens == 2 then
                 -- assume that the title does not contain the artist name, else this will break
                 -- TODO: fix the above (impossible)
-
+                
                 -- if there is artist name in token 1
                 if tokens[1]:find(artist) then
                     -- then the title should be in token 2
                     artist = tokens[1]
                     title = tokens[2]
-                -- same of the above but in reverse
+                    -- same of the above but in reverse
                 elseif tokens[2]:find(artist) then
                     artist = tokens[2]
                     title = tokens[1]
                 end
             end
         end
-
+        
         -- set fetched artwork (see https://github.com/mncc8337/chromium-artwork-fetcher)
         album_path = awesome_dir.."artwork.png"
     end
-
+    
     -- Set fallback art
     if album_path == '' then
         album_path = awesome_dir.."fallback.png"
     end
-
+    
     local display = artist.." - "..title
     if title:find("%s%-%s") and player_name == "chromium" then
         display = title
     end
-
-    musicico.markup = markup.fg.color(beautiful.music_icon_color_active, "󰝚 ")
+    
+    musicico.markup = markup_fg(beautiful.music_icon_color_active, "󰝚 ")
     titlew.markup = display
     awesome.emit_signal("music::set_title", title)
+    
+    if album ~= "" then
+        album = ", ".."<i>"..album.."</i>"
+    end
     awesome.emit_signal("music::set_detail", artist..album)
 
-    -- the chrome extension will automatically emit this signal when done fetching
-    if player_name ~= "chromium" then
-        awesome.emit_signal("music::set_cover", album_path)
-        current_art = album_path
+    if player_name == "chromium" then
+        album_path = awesome_dir.."artwork.png"
     end
+    awesome.emit_signal("music::set_cover", album_path)
+    current_art = album_path
 
     if new then
         local delay = 0.0
@@ -132,7 +131,7 @@ end
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""
-    musicico.markup = markup.fg.color(beautiful.music_icon_color_inactive, "󰝛 ")
+    musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
     titlew.markup = ""
     player_off = true
     no_player_fallback()
@@ -275,11 +274,7 @@ awesome.connect_signal("music::no_loop", function()
     playerctl:set_loop_status("NONE")
 end)
 
--- yes
 awesome.connect_signal("dashboard::show", function()
-    awesome.emit_signal("music::set_cover", current_art)
-end)
-awesome.connect_signal("music::show_player", function()
     awesome.emit_signal("music::set_cover", current_art)
 end)
 

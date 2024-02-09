@@ -48,7 +48,7 @@ local function reload_color(theme, color)
     theme.tasklist_bg_minimize = color.base
     theme.tasklist_bg_urgent = color.mauve
     theme.hotkeys_modifiers_fg = color.blue
-    theme.border_normal = color.surface1
+    theme.border_normal = color.crust
     theme.border_focus = color.lavender
     theme.border_marked = color.yellow
     theme.taglist_bg_focus = color.base
@@ -77,17 +77,18 @@ end
 
 local function load_theme(theme)
     local base = require("theme.base")
-    local modifications = require("theme.themes."..theme)
-    local final = {}
+    -- local modifications = require("theme.themes."..theme)
+    -- local final = {}
 
-    gears.table.crush(final, base)
-    gears.table.crush(final, modifications)
+    -- gears.table.crush(final, base)
+    -- gears.table.crush(final, modifications)
 
-    if modifications.color then
-        reload_color(final, modifications.color)
-    end
+    -- if modifications.color then
+    --     reload_color(final, modifications.color)
+    -- end
 
-    beautiful.init(final)
+    -- beautiful.init(final)
+    beautiful.init(base)
 end
 
 return {

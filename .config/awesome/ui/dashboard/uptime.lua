@@ -11,8 +11,7 @@ local uptime = wibox.widget {
 
 awesome.connect_signal("dashboard::show", function()
     awful.spawn.easy_async("uptime -p", function(time)
-        time = string.gsub(time, '\n', '')
-        uptime.markup = time
+        uptime.markup = time:sub(1, -2)
     end)
 end)
 

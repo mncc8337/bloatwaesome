@@ -83,7 +83,6 @@ dashboard:setup {
             wibox.widget {},
             uptime_panel,
             power_panel,
-            -- options_panel,
         },
         music_panel,
         volume_slider_panel,

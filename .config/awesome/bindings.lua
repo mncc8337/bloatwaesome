@@ -1,7 +1,6 @@
 local config       = require("config")
 local gears         = require("gears")
 local awful         = require("awful")
-local lain          = require("lain")
 local hotkeys_popup = require("awful.hotkeys_popup")
 
 local modkey = config.modkey
@@ -177,7 +176,6 @@ globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey }, "r", function ()
-            -- awful.screen.focused().mypromptbox:run()
             awful.spawn("rofi -show run")
         end,
         {description = "run rofi", group = "launcher"}) -- default: run prompt
@@ -192,11 +190,6 @@ globalkeys = gears.table.join(
                   }
               end,
               {description = "lua execute prompt", group = "awesome"}),
-    ]]--
-    --[[
-    -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
     ]]--
 )
 
@@ -231,7 +224,12 @@ clientkeys = gears.table.join(
         function (c)
             c.maximized = not c.maximized
         end ,
-        {description = "(un)maximize", group = "client"})
+        {description = "(un)maximize", group = "client"}),
+    awful.key({ modkey,           }, "y",
+        function (c)
+            c.sticky = not c.sticky
+        end ,
+        {description = "(un)sticky", group = "client"})
     -- awful.key({ modkey, "Control" }, "m",
     --     function (c)
     --         c.maximized_vertical = not c.maximized_vertical

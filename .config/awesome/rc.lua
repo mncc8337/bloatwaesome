@@ -59,7 +59,6 @@ awful.layout.append_default_layouts({
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.spiral.dwindle,
-    bling.layout.mstab,
     bling.layout.centered,
     awful.layout.suit.floating,
 })
@@ -71,6 +70,7 @@ require("ui")
 
 -- config hot corners' action
 local corner_action = require("modules.hot-corners")
+corner_action.set_corner_size(config.hot_corners_size)
 
 corner_action.topright(function()
     awesome.emit_signal("dashboard::toggle")
@@ -92,7 +92,7 @@ client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
 end)
 client.connect_signal("below", function(c)
-    c:geometry(c:gemometry())
+    c:geometry(c:geometry())
 end)
 
 -- Run garbage collector regularly to prevent memory leaks

@@ -1,32 +1,33 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local lain = require("lain")
-
 local ui = require("ui.ui_elements")
 
-local chart_bundle = ui.create_arcchart("󰋊", beautiful.filesys_icon_color)
+local arc_bundle = ui.create_arcchart("󰋊", beautiful.filesys_icon_color)
 
-local fs_chart = chart_bundle.arc
-local lain_fs = lain.widget.fs {
-    timeout = 600,
-    showpopup = "off",
-    settings = function()
-        chart_bundle.set_value(fs_now["/"].percentage)
-                                                                -- units correction
-        widget:set_markup((math.floor(fs_now["/"].used*100)/100)..string.gsub(fs_now["/"].units, 'b', 'iB'))
-    end
+local fs_used_text = wibox.widget {
+    widget = wibox.widget.textbox,
+    markup = "DISK",
+    font = beautiful.font_type.mono.." bold 11",
+    align = "right",
+    valign = "bottom",
+    forced_height = 25,
 }
-lain_fs.align = "right"
-lain_fs.font = beautiful.font_type.mono.." bold 11"
-lain_fs.valign = "bottom"
-lain_fs.forced_height = 25
-awesome.connect_signal("dashboard::show", lain_fs.update)
+
+awesome.connect_signal("fs::usage", function(percent)
+    arc_bundle.set_value(percent)
+end)
+awesome.connect_signal("fs::used", function(used)
+    fs_used_text.markup = (math.floor(used*100)/100).."GB"
+end)
+awesome.connect_signal("dashboard::show", function()
+    awesome.emit_signal("fs::update")
+end)
 
 return ui.create_dashboard_panel(wibox.widget {
     layout = wibox.layout.align.vertical,
     {
-        fs_chart,
+        arc_bundle.arc,
         widget = wibox.container.margin,
         top = 8, left = 8, right = 8, bottom = 5,
     },
@@ -40,7 +41,7 @@ return ui.create_dashboard_panel(wibox.widget {
                 valign = "bottom",
                 forced_height = 25,
             },
-            lain_fs,
+            fs_used_text,
         },
         widget = wibox.container.margin,
         left = 8, right = 8, bottom = 8,

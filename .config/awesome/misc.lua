@@ -87,3 +87,10 @@ function save_json(content, file)
     local encoded = json.encode(content)
     save_to_file(encoded, file)
 end
+
+function markup_fg(color, str)
+    return string.format("<span foreground='%s'>%s</span>", color, str)
+end
+function markup_bg(color, str)
+    return string.format("<span background='%s'>%s</span>", color, str)
+end

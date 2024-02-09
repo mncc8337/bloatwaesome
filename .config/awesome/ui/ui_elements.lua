@@ -1,7 +1,6 @@
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
-local markup    = require("lain").util.markup
 local rubato    = require("modules.rubato")
 
 local arc_num_per_row = 4
@@ -65,7 +64,7 @@ local function create_button_bg(text, color, onclick, width, height, font_size)
     local w = wibox.widget {
         {
             widget = wibox.widget.textbox,
-            markup = markup.fg.color(color, text),
+            markup = markup_fg(color, text),
             font = beautiful.font_type.icon..' '..(font_size or 16),
             align = "center",
             forced_width = width or 32,

@@ -1,8 +1,6 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local markup = require("lain").util.markup
-
 local ui = require("ui.ui_elements")
 
 -- local arc_bundle = ui.create_arcchart("", beautiful.temp_icon_color)
@@ -25,7 +23,7 @@ local temp_icon = wibox.widget {
     align = "center",
 }
 
-awesome.connect_signal("widget::temperature", function(temp)
+awesome.connect_signal("therm::temperature", function(temp)
     temp = tonumber(temp)
 
     local icon
@@ -45,8 +43,11 @@ awesome.connect_signal("widget::temperature", function(temp)
         icon = "󱗗"
     end
 
-    temp_icon.markup = markup.fg.color(beautiful.temp_icon_color, icon)
+    temp_icon.markup = markup_fg(beautiful.temp_icon_color, icon)
     temp_text.markup = temp..'°C'
+end)
+awesome.connect_signal("dashboard::show", function()
+    awesome.emit_signal("therm::update")
 end)
 
 return ui.create_dashboard_panel(wibox.widget {

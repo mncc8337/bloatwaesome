@@ -30,7 +30,7 @@ timeweather:setup {
         layout = wibox.layout.fixed.vertical,
         ui.create_dashboard_panel(wibox.widget {
             widget = wibox.widget.textbox(),
-            markup = "<b>Time and Weather</b>",
+            markup = "<b>Calendar</b>",
             align = "center",
             valign = "center",
             forced_height = 30,

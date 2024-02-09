@@ -37,7 +37,7 @@ theme.color = {
 }
 theme.font_type = {
     standard = "Roboto",
-    mono = "CaskaydiaCove NF",
+    mono = "CaskaydiaMono NF",
     icon = "Symbols Nerd Font",
 }
 theme.font_size = 12
@@ -83,11 +83,12 @@ theme.calendar_day_hover_bg  = theme.color.surface0
 theme.calendar_day_focus_bg  = theme.color.overlay1
 
 --[[ panel ]]--
+theme.dashboard_bg = theme.color.crust
 theme.dashboard_width = 450
 theme.timeweather_width = 400
 theme.panel_bg = theme.color.crust
 
-theme.font          = theme.font_type.standard..' '..theme.font_size
+theme.font = theme.font_type.standard..' '..theme.font_size
 
 --[[ idk ]]--
 theme.bg_focus      = theme.color.subtext0
@@ -116,7 +117,7 @@ theme.hotkeys_description_font = theme.font_type.mono..' '..theme.font_size
 
 theme.useless_gap   = dpi(10)
 theme.border_width  = dpi(2)
-theme.border_normal = theme.color.surface1
+theme.border_normal = theme.color.crust
 theme.border_focus  = theme.color.lavender
 theme.border_marked = theme.color.yellow
 
@@ -125,10 +126,8 @@ theme.popup_roundness = 5
 --[[ image icon ]]--
 theme.layout_tile       = awesome_dir.."/layouts_icons/tile.png"
 theme.layout_tileleft   = awesome_dir.."/layouts_icons/tileleft.png"
-theme.layout_dwindle    = awesome_dir.."/layouts_icons/dwindle.png"
 theme.layout_floating   = awesome_dir.."/layouts_icons/floating.png"
 theme.layout_centered   = awesome_dir.."/layouts_icons/centered.png"
-theme.layout_mstab      = awesome_dir.."/layouts_icons/mstab.png"
 
 theme.awesome_icon = awesome_dir.."/awesome-icon.png"
 
@@ -137,7 +136,9 @@ theme.wallpaper = awesome_dir.."/wallpapers/squares.png"
 theme.icon_theme = "Papirus"
 
 --[[ taglist ]]--
-theme.taglist_bg_urgent   = theme.color.blue
+theme.taglist_bg_focus = theme.color.base
+theme.taglist_fg_not_focus = theme.color.surface2
+theme.taglist_bg_urgent = theme.color.blue
 theme.taglist_spacing     = dpi(2)
 
 -- each tag has a unique color
@@ -163,23 +164,12 @@ theme.playerctl_player  = {"mpd", "%any", "chromium"}
 theme.flash_focus_start_opacity = 0.8
 theme.flash_focus_step = 0.01
 
-theme.mstab_bar_padding = dpi(5)
-theme.mstab_dont_resize_slaves = false
-theme.tabbar_style = "default"
-theme.tabbar_bg_focus = theme.color.lavender
-theme.tabbar_bg_normal = theme.color.base
-theme.tabbar_fg_focus = theme.color.base
-theme.tabbar_fg_normal = theme.color.text
-theme.tabbar_position = "top"
-theme.tabbar_size = dpi(30)
-theme.tabbar_font = theme.font_type.standard..' '..theme.font_size
-
-
 --[[ notification ]]--
 theme.notification_font = theme.font_type.standard..' '..theme.font_size
 theme.notification_bg = theme.color.base
 theme.notification_shape = rounded_rect(theme.popup_roundness)
 theme.notification_border_color = theme.border_focus
+theme.notification_max_width = 500
 -- change theme.notification_border_width does nothing
 naughty.config.defaults.border_width = theme.border_width
 

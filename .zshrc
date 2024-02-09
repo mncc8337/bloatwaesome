@@ -26,7 +26,7 @@ HIST_STAMPS="mm/dd/yyyy"
 
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(thefuck lol git fzf zsh-interactive-cd)
+plugins=(fzf zsh-interactive-cd)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -38,7 +38,9 @@ if [[ -n $(tty | grep tty) ]]; then
 fi
 
 alias py="python3"
-alias neo-matrix="neo-matrix -D"
+alias mv="mv -v"
+alias cp="cp -v"
+alias rm="rm -v"
 
 export PATH="$HOME/bin:"$PATH
 

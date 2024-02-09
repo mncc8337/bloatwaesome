@@ -17,10 +17,12 @@ local cpu_usage_text = wibox.widget {
     forced_height = 25,
 }
 
-awesome.connect_signal("widget::cpu_usage", function(usage)
+awesome.connect_signal("cpu::usage", function(usage)
     cpu_usage_text.markup = usage..'%'
     arc_bundle.set_value(usage)
-    -- graph_bundle.add_value(usage)
+end)
+awesome.connect_signal("dashboard::show", function()
+    awesome.emit_signal("cpu::update")
 end)
 
 return ui.create_dashboard_panel(wibox.widget {

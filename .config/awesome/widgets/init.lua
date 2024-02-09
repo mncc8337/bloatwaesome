@@ -49,5 +49,6 @@ return {
     clock = clock,
     alsa = alsa.volumewidget,
     volumeslider = alsa.volume_slider,
+    launcher = require("widgets.launcher"),
     --mykeyboardlayout = awful.widget.keyboardlayout()
 }

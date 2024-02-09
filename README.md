@@ -6,12 +6,12 @@ my _dots_
 ## Details
 - **Distro**: arch
 - **WM**: awesomewm
-- **Compositor**: [compfy](https://github.com/allusive-dev/compfy)
+- **Compositor**: [picom](https://github.com/yshui/picom)
 - **Icons**: [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
 - **Cursor**: [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor)
 - **Launcher**: [rofi](https://github.com/davatorium/rofi)
 - **Terminal**: [alacritty](https://github.com/alacritty/alacritty)
-- **Shell**: zsh
+- **Shell**: zsh with [oh my zsh](https://github.com/ohmyzsh/ohmyzsh)
 
 ## Dependencies
 |package               |  purpose                         |note|
@@ -24,9 +24,9 @@ my _dots_
 |cava-git              |audio visualizer                  |*   |
 |alsa-utils            |volume control                    |    |
 |playerctl             |music control                     |    |
-|compfy                |the compositor                    |    |
+|picom-git             |the compositor                    |    |
 |terminus-font         |tty font                          |*   |
-|ttf-cascadia-code-nerd|mono font                         |*   |
+|ttf-cascadia-mono-nerd|mono font                         |*   |
 |ttf-roboto            |system font                       |*   |
 |ttf-nerd-fonts-symbols|correctly display nerd font symbol|**  |
 |papirus-icon-theme    |icon theme                        |*   |

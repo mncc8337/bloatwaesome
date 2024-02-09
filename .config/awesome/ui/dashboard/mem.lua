@@ -1,8 +1,6 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local lain      = require("lain")
-
 local ui        = require("ui.ui_elements")
 
 --[[ arcchart ]]--
@@ -17,11 +15,14 @@ local mem_used_text = wibox.widget {
     forced_height = 25,
 }
 
-awesome.connect_signal("widget::memory_percent", function(percent)
+awesome.connect_signal("mem::percent", function(percent)
     arc_bundle.set_value(percent)
 end)
-awesome.connect_signal("widget::memory", function(mem)
-    mem_used_text.markup = (math.floor(mem*100/1024)/100).."GiB"
+awesome.connect_signal("mem::used", function(mem)
+    mem_used_text.markup = (math.floor(mem*100/1000)/100).."GB"
+end)
+awesome.connect_signal("dashboard::show", function()
+    awesome.emit_signal("mem::update")
 end)
 
 return ui.create_dashboard_panel(wibox.widget {

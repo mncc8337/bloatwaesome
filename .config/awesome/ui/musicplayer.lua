@@ -105,7 +105,7 @@ volume_slider:connect_signal("property::value", function()
 end)
 
 ---- song info and art
-local song_title = wibox.widget.textbox("No song")
+local song_title = wibox.widget.textbox("Nothing to see")
 song_title.font = beautiful.font_type.standard.." bold 18"
 local song_detail = wibox.widget.textbox("hehe")
 song_detail.font = beautiful.font_type.standard.." 12"
@@ -304,8 +304,8 @@ awesome.connect_signal("music::refreshUI", function()
     end
 end)
 awesome.connect_signal("music::set_cover", function(path)
-    -- coverico.image = gears.surface.load_uncached(path)
-    coverico.image = path
+    coverico.image = gears.surface.load_uncached(path)
+    -- coverico.image = path
 end)
 awesome.connect_signal("music::set_title", function(_title)
     song_title:set_markup(_title)

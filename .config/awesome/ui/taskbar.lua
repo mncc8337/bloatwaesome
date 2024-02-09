@@ -4,6 +4,7 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 local widgets   = require("widgets")
+
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
     awful.button({ }, 1, function(t) t:view_only() end),
@@ -58,33 +59,47 @@ local function set_wallpaper(s)
         gears.wallpaper.maximized(wallpaper, s, true)
     end
 end
-
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
+
+local function update_tag_color(self, c3, index, objects)
+    self:get_children_by_id('mytext_role')[1].text = ""
+    self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
+
+    for i, tag in ipairs(awful.screen.focused().tags) do
+        if i == index then
+            if #tag:clients() > 0 then
+                self:get_children_by_id('mytext_role')[1].text = ""
+            end
+            if tag.selected then
+                self:get_children_by_id('text_color')[1].fg = beautiful.tag_color[index]
+            end
+        end
+    end
+end
 
 --[[ taskbar ]]--
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
-
-    -- Each screen has its own tag table.
-    local tag_table = {}
-    for i = 1, config.tag_num do
-        table.insert(tag_table, i..'') -- my way to convert int to string lol
-    end
-    awful.tag(tag_table, s, awful.layout.layouts[1])
-
-    -- Create a promptbox for each screen
-    --s.mypromptbox = awful.widget.prompt()
-
+    
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.layoutbox = awful.widget.layoutbox(s)
     s.layoutbox:buttons(gears.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+        awful.button({ }, 1, function () awful.layout.inc( 1) end),
+        awful.button({ }, 3, function () awful.layout.inc(-1) end),
+        awful.button({ }, 4, function () awful.layout.inc( 1) end),
+        awful.button({ }, 5, function () awful.layout.inc(-1) end)
+    ))
+
+    -- Each screen has its own tag table.
+    local tag_table = {}
+    for i = 1, config.tag_num do
+        table.insert(tag_table, tostring(i))
+    end
+    awful.tag(tag_table, s, awful.layout.layouts[1])
+    
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {
         screen  = s,
@@ -116,36 +131,9 @@ awful.screen.connect_for_each_screen(function(s)
                    self.bg = beautiful.taglist_bg_focus
                 end)
 
-                self:get_children_by_id('mytext_role')[1].text = ""
-                self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
-
-                for i, tag in ipairs(awful.screen.focused().tags) do
-                    if i == index then
-                        if #tag:clients() > 0 then
-                            self:get_children_by_id('mytext_role')[1].text = ""
-                        end
-                        if tag.selected then
-                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_color[index]
-                        end
-                    end
-                end
+                update_tag_color(self, c3, index, objects)
             end,
-
-            update_callback = function(self, c3, index, objects) --luacheck: no unused args
-                self:get_children_by_id('mytext_role')[1].text = ""
-                self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
-
-                for i, tag in ipairs(awful.screen.focused().tags) do
-                    if i == index then
-                        if #tag:clients() > 0 then
-                            self:get_children_by_id('mytext_role')[1].text = ""
-                        end
-                        if tag.selected then
-                            self:get_children_by_id('text_color')[1].fg = beautiful.tag_color[index]
-                        end
-                    end
-                end
-            end,
+            update_callback = update_tag_color,
         },
     }
 
@@ -205,11 +193,10 @@ awful.screen.connect_for_each_screen(function(s)
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            s.layoutbox,
+            widgets.launcher,
             s.mytaglist,
             widgets.separator,
             s.mytasklist,
-            -- widgets.focused_client,
         },
         -- middle
         widgets.clock,
@@ -225,7 +212,7 @@ awful.screen.connect_for_each_screen(function(s)
                 left = -4, right = -4,
             },
             widgets.alsa,
-            wibox.widget {} -- placeholder
+            s.layoutbox,
         }
     }
 end)

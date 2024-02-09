@@ -1,7 +1,6 @@
 local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
-local markup    = require("lain").util.markup
 local ui        = require("ui.ui_elements")
 
 local power_menu = wibox.widget {
