@@ -12,8 +12,8 @@ local launcher = wibox.widget {
         font = beautiful.font_type.icon,
     },
     widget = wibox.container.background,
-    fg = beautiful.color.crust,
-    bg = beautiful.color.lavender,
+    fg = beautiful.launcher_fg,
+    bg = beautiful.launcher_bg,
     shape = rounded_rect(beautiful.popup_roundness),
 }
 launcher:buttons(awful.button({}, 1, function()

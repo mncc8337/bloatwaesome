@@ -29,25 +29,25 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    local ontop_button = button(beautiful.color.surface0, function()
+    local ontop_button = button(beautiful.titlebar_button_inactive, function()
         c.ontop = not c.ontop
     end)
     c:connect_signal("property::ontop", function(c)
         if c.ontop then
-            ontop_button.bg = beautiful.color.blue
+            ontop_button.bg = beautiful.titlebar_ontop_button
         else
-            ontop_button.bg = beautiful.color.surface0
+            ontop_button.bg = beautiful.titlebar_button_inactive
         end
     end)
 
-    local sticky_button = button(beautiful.color.surface0, function()
+    local sticky_button = button(beautiful.titlebar_button_inactive, function()
         c.sticky = not c.sticky
     end)
     c:connect_signal("property::sticky", function(c)
         if c.sticky then
-            sticky_button.bg = beautiful.color.green
+            sticky_button.bg = beautiful.titlebar_sticky_button
         else
-            sticky_button.bg = beautiful.color.surface0
+            sticky_button.bg = beautiful.titlebar_button_inactive
         end
     end)
 
@@ -63,10 +63,10 @@ client.connect_signal("request::titlebars", function(c)
                 layout = wibox.layout.fixed.horizontal,
                 spacing = 5,
                 wibox.widget {forced_width = 2},
-                button(beautiful.color.red, function()
+                button(beautiful.titlebar_close_button, function()
                     c:kill()
                 end),
-                button(beautiful.color.yellow, function()
+                button(beautiful.titlebar_minimize_button, function()
                     gears.timer.delayed_call(function()
                         c.minimized = not c.minimized
                     end)

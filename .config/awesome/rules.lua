@@ -44,6 +44,7 @@ awful.rules.rules = {
             sticky = true,
             height = 500,
             width = 850,
+            border_color = beautiful.panel_border,
         }
     },
     -- Floating clients.

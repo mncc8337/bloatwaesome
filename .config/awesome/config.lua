@@ -22,6 +22,21 @@ return {
 
     profile_picture = "/home/mncc/.config/awesome/avt.png",
 
+    -- interval to reload widget in second
+    widget_interval = {
+        cpu = 2,
+        mem = 2,
+        disk = 15 * 60,
+        therm = 2
+    },
     -- alsa device to control
     alsa_device = 0,
+    -- cpu core to show usage, 0 for average
+    core_id = 0,
+    -- tempfile to get temperature
+    -- run `find /sys/devices -type f -name "*temp*"` and choose a file here
+    -- or set to nil to automatically find it
+    tempfile = nil,
+
+    hot_corners_size = 2,
 }

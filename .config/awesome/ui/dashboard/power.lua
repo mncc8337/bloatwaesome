@@ -10,14 +10,14 @@ local power_menu = wibox.widget {
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            ui.create_button_bg("󰐥", beautiful.color.red, function() awful.spawn("systemctl poweroff") end),
-            ui.create_button_bg("󰜉", beautiful.color.green, function() awful.spawn("systemctl reboot") end),
+            ui.create_button_bg("󰐥", beautiful.shutdown_button, function() awful.spawn("systemctl poweroff") end),
+            ui.create_button_bg("󰜉", beautiful.reboot_button, function() awful.spawn("systemctl reboot") end),
         },
         {
             layout = wibox.layout.fixed.horizontal,
             spacing = 5,
-            ui.create_button_bg("󰤄", beautiful.color.blue, function() awful.spawn("systemctl suspend") end),
-            ui.create_button_bg("󰍃", beautiful.color.rosewater, function() awesome.quit() end),
+            ui.create_button_bg("󰤄", beautiful.sleep_button, function() awful.spawn("systemctl suspend") end),
+            ui.create_button_bg("󰍃", beautiful.logout_button, function() awesome.quit() end),
         },
     },
     widget = wibox.container.margin,

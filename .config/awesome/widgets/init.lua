@@ -7,7 +7,7 @@ local separator = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
     shape = gears.shape.rounded_rect,
-    color = beautiful.color.surface0,
+    color = beautiful.separator,
     forced_height = 18,
     forced_width = 4,
 }
@@ -17,7 +17,7 @@ local thin_separator = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
     shape = gears.shape.rounded_rect,
-    color = beautiful.color.surface0,
+    color = beautiful.separator,
     forced_height = 18,
     forced_width = 2,
 }

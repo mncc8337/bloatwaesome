@@ -35,8 +35,8 @@ local cal = wibox.widget {
     long_weekdays = true,
 }
 
-local prev_button = ui.create_button_fg("", beautiful.color.surface0, beautiful.color.text, function(_) end, 32, 23, 16)
-local next_button = ui.create_button_fg("", beautiful.color.surface0, beautiful.color.text, function(_) end, 32, 23, 16)
+local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
+local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
 
 local date_selected = nil
 local function decorate_cell(widget, flag, date)

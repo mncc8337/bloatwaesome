@@ -4,34 +4,41 @@ local gears = require("gears")
 
 local theme = {}
 
--- mocha
 theme.color = {
-    rosewater = "#f5e0dc",
-    flamingo  = "#f2cdcd",
-    pink      = "#f5c2e7",
-    mauve     = "#cba6f7",
-    red       = "#f38ba8",
-    maroon    = "#eba0ac",
-    peach     = "#fab387",
-    yellow    = "#f9e2af",
-    green     = "#a6e3a1",
-    teal      = "#94e2d5",
-    sky       = "#89dceb",
-    sapphire  = "#74c7ec",
-    blue      = "#89b4fa",
-    lavender  = "#b4befe",
-    text      = "#cdd6f4",
-    subtext1  = "#bac2de",
-    subtext0  = "#a6adc8",
-    overlay2  = "#9399b2",
-    overlay1  = "#7f849c",
-    overlay0  = "#6c7086",
-    surface2  = "#585b70",
-    surface1  = "#45475a",
-    surface0  = "#313244",
-    base      = "#1e1e2e",
-    mantle    = "#181825",
-    crust     = "#11111b",
+    "#1e1e2e" , -- base
+    "#11111b" , -- crust
+    "#313244" , -- surface0
+    "#45475a" , -- surface1
+    "#585b70" , -- surface2
+    "#cdd6f4" , -- text
+    "#f5e0dc" , -- rosewater
+    "#b4befe" , -- lavender
+    "#f38ba8" , -- red
+    "#fab387" , -- peach
+    "#f9e2af" , -- yellow
+    "#a6e3a1" , -- green
+    "#94e2d5" , -- teal
+    "#89b4fa" , -- blue
+    "#cba6f7" , -- mauve
+    "#f2cdcd" , -- flamingo
+}
+theme._color = {
+    base      = theme.color[1],
+    crust     = theme.color[2],
+    surface0  = theme.color[3],
+    surface1  = theme.color[4],
+    surface2  = theme.color[5],
+    text      = theme.color[6],
+    rosewater = theme.color[7],
+    lavender  = theme.color[8],
+    red       = theme.color[9],
+    peach     = theme.color[10],
+    yellow    = theme.color[11],
+    green     = theme.color[12],
+    teal      = theme.color[13],
+    blue      = theme.color[14],
+    mauve     = theme.color[15],
+    flamingo  = theme.color[16],
 }
 
 theme.wallpaper = gears.filesystem.get_configuration_dir().."wallpapers/yosemite.png"

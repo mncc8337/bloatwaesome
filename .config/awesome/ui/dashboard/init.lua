@@ -55,11 +55,11 @@ local dashboard = wibox {
     --       title   profile-panel  power-menu  music-player  volume  arcchart            spacing
     height = 30    + 137          + 79        + 144         + 50    + ui.arc_size + 46  + 8 * 7,
     y = config.bar_size,
-    bg = beautiful.dashboard_bg,
+    bg = beautiful.panel_bg,
     screen = awful.screen.focused(),
     shape = rounded_rect(beautiful.popup_roundness),
     border_width = beautiful.border_width,
-    border_color = beautiful.border_focus,
+    border_color = beautiful.panel_border,
 }
 
 dashboard:setup {

@@ -17,7 +17,7 @@ local function create_arcchart(icon, fg)
     local arc = wibox.widget {
         widget = wibox.container.arcchart,
         colors = {fg},
-        bg = beautiful.color.crust,
+        bg = beautiful.arc_bg,
         forced_width = arc_size,
         forced_height = arc_size,
         thickness = 8,

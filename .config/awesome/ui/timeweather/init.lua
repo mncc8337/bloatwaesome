@@ -18,11 +18,11 @@ local timeweather = wibox {
     --       title  time      spacing
     height = 30   + 22*7+68 + 8*3,
     x = (awful.screen.focused().geometry.width - beautiful.timeweather_width)/2,
-    bg = beautiful.dashboard_bg,
+    bg = beautiful.panel_bg,
     screen = awful.screen.focused(),
     shape = rounded_rect(beautiful.popup_roundness),
     border_width = beautiful.border_width,
-    border_color = beautiful.border_focus,
+    border_color = beautiful.panel_border,
 }
 
 timeweather:setup {
