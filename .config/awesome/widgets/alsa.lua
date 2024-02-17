@@ -1,10 +1,10 @@
 -- signals
 --[[
-    widget::increase_volume_level, level
-    widget::toggle_mute
-    widget::show_volume_control, top or top_right, timeout
+    alsa::increase_volume_level, level
+    alsa::toggle_mute
+    alsa::show_volume_control, top or top_right, timeout
 
-    widget::volume_mute, true or false
+    alsa::volume_mute, true or false
 ]]--
 local config       = require("config")
 local gears     = require("gears")
@@ -41,7 +41,7 @@ local lain_alsa = lain.widget.alsa {
 
         if prev_status ~= volume_now.status then
             local status = volume_now.status == "off"
-            awesome.emit_signal("widget::volume_mute", status)
+            awesome.emit_signal("alsa::volume_mute", status)
         end
         prev_status = volume_now.status
 
@@ -182,21 +182,21 @@ volumewidget:connect_signal("mouse::leave", function()
     lain_alsa.update()
 end)
 
-awesome.connect_signal("widget::increase_volume_level", function(num)
+awesome.connect_signal("alsa::increase_volume_level", function(num)
     local sign = ''
     if num > 0 then sign = '+' else sign = '-' end
     awful.spawn.easy_async("pactl set-sink-volume "..config.alsa_device..' '..sign..math.abs(num)..'%', lain_alsa.update)
     _volume_slider.value = lain_alsa.last.level + num
     show_volume_slider("top", 1.5)
 end)
-awesome.connect_signal("widget::toggle_mute", function()
+awesome.connect_signal("alsa::toggle_mute", function()
     awful.spawn.easy_async("pactl set-sink-mute "..config.alsa_device.." toggle", lain_alsa.update)
     show_volume_slider("top", 1.5)
 end)
-awesome.connect_signal("widget::show_volume_control", function(pos, timeout)
+awesome.connect_signal("alsa::show_volume_control", function(pos, timeout)
     show_volume_slider(pos, timeout)
 end)
-awesome.connect_signal("widget::hide_volume_control", function(pos, timeout)
+awesome.connect_signal("alsa::hide_volume_control", function(pos, timeout)
     close_popup_timer:stop()
     volume_slider_popup.visible = false
 end)

@@ -21,12 +21,14 @@ musicico.font = beautiful.font_type.icon.." 12"
 local titlew = wibox.widget.textbox()
 
 local function no_player_fallback()
+    musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
+    titlew.markup = ""
     awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
     awesome.emit_signal("music::set_title", "Nothing to see")
     awesome.emit_signal("music::set_detail", " ")
     awesome.emit_signal("music::set_total_time", 1)
     awesome.emit_signal("music::set_elapsed_time", 0)
-    awesome.emit_signal("music:refreshUI")
+    awesome.emit_signal("music::refreshUI")
 end
 
 local playerctl = bling.signal.playerctl.lib()
@@ -35,12 +37,7 @@ local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
     -- consider this is `player_off`
     if artist == '' or title == '' then
-        single_timer(0.01, function()
-            musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
-            titlew.markup = ""
-            no_player_fallback()
-        end):start()
-
+        no_player_fallback()
         player_off = true
         return
     end
@@ -131,8 +128,6 @@ end
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""
-    musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
-    titlew.markup = ""
     player_off = true
     no_player_fallback()
 end)
@@ -227,14 +222,6 @@ playerctlwidget:connect_signal("mouse::leave", function()
         scrl_title:continue()
     end
 end)
-
--- playerctlwidget:connect_signal("mouse::enter", function()
---     if player_off then return end
---     awesome.emit_signal("music::show_player", true)
--- end)
--- playerctlwidget:connect_signal("mouse::leave", function()
---     awesome.emit_signal("music::hide_player")
--- end)
 
 -- process music player signals
 awesome.connect_signal("music::volume_changed", function(value)

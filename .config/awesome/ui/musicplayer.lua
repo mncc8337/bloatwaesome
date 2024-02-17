@@ -1,6 +1,6 @@
 ---- signals
 --[[
-    signal name                 arguments       note
+    signal name                 argument        note
 
                             --<< player calls >>--
     music::volume_changed       value
@@ -41,15 +41,14 @@ local awesome_dir = gears.filesystem.get_configuration_dir()
 
 local status = {
     player_paused = false,
-    shuffle = false,
+    shuffle       = false,
     loop_playlist = false,
-    loop_track = false,
-    no_loop = false,
+    loop_track    = false,
+    no_loop       = false,
 }
 local time = {
-    -- updating = false,
     elapsed = 0,
-    total = 100
+    total   = 100
 }
 local function timeformat(t)
     decor = ''
@@ -75,6 +74,7 @@ local music_progressbar = wibox.widget {
 local text_time_elapsed = wibox.widget.textbox("N/A")
 text_time_elapsed.font = beautiful.font_type.standard.." Bold 11"
 text_time_elapsed.valign = "top"
+
 local text_time_total = wibox.widget.textbox("N/A")
 text_time_total.font = beautiful.font_type.standard.." Bold 11"
 text_time_total.valign = "top"
@@ -107,12 +107,11 @@ end)
 ---- song info and art
 local song_title = wibox.widget.textbox("Nothing to see")
 song_title.font = beautiful.font_type.standard.." bold 18"
-local song_detail = wibox.widget.textbox("hehe")
+local song_detail = wibox.widget.textbox(" ")
 song_detail.font = beautiful.font_type.standard.." 12"
-local coverico = wibox.widget.imagebox()
+local coverico = wibox.widget.imagebox(awesome_dir.."fallback.png")
 coverico.clip_shape = rounded_rect(beautiful.popup_roundness)
 coverico.forced_height = 128
-
 
 -- music player
 local recheck_delay = 0.3
@@ -253,39 +252,6 @@ local music_player_widget = wibox.widget {
     }
 }
 
--- -- a larger version
--- local music_player_popup = awful.popup {
---     ontop = true,
---     visible = false,
---     type = "dock",
---     maximum_height = 172,
---     -- width = 450,
---     shape = rounded_rect(beautiful.round_corner_radius),
---     border_color = beautiful.border_focus,
---     border_width = beautiful.border_width,
---     widget = music_player_widget,
---     shape = rounded_rect(beautiful.popup_roundness),
--- }
-
--- local music_player_timer = single_timer(0.1, function()
---     music_player_popup.visible = false
--- end)
-
--- music_player_popup:connect_signal("mouse::enter", function() music_player_timer:stop()  end)
--- music_player_popup:connect_signal("mouse::leave", function() music_player_timer:again() end)
-
--- awesome.connect_signal("music::show_player", function(near_mouse)
---     awesome.emit_signal("music::refreshUI")
---     music_player_timer:stop()
---     music_player_popup.visible = true
---     if near_mouse then
---         music_player_popup:move_next_to(mouse.current_widget_geometry)
---     end
--- end)
--- awesome.connect_signal("music::hide_player", function()
---     music_player_timer:again()
--- end)
-
 awesome.connect_signal("music::refreshUI", function()
     refresh_toggle_button()
 
@@ -333,9 +299,6 @@ end)
 awesome.connect_signal("music::set_volume", function(val)
     volume_slider.value = val
 end)
-
--- set default art
-awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
 
 return {
     widget = music_player_widget,

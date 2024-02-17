@@ -136,11 +136,11 @@ globalkeys = gears.table.join(
     --
 
     -- audio
-    awful.key({}, "XF86AudioRaiseVolume", function() awesome.emit_signal("widget::increase_volume_level",  2) end,
+    awful.key({}, "XF86AudioRaiseVolume", function() awesome.emit_signal("alsa::increase_volume_level",  2) end,
               {description = "increase volume",    group = "media"}),
-    awful.key({}, "XF86AudioLowerVolume", function() awesome.emit_signal("widget::increase_volume_level", -2) end,
+    awful.key({}, "XF86AudioLowerVolume", function() awesome.emit_signal("alsa::increase_volume_level", -2) end,
               {description = "decrease volume",    group = "media"}),
-    awful.key({}, "XF86AudioMute",        function() awesome.emit_signal("widget::toggle_mute")               end,
+    awful.key({}, "XF86AudioMute",        function() awesome.emit_signal("alsa::toggle_mute")               end,
               {description = "mute/unmute volume", group = "media"}),
     --
 
