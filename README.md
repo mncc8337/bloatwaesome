@@ -16,6 +16,8 @@ my _dots_
 ## Dependencies
 |package               |  purpose                         |note|
 |----------------------|----------------------------------|----|
+|xautolock             |screen auto locker                |    |
+|betterlockscreen      |screen locker                     |    |
 |awesome-git           |the WM                            |    |
 |zsh                   |the shell                         |    |
 |alacritty             |the terminal                      |    |
@@ -33,6 +35,6 @@ my _dots_
 |bibata-cursor-theme   |cursor theme                      |*   |
 
 _* : optional_  
-_**: no need to install if your nerd font is working as intended_  
+_**: no need to install if nerd font glyphs is not offset/weird_  
 Any packages above can be installed by using any AUR helper  
 for example `yay -S awesome-git`
