@@ -14,8 +14,9 @@ return {
     -- recommend: 12 if not floating bar
     --             5 if     floating bar
 
-    terminal = "alacritty",
-    editor = "code",
+    terminal    = "alacritty",
+    filemanager = "nemo",
+    editor      = "code",
 
     modkey = "Mod4",
     altkey = "Mod1",

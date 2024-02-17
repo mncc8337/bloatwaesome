@@ -23,16 +23,16 @@ awful.rules.rules = {
             placement = awful.placement.no_overlap+awful.placement.no_offscreen,
         }
     },
-    -- pavucontrol
-    {
-        rule_any = {class = {"Pavucontrol"}},
-        properties = {
-            ontop = true,
-            floating = true,
-            skip_taskbar = true,
-            placement = awful.placement.top_right,
-        }
-    },
+    -- -- pavucontrol
+    -- {
+    --     rule_any = {class = {"Pavucontrol"}},
+    --     properties = {
+    --         ontop = true,
+    --         floating = true,
+    --         skip_taskbar = true,
+    --         placement = awful.placement.top_right,
+    --     }
+    -- },
     -- drop-down terminal
     {
         rule_any = {class = {"drop-down-terminal"}},

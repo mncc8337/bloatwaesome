@@ -1,0 +1,12 @@
+#!/bin/env python3
+
+import time
+
+tm = time.time()
+input()
+cu = time.time() - tm
+
+h = int(cu / 3600); cu -= h * 3600
+m = int(cu / 60);   cu -= m * 60
+s = int(cu * 10 + 0.5) / 10
+print(f"{h}h {m}m {s}s")

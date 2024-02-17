@@ -23,7 +23,7 @@ local titlew = wibox.widget.textbox()
 local function no_player_fallback()
     awesome.emit_signal("music::set_cover", awesome_dir.."fallback.png")
     awesome.emit_signal("music::set_title", "Nothing to see")
-    awesome.emit_signal("music::set_detail", "hehe")
+    awesome.emit_signal("music::set_detail", " ")
     awesome.emit_signal("music::set_total_time", 1)
     awesome.emit_signal("music::set_elapsed_time", 0)
     awesome.emit_signal("music:refreshUI")
@@ -38,10 +38,10 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         single_timer(0.01, function()
             musicico.markup = markup_fg(beautiful.music_icon_color_inactive, "󰝛 ")
             titlew.markup = ""
+            no_player_fallback()
         end):start()
 
         player_off = true
-        no_player_fallback()
         return
     end
     player_off = false

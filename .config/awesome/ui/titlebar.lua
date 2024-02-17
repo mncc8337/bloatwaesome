@@ -29,7 +29,8 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    local ontop_button = button(beautiful.titlebar_button_inactive, function()
+    local _ontop_color = not c.ontop and beautiful.titlebar_button_inactive or beautiful.titlebar_ontop_button
+    local ontop_button = button(_ontop_color, function()
         c.ontop = not c.ontop
     end)
     c:connect_signal("property::ontop", function(c)
@@ -40,7 +41,8 @@ client.connect_signal("request::titlebars", function(c)
         end
     end)
 
-    local sticky_button = button(beautiful.titlebar_button_inactive, function()
+    local _sticky_color = not c.sticky and beautiful.titlebar_button_inactive or beautiful.titlebar_sticky_button
+    local sticky_button = button(_sticky_color, function()
         c.sticky = not c.sticky
     end)
     c:connect_signal("property::sticky", function(c)
@@ -56,33 +58,38 @@ client.connect_signal("request::titlebars", function(c)
         bg_normal = beautiful.border_normal,
         bg_focus = beautiful.border_focus,
     }):setup {
-        layout = wibox.layout.align.horizontal,
         wibox.widget {
-            widget = wibox.container.place,
-            {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = 5,
-                wibox.widget {forced_width = 2},
-                button(beautiful.titlebar_close_button, function()
-                    c:kill()
-                end),
-                button(beautiful.titlebar_minimize_button, function()
-                    gears.timer.delayed_call(function()
-                        c.minimized = not c.minimized
-                    end)
-                end),
-            }
+            layout = wibox.layout.align.horizontal,
+            -- right
+            wibox.widget {
+                widget = wibox.container.place,
+                {
+                    layout = wibox.layout.fixed.horizontal,
+                    spacing = 5,
+                    button(beautiful.titlebar_close_button, function()
+                        c:kill()
+                    end),
+                    button(beautiful.titlebar_minimize_button, function()
+                        gears.timer.delayed_call(function()
+                            c.minimized = not c.minimized
+                        end)
+                    end),
+                }
+            },
+            -- middle
+            wibox.widget {buttons = buttons},
+            -- left
+            wibox.widget {
+                widget = wibox.container.place,
+                {
+                    layout = wibox.layout.fixed.horizontal,
+                    spacing = 5,
+                    ontop_button,
+                    sticky_button,
+                }
+            },
         },
-        wibox.widget {buttons = buttons},
-        wibox.widget {
-            widget = wibox.container.place,
-            {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = 5,
-                ontop_button,
-                sticky_button,
-                wibox.widget {forced_width = 2},
-            }
-        },
+        widget = wibox.container.margin,
+        left = 10, right = 10,
     }
 end)

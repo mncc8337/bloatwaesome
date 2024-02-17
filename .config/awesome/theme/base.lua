@@ -186,19 +186,20 @@ theme.tag_color = {
     theme._color.flamingo,
     theme._color.lavender,
     theme._color.rosewater,
-    theme._color.pink,
     theme._color.mauve,
-    theme._color.maroon,
-    theme._color.sky,
     theme._color.teal,
+    theme._color.peach,
+    -------
+    theme._color.text,
+    theme._color.blue,
 }
 
 --[[ bling ]]--
 -- prioritize mpd, deprioritize chromium
 theme.playerctl_player  = {"mpd", "%any", "chromium"}
 
-theme.flash_focus_start_opacity = 0.8
-theme.flash_focus_step = 0.01
+-- theme.flash_focus_start_opacity = 0.8
+-- theme.flash_focus_step = 0.01
 
 --[[ notification ]]--
 theme.notification_font = theme.font_type.standard..' '..theme.font_size

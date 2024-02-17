@@ -42,6 +42,6 @@ alias mv="mv -v"
 alias cp="cp -v"
 alias rm="rm -v"
 
-export PATH="$HOME/bin:"$PATH
+export PATH="$HOME/.bin:"$PATH
 
 crunchbang-mini

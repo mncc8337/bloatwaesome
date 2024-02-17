@@ -58,7 +58,6 @@ local bling = require("modules.bling")
 awful.layout.append_default_layouts({
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
-    awful.layout.suit.spiral.dwindle,
     bling.layout.centered,
     awful.layout.suit.floating,
 })

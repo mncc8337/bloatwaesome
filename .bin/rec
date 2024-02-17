@@ -6,7 +6,7 @@
 # default vals
 audio_param=""
 framerate=60
-output="$HOME/Videos/$(date +"%Y-%m-%d %H-%M-%S").mkv"
+output="$HOME/Videos/$(date +"%Y-%m-%d_%H-%M-%S").mkv"
 
 # default geometries
 x=0
