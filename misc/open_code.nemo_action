@@ -1,0 +1,10 @@
+[Nemo Action]
+Active=true
+Name=Open VSCode here
+Exec=code %P
+Icon-Name=code
+Selection=none
+Extensions=any;
+EscapeSpaces=false
+Separator=,
+Quote=single
