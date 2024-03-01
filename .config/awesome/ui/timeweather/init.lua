@@ -41,8 +41,7 @@ timeweather:setup {
     margins = 4,
 }
 
--- the direction of the timeweather
-local timeweather_opened = true
+local timeweather_opened = false
 
 local timeweather_timed = rubato.timed {
     duration = 0.3,

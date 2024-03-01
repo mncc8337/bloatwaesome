@@ -36,12 +36,16 @@ local playerctl = bling.signal.playerctl.lib()
 local prev_notification
 playerctl:connect_signal("metadata", function(_, title, artist, album_path, album, new, player_name)
     -- consider this is `player_off`
-    if artist == '' or title == '' then
+    if artist == '' and title == '' then
         no_player_fallback()
         player_off = true
         return
     end
     player_off = false
+
+    if artist == '' then
+        artist = " "
+    end
 
     current_player = player_name
     
@@ -84,7 +88,11 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         album_path = awesome_dir.."fallback.png"
     end
     
-    local display = artist.." - "..title
+    local display = title
+    if artist ~= " " then
+        display = artist.." - "..title
+    end
+
     if title:find("%s%-%s") and player_name == "chromium" then
         display = title
     end

@@ -92,8 +92,7 @@ dashboard:setup {
     margins = 4,
 }
 
--- the direction of the dashboard
-local dashboard_opened = true
+local dashboard_opened = false
 
 local dashboard_timed = rubato.timed {
     duration = 0.3,

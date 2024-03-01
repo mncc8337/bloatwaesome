@@ -1,8 +1,11 @@
 return {
     openweathermap = {
-        API_key = "open weather API key",
-        latitude = 69,
+        API_key    = "open weather API key",
+        latitude   = 69,
         longtitude = 420,
+        units      = "metric",
+        lang       = "us",
+        cnt        = 5,
     },
     theme = "catppuccin", -- catppuccin, monochrome
 
@@ -25,13 +28,17 @@ return {
 
     -- interval to reload widget in second
     widget_interval = {
-        cpu = 2,
-        mem = 2,
-        disk = 15 * 60,
-        therm = 2
+        cpu     = 2,
+        mem     = 2,
+        disk    = 15 * 60,
+        therm   = 2,
+        alsa    = 5 * 60,
+        weather = 15 * 60,
     },
-    -- alsa device to control
-    alsa_device = 0,
+    -- mixer channel to control
+    alsa_channel = "Master",
+    -- volume slider length in taskbar, must be in float
+    mini_volume_slider_length = 100.0,
     -- cpu core to show usage, 0 for average
     core_id = 0,
     -- tempfile to get temperature

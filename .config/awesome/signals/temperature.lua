@@ -11,6 +11,8 @@ local config = require("config")
 local cmd = "find /sys/devices -type f -name \"*temp*\" | grep -E \"coretemp.*temp1_input\""
 local tempfile = nil
 
+local last_temp = nil
+
 -- get tempfile
 if config.tempfile == nil then
     awful.spawn.easy_async_with_shell(cmd, function(stdout)
@@ -22,7 +24,11 @@ local function get_info(stdout)
     stdout = stdout:sub(1, -2)
 
     local temp = tonumber(stdout) / 1000
-    awesome.emit_signal("therm::temperature", temp)
+
+    if last_temp ~= temp then
+        awesome.emit_signal("therm::temperature", temp)
+        last_temp = temp
+    end
 end
 
 awesome.connect_signal("therm::update", function()

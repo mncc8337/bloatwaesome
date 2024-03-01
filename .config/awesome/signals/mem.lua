@@ -10,16 +10,19 @@ local awful  = require("awful")
 local gears  = require("gears")
 local config = require("config")
 
-local total    = 0
-local free     = 0
-local buf      = 0
-local cache    = 0
-local swap     = 0
-local swapf    = 0
-local srec     = 0
-local used     = 0
-local swapused = 0
-local perc     = 0
+local total    = nil
+local free     = nil
+local buf      = nil
+local cache    = nil
+local swap     = nil
+local swapf    = nil
+local srec     = nil
+local used     = nil
+local swapused = nil
+local perc     = nil
+
+local last_used = nil
+local last_swapused = nil
 
 local function get_info(stdout)
     stdout = stdout:sub(1, -2)
@@ -45,11 +48,17 @@ local function get_info(stdout)
 
     used = total - free - buf - cache - srec
     swapused = swap - swapf
-    perc = math.floor(used / total * 100)
-
-    awesome.emit_signal("mem::used", used)
-    awesome.emit_signal("mem::swap", swapused)
-    awesome.emit_signal("mem::percent", perc)
+    
+    if last_swapused ~= swapused then
+        awesome.emit_signal("mem::swap", swapused)
+        last_swapused = swapused
+    end
+    if last_used ~= used then
+        perc = math.floor(used / total * 100)
+        awesome.emit_signal("mem::used", used)
+        awesome.emit_signal("mem::percent", perc)
+        last_used = used
+    end
 end
 
 awesome.connect_signal("mem::update", function()

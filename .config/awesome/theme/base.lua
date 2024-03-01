@@ -160,22 +160,20 @@ theme.border_marked = theme._color.yellow
 theme.popup_roundness = 5
 
 --[[ image icon ]]--
-theme.layout_tile       = awesome_dir.."/layouts_icons/tile.png"
-theme.layout_tileleft   = awesome_dir.."/layouts_icons/tileleft.png"
-theme.layout_floating   = awesome_dir.."/layouts_icons/floating.png"
-theme.layout_centered   = awesome_dir.."/layouts_icons/centered.png"
-
-theme.awesome_icon = awesome_dir.."/awesome-icon.png"
+theme.layout_tile       = awesome_dir.."icon/layout/tile.png"
+theme.layout_tileleft   = awesome_dir.."icon/layout/tileleft.png"
+theme.layout_floating   = awesome_dir.."icon/layout/floating.png"
+theme.layout_centered   = awesome_dir.."icon/layout/centered.png"
 
 theme.wallpaper = awesome_dir.."/wallpapers/squares.png"
 
 theme.icon_theme = "Papirus"
 
 --[[ taglist ]]--
-theme.taglist_bg_focus = theme._color.base
+theme.taglist_bg_focus     = theme._color.base
 theme.taglist_fg_not_focus = theme._color.surface2
-theme.taglist_bg_urgent = theme._color.blue
-theme.taglist_spacing     = dpi(2)
+theme.taglist_bg_urgent    = theme._color.blue
+theme.taglist_spacing      = dpi(2)
 
 -- each tag has a unique color
 theme.tag_color = {

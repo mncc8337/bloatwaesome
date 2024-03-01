@@ -10,17 +10,30 @@ local awful  = require("awful")
 local gears  = require("gears")
 local config = require("config")
 
+local last_available = nil
+local last_used = nil
+
 local function get_info(stdout)
     stdout = stdout:sub(1, -2)
     local tokens = gears.string.split(stdout, "%s")
 
-    local used = tonumber(tokens[4] * 0.000001024)
-    local available = tonumber(tokens[5] * 0.000001024)
+    local used  = tonumber(tokens[4] * 0.000001024)
     local usage = tonumber(tokens[6]:sub(1, -2))
-
-    awesome.emit_signal("fs::usage", usage)
-    awesome.emit_signal("fs::used", used)
-    awesome.emit_signal("fs::available", available)
+    
+    if last_available == nil then
+        local available = tonumber(tokens[5] * 0.000001024)
+        awesome.emit_signal("fs::available", available)
+        -- available space never change, set to 0 instead to save memory
+        last_available = 0
+    end
+    
+    if last_used ~= used then
+        awesome.emit_signal("fs::usage", usage)
+        awesome.emit_signal("fs::used", used)
+        
+        last_used = used
+    end
+    
 end
 
 awesome.connect_signal("fs::update", function()

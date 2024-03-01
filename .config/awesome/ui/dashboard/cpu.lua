@@ -1,8 +1,6 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local lain = require("lain")
-
 local ui = require("ui.ui_elements")
 
 --[[ arcchart ]]--
