@@ -1,12 +1,6 @@
 [submodule ".config/awesome/rubato"]
-	path = .config/awesome/rubato
+	path = .config/awesome/modules/rubato
 	url = https://github.com/andOrlando/rubato
 [submodule ".config/awesome/bling"]
-	path = .config/awesome/bling
+	path = .config/awesome/modules/bling
 	url = https://github.com/BlingCorp/bling
-[submodule ".config/awesome/lain"]
-	path = .config/awesome/lain
-	url = https://github.com/lcpz/lain
-[submodule ".config/awesome/layout-machi"]
-	path = .config/awesome/layout-machi
-	url = https://github.com/xinhaoyuan/layout-machi
