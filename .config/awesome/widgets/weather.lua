@@ -11,7 +11,11 @@ local text = wibox.widget {
 local icon = wibox.widget.imagebox(awesome_dir.."icon/openweathermap/na.png")
 
 awesome.connect_signal("weather::current", function(dat)
-    text.markup = "<b>"..math.floor(dat["main"]["temp"] + 0.5).."°C</b>"
+    if dat["cod"] == 200 then
+        text.markup = "<b>"..math.floor(dat["main"]["temp"] + 0.5).."°C</b>"
+    else
+        text.markup = "N/A"
+    end
     icon.image = dat["icon_image"]
 end)
 

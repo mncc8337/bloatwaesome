@@ -37,11 +37,15 @@ if [[ -n $(tty | grep tty) ]]; then
   setfont /usr/share/kbd/consolefonts/ter-u12n.psf.gz
 fi
 
+# fzf
+
 alias py="python3"
 alias mv="mv -v"
 alias cp="cp -v"
 alias rm="rm -v"
 
 export PATH="$HOME/.bin:"$PATH
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
 crunchbang-mini

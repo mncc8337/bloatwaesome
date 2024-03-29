@@ -13,9 +13,19 @@ local json   = require("modules.json")
 local awesome_dir = require("gears").filesystem.get_configuration_dir()
 
 local function current_func(stdout)
-    -- see https://openweathermap.org/current
-    -- for dat usage
-    local dat = json.decode(stdout)
+    local dat = nil
+
+    -- cannot get data
+    if stdout == "" then
+        dat = {}
+        dat["cod"] = 1
+        dat["icon_image"] = awesome_dir.."icon/openweathermap/na.png"
+    else
+        -- see https://openweathermap.org/current
+        -- for dat usage
+        dat = json.decode(stdout)
+    end
+
 
     -- if success
     if dat["cod"] == 200 then
@@ -39,7 +49,16 @@ local function current_func(stdout)
 end
 
 local function forecast_func(stdout)
-    local dat = json.decode(stdout)
+    local dat = nil
+    
+    -- cannot get data
+    if stdout == "" then
+        dat = {}
+        dat["cod"] = 1
+        dat["icon_image"] = awesome_dir.."icon/openweathermap/na.png"
+    else
+        dat = json.decode(stdout)
+    end
     
     -- if success
     if dat["cod"] == 200 then

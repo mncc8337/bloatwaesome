@@ -120,8 +120,8 @@ theme.panel_border = theme._color.surface0
 --[[ titlebar ]]--
 theme.titlebar_close_button    = theme._color.red
 theme.titlebar_minimize_button = theme._color.yellow
-theme.titlebar_ontop_button   = theme._color.blue
-theme.titlebar_sticky_button    = theme._color.green
+theme.titlebar_ontop_button    = theme._color.blue
+theme.titlebar_sticky_button   = theme._color.green
 theme.titlebar_button_inactive = theme._color.surface0
 
 --[[ idk ]]--

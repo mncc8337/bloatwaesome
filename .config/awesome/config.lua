@@ -9,8 +9,8 @@ return {
     },
     theme = "catppuccin", -- catppuccin, monochrome
 
-    tag_num = 4, -- should be no more than 12
-    bar_size = 28,
+    tag_num = 6, -- should be no more than 12
+    bar_size = 24,
     floating_bar = true,
     -- the space between bar (or dashboard and drop-down terminal if not floating bar) and screen border
     screen_spacing = 5,

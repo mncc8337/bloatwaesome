@@ -44,6 +44,11 @@ local config = require("config")
 local theme = require("theme")
 theme.load(config.theme)
 if config.floating_bar then
+    -- no maximize client
+    client.connect_signal("manage", function(c)
+        c.maximized = false
+    end)
+
     naughty.config.padding = beautiful.useless_gap * 2
 else
     naughty.config.padding = config.bar_screen_space

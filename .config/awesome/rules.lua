@@ -112,5 +112,15 @@ client.connect_signal("manage", function (c)
         awful.placement.centered(c, {honor_workarea = true})
     end
 end)
+
+local config = require("config")
+
 client.connect_signal("property::fullscreen", reconfig_border)
-client.connect_signal("property::maximized", reconfig_border)
+client.connect_signal("property::maximized", function(c)
+    -- prevent maximizing clients
+    if config.floating_bar then
+        c.maximized = false
+    else
+        reconfig_border(c)
+    end
+end)

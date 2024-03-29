@@ -41,6 +41,6 @@ theme._color = {
     flamingo  = theme.color[16],
 }
 
-theme.wallpaper = gears.filesystem.get_configuration_dir().."wallpapers/yosemite.png"
+theme.wallpaper = gears.filesystem.get_configuration_dir().."/wallpapers/yosemite.png"
 
 return theme

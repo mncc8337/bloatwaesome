@@ -25,8 +25,7 @@ local function get_info(stdout)
         local v, m = line:match("([%d]+)%%.*%[([%l]*)") -- [vol%] [on/off]
         if line:match("([%d]+)%%.*%[([%l]*)") then
             v = tonumber(v)
-            if m == "on" then m = false
-            else m = true end
+            m = (m ~= "on")
 
             if line:match("Left") then
                 left_v = v

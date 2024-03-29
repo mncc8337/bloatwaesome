@@ -46,6 +46,7 @@ local status = {
     loop_track    = false,
     no_loop       = false,
 }
+
 local time = {
     elapsed = 0,
     total   = 100
@@ -114,16 +115,10 @@ coverico.clip_shape = rounded_rect(beautiful.popup_roundness)
 coverico.forced_height = 128
 
 -- music player
-local recheck_delay = 0.3
+local recheck_delay = 1.0
 
 local function toggle_press(w)
-    if status.player_paused then
-        w.text = "󰏤"
-        awesome.emit_signal("music::play")
-    else
-        w.text = "󰐊"
-        awesome.emit_signal("music::pause")
-    end
+    awesome.emit_signal("music::toggle")
     single_timer(recheck_delay, function()
         if status.player_paused then
             w.text = "󰐊"
