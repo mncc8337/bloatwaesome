@@ -16,8 +16,6 @@ my _dots_
 ## Dependencies
 |package               |  purpose                         |note|
 |----------------------|----------------------------------|----|
-|xautolock             |screen auto locker                |    |
-|betterlockscreen      |screen locker                     |    |
 |awesome-git           |the WM                            |    |
 |zsh                   |the shell                         |    |
 |alacritty             |the terminal                      |    |
