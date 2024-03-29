@@ -38,7 +38,6 @@ local cal = wibox.widget {
 local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
 local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
 
-local date_selected = nil
 local function decorate_cell(widget, flag, date)
     local cur_date = os.date("*t")
     if (cur_date.year ~= date.year or cur_date.month ~= date.month) and flag == "focus" then
@@ -77,16 +76,6 @@ local function decorate_cell(widget, flag, date)
         widget = wibox.container.background,
     }
 
-    local selected = false
-
-    if date_selected and flag == "normal"
-       and date.year == date_selected.year
-       and date.month == date_selected.month
-       and date.day == date_selected.day then
-        ret.bg = beautiful.calendar_day_focus_bg
-        selected = true
-    end
-
     if flag == "normal" and not selected then
         ret:connect_signal("mouse::enter", function()
             ret.bg = beautiful.calendar_day_hover_bg
@@ -94,11 +83,6 @@ local function decorate_cell(widget, flag, date)
         ret:connect_signal("mouse::leave", function()
             ret.bg = beautiful.calendar_day_normal_bg
         end)
-        ret:buttons {awful.button({}, 1, function()
-            date_selected = date
-            -- force redraw
-            cal:set_date(os.date("*t"))
-        end)}
     end
 
     return ret

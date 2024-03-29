@@ -2,9 +2,7 @@
 
 local gears = require("gears")
 
-local theme = {}
-
-theme.color = {
+local color = {
     "#1e1e2e" , -- base
     "#11111b" , -- crust
     "#313244" , -- surface0
@@ -22,25 +20,11 @@ theme.color = {
     "#cba6f7" , -- mauve
     "#f2cdcd" , -- flamingo
 }
-theme._color = {
-    base      = theme.color[1],
-    crust     = theme.color[2],
-    surface0  = theme.color[3],
-    surface1  = theme.color[4],
-    surface2  = theme.color[5],
-    text      = theme.color[6],
-    rosewater = theme.color[7],
-    lavender  = theme.color[8],
-    red       = theme.color[9],
-    peach     = theme.color[10],
-    yellow    = theme.color[11],
-    green     = theme.color[12],
-    teal      = theme.color[13],
-    blue      = theme.color[14],
-    mauve     = theme.color[15],
-    flamingo  = theme.color[16],
+
+local mods = {}
+mods.wallpaper = gears.filesystem.get_configuration_dir().."/wallpapers/yosemite.png"
+
+return {
+    color = color,
+    mods = mods,
 }
-
-theme.wallpaper = gears.filesystem.get_configuration_dir().."/wallpapers/yosemite.png"
-
-return theme
