@@ -16,18 +16,14 @@ my _dots_
 ## Dependencies
 |package               |  purpose                         |note|
 |----------------------|----------------------------------|----|
-|xautolock             |screen auto locker                |    |
-|betterlockscreen      |screen locker                     |    |
-|awesome-git           |the WM                            |    |
-|zsh                   |the shell                         |    |
-|alacritty             |the terminal                      |    |
+|awesome-git           |WM                                |    |
+|zsh                   |shell                             |    |
+|alacritty             |terminal                          |    |
 |maim                  |screen shooting                   |    |
 |rofi                  |application launcher              |    |
-|cava-git              |audio visualizer                  |*   |
 |alsa-utils            |volume control                    |    |
 |playerctl             |music control                     |    |
-|picom-git             |the compositor                    |    |
-|terminus-font         |tty font                          |*   |
+|picom-git             |compositor                        |    |
 |ttf-cascadia-mono-nerd|mono font                         |*   |
 |ttf-roboto            |system font                       |*   |
 |ttf-nerd-fonts-symbols|correctly display nerd font symbol|**  |
