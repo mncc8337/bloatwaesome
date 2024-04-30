@@ -10,41 +10,9 @@ local awful     = require("awful")
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
 
-local musicplayer = require("ui.musicplayer")
-local widgets    = require("widgets")
 local ui         = require("ui.ui_elements")
 local rubato     = require("modules.rubato")
 
---[[ WIDGETS ]]--
-local clock = wibox.widget {
-    widget = wibox.widget.textclock,
-    format = "%H:%M",
-    font = beautiful.font_type.mono.." 60",
-    align = "center",
-    valign = "center",
-    height = 80,
-}
-
-local profile_panel = require("ui.dashboard.profile")
-local quote_panel = require("ui.dashboard.quote")
-local music_panel = ui.create_dashboard_panel(musicplayer)
-local volume_slider_panel = ui.create_dashboard_panel(widgets.volumeslider)
-
-local fs_panel = require("ui.dashboard.filesystem")
-local mem_panel = require("ui.dashboard.mem")
-local cpu_panel = require("ui.dashboard.cpu")
-local temp_panel = require("ui.dashboard.temp")
-
-local sysres = wibox.widget {
-    layout = wibox.layout.fixed.horizontal,
-    cpu_panel,
-    mem_panel,
-    fs_panel,
-    temp_panel,
-}
-
-local power_panel = require("ui.dashboard.power")
-local uptime_panel = require("ui.dashboard.uptime")
 
 --[[ BASE ]]--
 --                       title   profile-panel  power-menu  music-player  volume  arcchart            spacing
@@ -66,6 +34,10 @@ local dashboard = wibox {
 local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
 local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
 
+local control_center = require("ui.dashboard.control_center")
+local notifys_center = require("ui.dashboard.notification_center")
+notifys_center.forced_height = dashboard_height - 8 * 2 - 30
+
 local tabs = {
     wibox.widget {
         layout = wibox.layout.fixed.vertical,
@@ -74,28 +46,14 @@ local tabs = {
             prev_button,
             wibox.widget {
                 widget = wibox.widget.textbox(),
-                markup = "<b>Dashboard</b>",
+                markup = "<b>Controls</b>",
                 align = "center",
                 valign = "center",
                 forced_height = 30,
             },
             next_button,
         }),
-        {
-            layout = wibox.layout.align.horizontal,
-            quote_panel,
-            profile_panel,
-        },
-        {
-            layout = wibox.layout.align.horizontal,
-            expand = "inside",
-            wibox.widget {},
-            uptime_panel,
-            power_panel,
-        },
-        music_panel,
-        volume_slider_panel,
-        sysres,
+        control_center,
     },
     wibox.widget {
         layout = wibox.layout.fixed.vertical,
@@ -110,7 +68,8 @@ local tabs = {
                 forced_height = 30,
             },
             next_button,
-        })
+        }),
+        notifys_center,
     },
 }
 
@@ -174,3 +133,7 @@ client.connect_signal("button::press", hide_dashboard_on_click)
 awesome.connect_signal("dashboard::show", show_dashboard)
 awesome.connect_signal("dashboard::hide", hide_dashboard)
 awesome.connect_signal("dashboard::toggle", toggle_dashboard)
+awesome.connect_signal("dashboard::toggle_tag", function(tag_id)
+    toggle_dashboard()
+    scroller.scroll_to(tag_id)
+end)

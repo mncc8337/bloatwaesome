@@ -4,20 +4,18 @@ local wibox     = require("wibox")
 
 --[[ centered thing ]]--
 function h_centered_widget(widget)
-    local placeholder = wibox.widget {}
     local w = {
         layout = wibox.layout.align.horizontal,
         expand = "outside",
-        placeholder, widget, placeholder
+        nil, widget, nil
     }
     return w
 end
 function v_centered_widget(widget)
-    local placeholder = wibox.widget {}
     local w = {
         layout = wibox.layout.align.vertical,
         expand = "outside",
-        placeholder, widget, placeholder
+        nil, widget, nil
     }
     return w
 end

@@ -120,7 +120,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
         single_timer(delay, function()
             local common =  {
                 timeout = 4,
-                -- title = title,
+                title = player_name,
                 message = "now playing\n"..
                         "<span font = '"..beautiful.font_type.standard.." 18'><b>"..title.."</b></span>\n"..
                         artist..album,

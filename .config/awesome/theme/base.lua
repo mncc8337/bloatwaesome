@@ -49,7 +49,7 @@ local function get_theme(color)
     theme.music_progressbar_bg = theme._color.crust
     theme.music_progressbar_fg = theme._color.blue
 
-    theme.musicplayer_primary_button_normal   = theme._color.surface2
+    theme.musicplayer_primary_button_normal   = theme._color.surface1
     theme.musicplayer_secondary_button_normal = theme._color.surface0
     theme.musicplayer_button_focus            = theme._color.text
 
@@ -98,6 +98,9 @@ local function get_theme(color)
     theme.timeweather_width = 400
     theme.panel_bg     = theme._color.crust
     theme.panel_border = theme._color.surface0
+
+    --[[ notification panel ]]--
+    theme.notification_title_bg = theme._color.surface0
 
     --[[ titlebar ]]--
     theme.titlebar_close_button    = theme._color.red

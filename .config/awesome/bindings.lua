@@ -156,12 +156,14 @@ globalkeys = gears.table.join(
     --
 
     -- corner key
-    awful.key({altkey}, "F12", function() awesome.emit_signal("dashboard::toggle")      end,
-              {description = "toggle dashboard",          group = "awesome"}),
-    awful.key({altkey}, "F11", function() awesome.emit_signal("drop-down-term::toggle") end,
-              {description = "toggle drop-down terminal", group = "awesome"}),
-    awful.key({altkey}, "F10", function() awesome.emit_signal("timeweather::toggle")    end,
-              {description = "toggle time and weather",   group = "awesome"})
+    awful.key({altkey         }, "F12", function() awesome.emit_signal("dashboard::toggle_tag", 1) end,
+              {description = "toggle control center",      group = "awesome"}),
+    awful.key({altkey, "Shift"}, "F12", function() awesome.emit_signal("dashboard::toggle_tag", 2) end,
+              {description = "toggle notification center", group = "awesome"}),
+    awful.key({altkey         }, "F11", function() awesome.emit_signal("drop-down-term::toggle")   end,
+              {description = "toggle drop-down terminal",  group = "awesome"}),
+    awful.key({altkey         }, "F10", function() awesome.emit_signal("timeweather::toggle")      end,
+              {description = "toggle time and weather",    group = "awesome"})
     --
 )
 
