@@ -2,77 +2,111 @@
 program = "/usr/bin/zsh"
 
 [window]
-dimensions = {columns = 80, lines = 25}
-padding = {x = 3, y = 3}
 decorations = "None"
 opacity = 1.0
 
+[window.dimensions]
+columns = 80
+lines = 25
+
+[window.padding]
+x = 3
+y = 3
+
 [font]
-normal      = {family = "CaskaydiaMono NF", style = "Regular"}
-bold        = {family = "CaskaydiaMono NF", style = "Bold"}
-italic      = {family = "CaskaydiaMono NF", style = "Italic"}
-bold_italic = {family = "CaskaydiaMono NF", style = "Bold Italic"}
 size = 12.0
 builtin_box_drawing = false
 
+[font.normal]
+family = "CaskaydiaMono NF"
+style = "Regular"
+
+[font.bold]
+family = "CaskaydiaMono NF"
+style = "Bold"
+
+[font.italic]
+family = "CaskaydiaMono NF"
+style = "Italic"
+
+[font.bold_italic]
+family = "CaskaydiaMono NF"
+style = "Bold Italic"
+
 [colors]
 draw_bold_text_with_bright_colors = false
-cursor         = {text = "#1e1e2e", cursor = "#f5e0dc"}
-vi_mode_cursor = {text = "#1e1e2e", cursor = "#b4befe"}
-selection      = {text = "#1e1e2e", background = "#f5e0dc"}
-footer_bar     = {foreground = "#1e1e2e", background = "#a6adc8"}
+indexed_colors = [
+    { index = 16, color = "#fab387" },
+    { index = 17, color = "#f5e0dc" },
+]
 
-[colors.search]
-matches       = {foreground = "#1e1e2e", background = "#a6adc8"}
-focused_match = {foreground = "#1e1e2e", background = "#a6e3a1"}
+[colors.cursor]
+text = "#1e1e2e"
+cursor = "#f5e0dc"
 
-[colors.hints]
-start = {foreground = "#1e1e2e", background = "#f9e2af"}
-end   = {foreground = "#1e1e2e", background = "#a6acd8"}
+[colors.vi_mode_cursor]
+text = "#1e1e2e"
+cursor = "#b4befe"
+
+[colors.selection]
+text = "#1e1e2e"
+background = "#f5e0dc"
+
+[colors.footer_bar]
+foreground = "#1e1e2e"
+background = "#a6adc8"
+
+[colors.search.matches]
+foreground = "#1e1e2e"
+background = "#a6adc8"
+
+[colors.search.focused_match]
+foreground = "#1e1e2e"
+background = "#a6e3a1"
+
+[colors.hints.start]
+foreground = "#1e1e2e"
+background = "#f9e2af"
+
+[colors.hints.end]
+foreground = "#1e1e2e"
+background = "#a6acd8"
 
 [colors.primary]
-background        = "#1e1e2e"
-foreground        = "#cdd6f4"
-dim_foreground    = "#cdd6f4"
+background = "#282828"
+foreground = "#EBDBB2"
+dim_foreground = "#cdd6f4"
 bright_foreground = "#cdd6f4"
 
 [colors.normal]
-black   = "#45475a"
-red     = "#f38ba8"
-green   = "#a6e3a1"
-yellow  = "#f9e2af"
-blue    = "#89b4fa"
-magenta = "#f5c2e7"
-cyan    = "#94e2d5"
-white   = "#bac2de"
+black = "#282828"
+red = "#CC241D"
+green = "#98971A"
+yellow = "#D79921"
+blue = "#458588"
+magenta = "#B16286"
+cyan = "#689D6A"
+white = "#A89984"
 
 [colors.bright]
-black   = "#585b70"
-red     = "#f38ba8"
-green   = "#a6e3a1"
-yellow  = "#f9e2af"
-blue    = "#89b4fa"
-magenta = "#f5c2e7"
-cyan    = "#94e2d5"
-white   = "#a6adc8"
+black = "#928374"
+red = "#FB4934"
+green = "#B8BB26"
+yellow = "#FABD2F"
+blue = "#83A598"
+magenta = "#D3869B"
+cyan = "#8EC07C"
+white = "#EBDBB2"
 
 [colors.dim]
-black   = "#45475a"
-red     = "#f38ba8"
-green   = "#a6e3a1"
-yellow  = "#f9e2af"
-blue    = "#89b4fa"
+black = "#45475a"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
 magenta = "#f5c2e7"
-cyan    = "#94e2d5"
-white   = "#bac2de"
-
-[[colors.indexed_colors]]
-index = 16
-color = "#fab387"
-
-[[colors.indexed_colors]]
-index = 17
-color = "#f5e0dc"
+cyan = "#94e2d5"
+white = "#bac2de"
 
 [selection]
 save_to_clipboard = true

@@ -8,6 +8,7 @@ local ui        = require("ui.ui_elements")
 local profile_pic = wibox.widget.imagebox(config.profile_picture)
 profile_pic.forced_width = 100
 profile_pic.forced_height = 100
+profile_pic.clip_shape = rounded_rect(beautiful.popup_roundness)
 
 local p_name = wibox.widget {
     widget = wibox.widget.textbox,

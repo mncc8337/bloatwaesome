@@ -1,4 +1,5 @@
 local awful     = require("awful")
+local ruled     = require("ruled")
 local beautiful = require("beautiful")
 
 -- {{{ Rules
@@ -83,6 +84,18 @@ awful.rules.rules = {
     --   properties = { screen = 1, tag = "2" } },
 }
 -- }}}
+
+-- All notifications will match this rule.
+ruled.notification.connect_signal('request::rules', function()
+    ruled.notification.append_rule {
+        rule       = { },
+        properties = {
+            screen           = awful.screen.preferred,
+            -- implicit_timeout = 5,
+            position         = "top_middle",
+        }
+    }
+end)
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.

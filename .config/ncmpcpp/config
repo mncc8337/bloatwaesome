@@ -14,7 +14,7 @@ visualizer_output_name = "my_fifo"
 visualizer_in_stereo = "no"
 visualizer_type = "ellipse"
 visualizer_fps = "60"
-visualizer_look = *|
+visualizer_look = ●▮
 visualizer_color = "33,39,63,75,81,99,117,153,189"
 
 # COLORS

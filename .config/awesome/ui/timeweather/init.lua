@@ -10,33 +10,65 @@ local rubato     = require("modules.rubato")
 local time = require("ui.timeweather.time")
 
 --[[ BASE ]]--
+--                         title  time      spacing
+local timeweather_height = 30   + 22*7+68 + 8*3
 local timeweather = wibox {
     ontop = true,
     visible = false,
     type = "dock",
     width = beautiful.timeweather_width,
-    --       title  time      spacing
-    height = 30   + 22*7+68 + 8*3,
+    height = timeweather_height,
     x = (awful.screen.focused().geometry.width - beautiful.timeweather_width)/2,
     bg = beautiful.panel_bg,
     screen = awful.screen.focused(),
     shape = rounded_rect(beautiful.popup_roundness),
-    border_width = beautiful.border_width,
-    border_color = beautiful.panel_border,
+    -- border_width = beautiful.border_width,
+    -- border_color = beautiful.panel_border,
 }
 
-timeweather:setup {
-    {
+local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
+local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
+
+local tabs = {
+    wibox.widget {
         layout = wibox.layout.fixed.vertical,
         ui.create_dashboard_panel(wibox.widget {
-            widget = wibox.widget.textbox(),
-            markup = "<b>Calendar</b>",
-            align = "center",
-            valign = "center",
-            forced_height = 30,
+            layout = wibox.layout.align.horizontal,
+            prev_button,
+            wibox.widget {
+                widget = wibox.widget.textbox(),
+                markup = "<b>Calendar</b>",
+                align = "center",
+                valign = "center",
+                forced_height = 30,
+            },
+            next_button,
         }),
-        time,
+        time
     },
+    wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        ui.create_dashboard_panel(wibox.widget {
+            layout = wibox.layout.align.horizontal,
+            prev_button,
+            wibox.widget {
+                widget = wibox.widget.textbox(),
+                markup = "<b>Weather</b>",
+                align = "center",
+                valign = "center",
+                forced_height = 30,
+            },
+            next_button,
+        })
+    },
+}
+
+local scroller = ui.h_scrollable(tabs, beautiful.timeweather_width, timeweather_height - 4 * 2, {top = 0, bottom = 0, left = 0, right = 0})
+prev_button:buttons(awful.button({}, 1, function() scroller.scroll(-1) end))
+next_button:buttons(awful.button({}, 1, function() scroller.scroll( 1) end))
+
+timeweather:setup {
+    scroller,
     widget = wibox.container.margin,
     margins = 4,
 }
@@ -70,7 +102,7 @@ local function show_timeweather()
     timeweather.visible = true
     
     timeweather_opened = true
-    timeweather_timed.target = config.bar_size + (config.floating_bar and beautiful.border_width * 2 + config.screen_spacing or 0) + config.screen_spacing
+    timeweather_timed.target = config.bar_size + (config.floating_bar and config.screen_spacing or 0) + config.screen_spacing
 end
 local function toggle_timeweather()
     if not timeweather_opened then

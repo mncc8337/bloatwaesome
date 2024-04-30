@@ -1,0 +1,10 @@
+{
+  "base16-nvim": { "branch": "master", "commit": "eec6882101dd189117f79c5d18d389d20cfc0415" },
+  "lazy.nvim": { "branch": "main", "commit": "31ddbea7c10b6920c9077b66c97951ca8682d5c8" },
+  "nvim-colorizer.lua": { "branch": "master", "commit": "85855b38011114929f4058efc97af1059ab3e41d" },
+  "nvim-tree.lua": { "branch": "master", "commit": "81eb8d519233c105f30dc0a278607e62b20502fd" },
+  "nvim-web-devicons": { "branch": "master", "commit": "93ddac6966d5d3416f96df728d7b92e27aaa4452" },
+  "plenary.nvim": { "branch": "master", "commit": "8aad4396840be7fc42896e3011751b7609ca4119" },
+  "telescope.nvim": { "branch": "master", "commit": "6312868392331c9c0f22725041f1ec2bef57c751" },
+  "wal.vim": { "branch": "master", "commit": "c72ba0d18946f29aab9c95eb6975d321c68b3681" }
+}

@@ -1,5 +1,0 @@
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-gio mount -d /dev/sda1 &
-picom &
-ibus-daemon -r &
-awesome

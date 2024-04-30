@@ -110,72 +110,6 @@ local function create_button_fg(icon, normal_color, focus_color, onclick, width,
     return buttonw
 end
 
-local created_tab_buttons = {}
-local function create_tab_button(text, name)
-    local button = wibox.widget {
-        {
-            widget = wibox.widget.textbox,
-            markup = text,
-            align = "center",
-            valign = "center",
-            forced_height = 15,
-            forced_width = 90,
-            font = beautiful.font_type.icon.." 10",
-        },
-        widget = wibox.container.background,
-        bg = beautiful.button_normal,
-    }
-
-    local base_color = beautiful.button_normal
-
-    local function set_active()
-        base_color = beautiful.button_selected
-        button.bg = base_color
-        button.fg = beautiful.fg_invert
-    end
-    local function set_deactive()
-        base_color = beautiful.button_normal
-        button.bg = base_color
-        button.fg = beautiful.fg_normal
-    end
-
-    local function set_action(action)
-        button:buttons{awful.button({}, 1, function()
-            action()
-            for _, b in ipairs(created_tab_buttons) do
-                b.set_deactive()
-            end
-            set_active()
-            awesome.emit_signal("dashboard::change_tab", name)
-        end)}
-    end
-
-    button:connect_signal("mouse::enter", function()
-        if base_color ~= beautiful.button_selected then
-            button.bg = beautiful.button_focus
-            button.fg = beautiful.fg_normal
-        end
-    end)
-    button:connect_signal("mouse::leave", function()
-        button.bg = base_color
-        if base_color == beautiful.button_selected then
-            button.fg = beautiful.fg_invert
-        else
-            button.fg = beautiful.fg_normal
-        end
-    end)
-
-    local self =  {
-        button = button,
-        set_active = set_active,
-        set_deactive = set_deactive,
-        set_action = set_action,
-    }
-    table.insert(created_tab_buttons, self)
-
-    return self
-end
-
 -- a horizontal tabs scroller uses rubato for smooth movement
 -- tabs: tabs to add to the scroller
 -- width: the width of the scroller
@@ -204,21 +138,27 @@ local function h_scrollable(tabs, width, height, margins)
     end
 
     local current_tab = 1
-    local function scroll_to(i)
-        local dis = i - current_tab
-        if dis == 0 then return end
+    local function scroll(dis)
+        if current_tab + dis < 1 or current_tab + dis > #tabs then return end
 
         -- pretty inefficient but idk the other way to do this
         for idx, cx in ipairs(current_x) do
             current_x[idx] = cx - (width + margins.left + margins.right) * dis
             tab_timed[idx].target = current_x[idx] + margins.left
         end
-        current_tab = i
+        current_tab = current_tab + dis
+    end
+    local function scroll_to(i)
+        local dis = i - current_tab
+        if dis == 0 then return end
+
+        scroll(dis)
     end
 
     return {
         widget = wibox.widget {layout = scroller},
         scroll_to = scroll_to,
+        scroll = scroll,
     }
 end
 
@@ -228,6 +168,5 @@ return {
     create_dashboard_panel = create_dashboard_panel,
     create_button_bg = create_button_bg,
     create_button_fg = create_button_fg,
-    create_tab_button = create_tab_button,
     h_scrollable = h_scrollable,
 }

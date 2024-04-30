@@ -219,7 +219,7 @@ playerctlwidget:connect_signal("mouse::enter", function()
     if titlew:get_preferred_size() < 300.0 then
         scrl_title:pause()
     end
-    buttons_anim.target = 42 + 22*2
+    buttons_anim.target = 32 + 22*2
 end)
 playerctlwidget:connect_signal("mouse::leave", function()
     if player_off then return end

@@ -41,4 +41,17 @@ export PATH="$HOME/.bin:"$PATH
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+# set terminal colorscheme
+gogh() {
+    source ~/PLAYGROUND/py-env/bin/activate
+    bash -c "$(curl -sLo- https://git.io/vQgMr)"
+    deactivate
+}
+
+# for some reason in my box XDG base directory env vars are not set
+export XDG_CONFIG_HOME="$HOME/.config"
+#export XDG_CACHE_HOME="$HOME/.cache"
+#export XDG_DATA_HOME="$HOME/.local/share"
+#export XDG_STATE_HOME="$HOME/.local/state"
+
 crunchbang-mini

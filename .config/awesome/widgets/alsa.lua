@@ -80,12 +80,13 @@ local volume_slider = wibox.widget {
     widget = wibox.container.margin,
     right = 10, left = 10,
 }
+
 local volume_slider_popup = wibox {
     ontop = true,
     visible = false,
     type = "dock",
     width = 350,
-    height = 50,
+    height = 40,
     border_color = beautiful.border_focus,
     border_width = beautiful.border_width,
     widget = volume_slider,
@@ -93,7 +94,7 @@ local volume_slider_popup = wibox {
 }
 local popup_placement_config = {
     margins = {
-        top = config.bar_size + (config.floating_bar and 10 or 0),
+        top = config.bar_size + (config.floating_bar and config.screen_spacing + beautiful.border_width * 4 or beautiful.border_width * 2),
         right = (config.floating_bar and beautiful.useless_gap * 2 or 0)
     }
 }

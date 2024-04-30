@@ -66,14 +66,8 @@ client.connect_signal("request::titlebars", function(c)
                 {
                     layout = wibox.layout.fixed.horizontal,
                     spacing = 5,
-                    button(beautiful.titlebar_close_button, function()
-                        c:kill()
-                    end),
-                    button(beautiful.titlebar_minimize_button, function()
-                        gears.timer.delayed_call(function()
-                            c.minimized = not c.minimized
-                        end)
-                    end),
+                    sticky_button,
+                    ontop_button,
                 }
             },
             -- middle
@@ -84,8 +78,14 @@ client.connect_signal("request::titlebars", function(c)
                 {
                     layout = wibox.layout.fixed.horizontal,
                     spacing = 5,
-                    ontop_button,
-                    sticky_button,
+                    button(beautiful.titlebar_minimize_button, function()
+                        gears.timer.delayed_call(function()
+                            c.minimized = not c.minimized
+                        end)
+                    end),
+                    button(beautiful.titlebar_close_button, function()
+                        c:kill()
+                    end),
                 }
             },
         },

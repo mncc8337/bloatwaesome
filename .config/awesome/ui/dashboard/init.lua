@@ -47,30 +47,39 @@ local power_panel = require("ui.dashboard.power")
 local uptime_panel = require("ui.dashboard.uptime")
 
 --[[ BASE ]]--
+--                       title   profile-panel  power-menu  music-player  volume  arcchart            spacing
+local dashboard_height = 30    + 137          + 79        + 144         + 50    + ui.arc_size + 46  + 8 * 7
 local dashboard = wibox {
     ontop = true,
     visible = false,
     type = "dock",
     width = beautiful.dashboard_width,
-    --       title   profile-panel  power-menu  music-player  volume  arcchart            spacing
-    height = 30    + 137          + 79        + 144         + 50    + ui.arc_size + 46  + 8 * 7,
+    height = dashboard_height,
     y = config.bar_size,
     bg = beautiful.panel_bg,
     screen = awful.screen.focused(),
     shape = rounded_rect(beautiful.popup_roundness),
-    border_width = beautiful.border_width,
-    border_color = beautiful.panel_border,
+    -- border_width = beautiful.border_width,
+    -- border_color = beautiful.panel_border,
 }
 
-dashboard:setup {
-    {
+local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
+local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
+
+local tabs = {
+    wibox.widget {
         layout = wibox.layout.fixed.vertical,
         ui.create_dashboard_panel(wibox.widget {
-            widget = wibox.widget.textbox(),
-            markup = "<b>Dashboard</b>",
-            align = "center",
-            valign = "center",
-            forced_height = 30,
+            layout = wibox.layout.align.horizontal,
+            prev_button,
+            wibox.widget {
+                widget = wibox.widget.textbox(),
+                markup = "<b>Dashboard</b>",
+                align = "center",
+                valign = "center",
+                forced_height = 30,
+            },
+            next_button,
         }),
         {
             layout = wibox.layout.align.horizontal,
@@ -88,6 +97,29 @@ dashboard:setup {
         volume_slider_panel,
         sysres,
     },
+    wibox.widget {
+        layout = wibox.layout.fixed.vertical,
+        ui.create_dashboard_panel(wibox.widget {
+            layout = wibox.layout.align.horizontal,
+            prev_button,
+            wibox.widget {
+                widget = wibox.widget.textbox(),
+                markup = "<b>Notifications</b>",
+                align = "center",
+                valign = "center",
+                forced_height = 30,
+            },
+            next_button,
+        })
+    },
+}
+
+local scroller = ui.h_scrollable(tabs, beautiful.dashboard_width, dashboard_height - 4 * 2, {top = 0, bottom = 0, left = 0, right = 0})
+prev_button:buttons(awful.button({}, 1, function() scroller.scroll(-1) end))
+next_button:buttons(awful.button({}, 1, function() scroller.scroll( 1) end))
+
+dashboard:setup {
+    scroller,
     widget = wibox.container.margin,
     margins = 4,
 }
@@ -114,13 +146,12 @@ end
 local function show_dashboard()
     dashboard.screen = awful.screen.focused()
     local h = dashboard.screen.geometry.height
-    dashboard.y = config.bar_size + (config.floating_bar and beautiful.border_width * 2 + config.screen_spacing or 0) + config.screen_spacing
+    dashboard.y = config.bar_size + (config.floating_bar and config.screen_spacing or 0) + config.screen_spacing
 
     dashboard.visible = true
 
     dashboard_opened = true
     dashboard_timed.target = beautiful.dashboard_width
-                           + beautiful.border_width * 2
                            + (config.floating_bar and beautiful.useless_gap * 2 or config.screen_spacing)
 end
 local function toggle_dashboard()

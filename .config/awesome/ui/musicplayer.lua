@@ -127,7 +127,7 @@ local function toggle_press(w)
         end
     end):start()
 end
-local togglebutton = ui.create_button_fg("󰐊", beautiful.musicplayer_primary_button_normal, beautiful.musicplayer_button_focus, toggle_press, 42, _, 24, _)
+local togglebutton = ui.create_button_fg("󰐊", beautiful.musicplayer_primary_button_normal, beautiful.musicplayer_button_focus, toggle_press, 32, _, 20, _)
 
 local function refresh_toggle_button()
     if status.player_paused then

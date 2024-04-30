@@ -48,20 +48,6 @@ local tasklist_buttons = gears.table.join(
         awful.client.focus.byidx(-1)
     end))
 
-local function set_wallpaper(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
-end
--- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
-
 local function update_tag_color(self, c3, index, objects)
     self:get_children_by_id('mytext_role')[1].text = ""
     self:get_children_by_id('text_color')[1].fg = beautiful.taglist_fg_not_focus
@@ -80,9 +66,6 @@ end
 
 --[[ taskbar ]]--
 awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
-    set_wallpaper(s)
-    
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.layoutbox = awful.widget.layoutbox(s)
@@ -112,7 +95,7 @@ awful.screen.connect_for_each_screen(function(s)
                     align = "center",
                     valign = "center",
                     widget = wibox.widget.textbox,
-                    font = beautiful.font_type.icon.." 20",
+                    font = beautiful.font_type.icon.." bold 16",
                 },
                 id = 'text_color',
                 forced_width = 30,
@@ -166,7 +149,7 @@ awful.screen.connect_for_each_screen(function(s)
             top = 3, bottom = 3,
         },
     }
-
+    
     -- Create the wibox
     s.wibar = awful.wibar {
         position = "top",
@@ -180,9 +163,9 @@ awful.screen.connect_for_each_screen(function(s)
             left = beautiful.useless_gap * 2,
             right = beautiful.useless_gap * 2
         }
+        s.wibar.shape = rounded_rect(beautiful.popup_roundness)
         s.wibar.border_width = 2
         s.wibar.border_color = beautiful.border_normal
-        s.wibar.shape = rounded_rect(beautiful.popup_roundness)
     end
 
     -- Add widgets to the wibox

@@ -7,13 +7,14 @@ return {
         lang       = "us",
         cnt        = 5,
     },
-    theme = "catppuccin", -- catppuccin, monochrome
+    theme = "gruvbox", -- catppuccin, monochrome, everforest, gruvbox, ayu-mirage, tomorrow, random, wal (WIP)
 
     tag_num = 6, -- should be no more than 12
     bar_size = 24,
     floating_bar = true,
-    -- the space between bar (or dashboard and drop-down terminal if not floating bar) and screen border
-    screen_spacing = 5,
+    -- the space between dashboard and drop-down terminal and screen border if not floating bar
+    -- the top margin of taskbar and screen border if floating bar
+    screen_spacing = 12,
     -- recommend: 12 if not floating bar
     --             5 if     floating bar
 
