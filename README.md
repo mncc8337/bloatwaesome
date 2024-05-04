@@ -5,7 +5,7 @@ my _dots_
 
 ## Details
 - **Distro**: Arch Linux
-- **WM**: awesomewm
+- **WM**: [awesome](https://github.com/awesomeWM/awesome)
 - **Compositor**: [picom](https://github.com/yshui/picom)
 - **Icons**: [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
 - **Cursor**: [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor)
