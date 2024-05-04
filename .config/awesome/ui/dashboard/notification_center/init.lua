@@ -10,7 +10,7 @@ local notifs_count = 0
 
 local notifs_container = wibox.widget {
     layout = require("modules.overflow").vertical,
-    scrollbar_enabled = true,
+    scrollbar_enabled = false,
     spacing = 2,
     step = 80,
 }
