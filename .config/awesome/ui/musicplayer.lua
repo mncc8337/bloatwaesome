@@ -266,7 +266,13 @@ awesome.connect_signal("music::refreshUI", function()
 end)
 awesome.connect_signal("music::set_cover", function(path)
     coverico.image = gears.surface.load_uncached(path)
-    -- coverico.image = path
+
+    -- avoid overflowing
+    -- if cover image is longer than half of the dashboard then hide the loop and the shuffle button
+    local new_width = coverico.source_width * 128 / coverico.source_height
+
+    loopbutton.visible = not (new_width > beautiful.dashboard_width / 2)
+    shufflebutton.visible = not (new_width > beautiful.dashboard_width / 2)
 end)
 awesome.connect_signal("music::set_title", function(_title)
     song_title:set_markup(_title)

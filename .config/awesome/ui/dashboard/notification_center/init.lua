@@ -1,5 +1,6 @@
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
+local gears     = require("gears")
 local awful     = require("awful")
 local naughty   = require("naughty")
 local ui        = require("ui.ui_elements")
@@ -10,7 +11,7 @@ local notifs_count = 0
 local notifs_container = wibox.widget {
     layout = require("modules.overflow").vertical,
     scrollbar_enabled = true,
-    spacing = 10,
+    spacing = 2,
     step = 80,
 }
 
@@ -33,31 +34,24 @@ local function remove(wid)
 end
 
 local function add_notif(title, message, icon)
-    local close_button = wibox.widget {
-        widget = wibox.container.background,
-        bg = beautiful.titlebar_close_button,
-        shape = rounded_rect(3),
-        forced_width = 20,
-        forced_height = 10,
-    }
-    
     local title_widget = wibox.widget {
         wibox.widget {
-            layout = wibox.layout.align.horizontal,
             wibox.widget {
-                widget = wibox.widget.textbox,
-                markup = ' '.."<b>"..title.."</b>"..", "..markup_fg(beautiful.color[5], os.date("%H:%M:%S")),
-                font = beautiful.font_type.standard.."18",
-            },
-            nil,
-            wibox.widget {
+                layout = wibox.layout.align.horizontal,
                 wibox.widget {
-                    close_button,
-                    widget = wibox.container.margin,
-                    right = 8,
+                    widget = wibox.widget.textbox,
+                    markup = title,
+                    font = beautiful.font_type.standard.."18 bold",
                 },
-                widget = wibox.container.place,
+                nil,
+                wibox.widget {
+                    widget = wibox.widget.textbox,
+                    markup = markup_fg(beautiful.color.bg4, os.date("%H:%M:%S")),
+                    font = beautiful.font_type.standard.."14 italic",
+                },
             },
+            widget = wibox.container.margin,
+            left = 8, right = 8,
         },
         widget = wibox.container.background,
         bg = beautiful.notification_title_bg,
@@ -67,6 +61,7 @@ local function add_notif(title, message, icon)
         widget = wibox.widget.textbox,
         markup = message,
         font = beautiful.font_type.standard.."16",
+        height = 100,
     }
 
     
@@ -74,18 +69,17 @@ local function add_notif(title, message, icon)
     
     if icon then
         notif = wibox.widget {
-            layout = wibox.layout.fixed.horizontal,
+            layout = wibox.layout.align.horizontal,
             wibox.widget {
                 wibox.widget {
                     widget = wibox.widget.imagebox,
-                    image = icon,
-                    forced_width = 100,
+                    image = gears.surface.load_uncached(icon),
                     forced_height = 100,
                     clip_shape = rounded_rect(4),
                 },
                 widget = wibox.container.margin,
                 margins = 8,
-                right = 0,
+                right = 0
             },
             wibox.widget {
                 message_widget,
@@ -104,12 +98,12 @@ local function add_notif(title, message, icon)
     notif = wibox.widget {
         layout = wibox.layout.align.vertical,
         title_widget,
-        notif
+        notif,
     }
     
     notif = ui.create_dashboard_panel(notif)
     
-    close_button:buttons(awful.button({ }, 1, function() remove(notif) end))
+    notif:buttons(awful.button({ }, 1, function() remove(notif) end))
 
     notifs_container:insert(1, notif)
 

@@ -9,24 +9,6 @@ local function get_theme(color)
     local theme = {}
     theme.color = color
 
-    theme._color = {
-        base      = theme.color[1],
-        crust     = theme.color[2],
-        surface0  = theme.color[3],
-        surface1  = theme.color[4],
-        surface2  = theme.color[5],
-        text      = theme.color[6],
-        rosewater = theme.color[7],
-        lavender  = theme.color[8],
-        red       = theme.color[9],
-        peach     = theme.color[10],
-        yellow    = theme.color[11],
-        green     = theme.color[12],
-        teal      = theme.color[13],
-        blue      = theme.color[14],
-        mauve     = theme.color[15],
-        flamingo  = theme.color[16],
-    }
     theme.font_type = {
         standard = "Roboto",
         mono     = "CaskaydiaMono NF",
@@ -35,112 +17,113 @@ local function get_theme(color)
     theme.font_size = 12
 
     --[[ icons ]]--
-    theme.mem_icon_color            = theme._color.yellow
-    theme.cpu_icon_color            = theme._color.blue
-    theme.temp_icon_color           = theme._color.red
-    theme.filesys_icon_color        = theme._color.green
-    theme.music_icon_color_inactive = theme._color.surface2
-    theme.music_icon_color_active   = theme._color.blue
+    theme.mem_icon_color            = theme.color.yellow
+    theme.cpu_icon_color            = theme.color.blue
+    theme.temp_icon_color           = theme.color.red
+    theme.filesys_icon_color        = theme.color.green
+
+    theme.music_icon_color_inactive = theme.color.fg1
+    theme.music_icon_color_active   = theme.color.accent1
 
     --[[ widgets ]]--
-    theme.volumebar_bg = theme._color.crust
-    theme.volumebar_fg = theme._color.blue
+    theme.volumebar_bg = theme.color.bg2
+    theme.volumebar_fg = theme.color.accent1
 
-    theme.music_progressbar_bg = theme._color.crust
-    theme.music_progressbar_fg = theme._color.blue
+    theme.music_progressbar_bg = theme.color.bg2
+    theme.music_progressbar_fg = theme.color.accent1
 
-    theme.musicplayer_primary_button_normal   = theme._color.surface1
-    theme.musicplayer_secondary_button_normal = theme._color.surface0
-    theme.musicplayer_button_focus            = theme._color.text
+    theme.musicplayer_primary_button_normal   = theme.color.bg4
+    theme.musicplayer_secondary_button_normal = theme.color.bg3
+    theme.musicplayer_button_focus            = theme.color.fg2
 
-    theme.button_normal   = theme._color.surface0
-    theme.button_focus    = theme._color.crust
-    theme.button_selected = theme._color.lavender
+    theme.button_normal   = theme.color.bg3
+    theme.button_focus    = theme.color.bg2
+    theme.button_selected = theme.color.accent2
 
-    theme.shutdown_button = theme._color.red
-    theme.reboot_button   = theme._color.green
-    theme.logout_button   = theme._color.rosewater
-    theme.sleep_button    = theme._color.blue
+    theme.shutdown_button = theme.color.red
+    theme.reboot_button   = theme.color.green
+    theme.logout_button   = theme.color.fg3
+    theme.sleep_button    = theme.color.blue
 
-    theme.profile_distro  = theme._color.blue
-    theme.profile_version = theme._color.yellow
-    theme.profile_package = theme._color.green
-    theme.profile_wm      = theme._color.red
+    theme.profile_distro  = theme.color.blue
+    theme.profile_version = theme.color.yellow
+    theme.profile_package = theme.color.green
+    theme.profile_wm      = theme.color.red
 
-    theme.launcher_bg = theme._color.lavender
-    theme.launcher_fg = theme._color.crust
+    theme.launcher_bg = theme.color.accent2
+    theme.launcher_fg = theme.color.bg2
 
-    theme.separator = theme._color.surface0
+    theme.separator = theme.color.bg3
 
-    theme.arc_bg = theme._color.crust
+    theme.arc_bg = theme.color.bg2
 
     --[[ calendar ]]--
-    theme.calendar_normal_bg = theme._color.base
-    theme.calendar_normal_fg = theme._color.subtext0
+    theme.calendar_normal_bg = theme.color.bg1
+    theme.calendar_normal_fg = theme.color.subfg20
 
-    theme.calendar_focus_bg = theme._color.lavender
-    theme.calendar_focus_fg = theme._color.crust
+    theme.calendar_focus_bg = theme.color.accent2
+    theme.calendar_focus_fg = theme.color.bg2
 
-    theme.calendar_header_bg = theme._color.base
-    theme.calendar_header_fg = theme._color.text
+    theme.calendar_header_bg = theme.color.bg1
+    theme.calendar_header_fg = theme.color.fg2
 
-    theme.calendar_weekday_bg = theme._color.base
-    theme.calendar_weekday_fg = theme._color.text
+    theme.calendar_weekday_bg = theme.color.bg1
+    theme.calendar_weekday_fg = theme.color.fg2
 
-    theme.calendar_day_normal_bg = theme._color.base
-    theme.calendar_day_hover_bg  = theme._color.surface0
+    theme.calendar_day_normal_bg = theme.color.bg1
+    theme.calendar_day_hover_bg  = theme.color.bg3
 
-    theme.calendar_button_bg = theme._color.surface0
-    theme.calender_button_fg = theme._color.text
+    theme.calendar_button_bg = theme.color.bg3
+    theme.calender_button_fg = theme.color.fg2
 
     --[[ panel ]]--
     theme.dashboard_width   = 450
     theme.timeweather_width = 400
-    theme.panel_bg     = theme._color.crust
-    theme.panel_border = theme._color.surface0
+    theme.panel_bg     = theme.color.bg2
+    theme.panel_border = theme.color.bg3
 
     --[[ notification panel ]]--
-    theme.notification_title_bg = theme._color.surface0
+    theme.notification_title_bg = theme.color.bg3
 
     --[[ titlebar ]]--
-    theme.titlebar_close_button    = theme._color.red
-    theme.titlebar_minimize_button = theme._color.yellow
-    theme.titlebar_ontop_button    = theme._color.blue
-    theme.titlebar_sticky_button   = theme._color.green
-    theme.titlebar_button_inactive = theme._color.surface0
+    theme.titlebar_close_button    = theme.color.red
+    theme.titlebar_minimize_button = theme.color.yellow
+    theme.titlebar_ontop_button    = theme.color.blue
+    theme.titlebar_sticky_button   = theme.color.green
+    theme.titlebar_button_inactive = theme.color.bg3
 
     --[[ idk ]]--
     theme.font = theme.font_type.standard..' '..theme.font_size
 
-    -- theme.bg_focus      = theme._color.subtext0
-    theme.bg_normal     = theme._color.base
-    theme.bg_urgent     = theme._color.blue
-    -- theme.bg_minimize   = theme._color.surface2
-    theme.bg_systray    = theme._color.base
+    -- theme.bg_focus      = theme.color.subfg20
+    theme.bg_normal     = theme.color.bg1
+    theme.bg_urgent     = theme.color.accent1
+    -- theme.bg_minimize   = theme.color.fg1
+    theme.bg_systray    = theme.color.bg1
 
-    theme.fg_normal     = theme._color.text
-    theme.fg_invert     = theme._color.crust
+    theme.fg_normal     = theme.color.fg2
+    theme.fg_invert     = theme.color.bg2
     theme.fg_focus      = theme.fg_normal
     theme.fg_urgent     = theme.fg_normal
     theme.fg_minimize   = theme.fg_normal
 
-    theme.tooltip_bg = theme._color.base
-    theme.layoutlist_bg_selected = theme._color.surface1
+    theme.tooltip_bg = theme.color.bg1
+    theme.layoutlist_bg_selected = theme.color.bg4
 
-    theme.tasklist_bg_normal   = theme._color.surface1
-    theme.tasklist_bg_focus    = theme._color.lavender
-    theme.tasklist_bg_minimize = theme._color.base
-    theme.tasklist_bg_urgent   = theme._color.mauve
+    theme.tasklist_bg_normal   = theme.color.bg4
+    theme.tasklist_bg_focus    = theme.color.accent2
+    theme.tasklist_bg_minimize = theme.color.bg1
+    theme.tasklist_bg_urgent   = theme.color.magenta
 
-    theme.hotkeys_modifiers_fg     = theme._color.blue
+    theme.hotkeys_modifiers_fg     = theme.color.accent1
     theme.hotkeys_font             = theme.font_type.mono..' '..theme.font_size
     theme.hotkeys_description_font = theme.font_type.mono..' '..theme.font_size
 
     theme.useless_gap   = dpi(10)
     theme.border_width  = dpi(2)
-    theme.border_normal = theme._color.crust
-    theme.border_focus  = theme._color.lavender
-    theme.border_marked = theme._color.yellow
+    theme.border_normal = theme.color.bg2
+    theme.border_focus  = theme.color.fg1
+    theme.border_marked = theme.color.yellow
 
     theme.popup_roundness = 5
 
@@ -155,26 +138,26 @@ local function get_theme(color)
     theme.icon_theme = "Papirus"
 
     --[[ taglist ]]--
-    theme.taglist_bg_focus     = theme._color.base
-    theme.taglist_fg_not_focus = theme._color.surface2
-    theme.taglist_bg_urgent    = theme._color.blue
+    theme.taglist_bg_focus     = theme.color.bg1
+    theme.taglist_fg_not_focus = theme.color.fg1
+    theme.taglist_bg_urgent    = theme.color.accent1
     theme.taglist_spacing      = dpi(2)
 
     -- each tag has a unique color
     theme.tag_color = {
-        theme._color.blue,
-        theme._color.red,
-        theme._color.green,
-        theme._color.yellow,
-        theme._color.flamingo,
-        theme._color.lavender,
-        theme._color.rosewater,
-        theme._color.mauve,
-        theme._color.teal,
-        theme._color.peach,
-        -------
-        theme._color.text,
-        theme._color.blue,
+        theme.color.blue,
+        theme.color.red,
+        theme.color.green,
+        theme.color.yellow,
+        theme.color.pink,
+        theme.color.fg4,
+        theme.color.fg3,
+        theme.color.magenta,
+        theme.color.cyan,
+        theme.color.orange,
+       -------
+        theme.color.fg2,
+        theme.color.blue,
     }
 
     --[[ bling ]]--
@@ -186,10 +169,10 @@ local function get_theme(color)
 
     --[[ notification ]]--
     theme.notification_font = theme.font_type.standard..' '..theme.font_size
-    theme.notification_bg = theme._color.base
+    theme.notification_bg = theme.color.bg1
     theme.notification_shape = rounded_rect(theme.popup_roundness)
     theme.notification_border_color = theme.border_focus
-    theme.notification_max_width = 500
+    -- theme.notification_max_width = 500
     -- change theme.notification_border_width does nothing
     naughty.config.defaults.border_width = theme.border_width
 

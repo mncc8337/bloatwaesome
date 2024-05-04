@@ -71,23 +71,20 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
                     -- then the title should be in token 2
                     artist = tokens[1]
                     title = tokens[2]
-                    -- same of the above but in reverse
                 elseif tokens[2]:find(artist) then
+                    -- same of the above but in reverse
                     artist = tokens[2]
                     title = tokens[1]
                 end
             end
         end
-        
-        -- set fetched artwork (see https://github.com/mncc8337/chromium-artwork-fetcher)
-        album_path = awesome_dir.."artwork.png"
     end
-    
+
     -- Set fallback art
     if album_path == '' then
         album_path = awesome_dir.."fallback.png"
     end
-    
+
     local display = title
     if artist ~= " " then
         display = artist.." - "..title
@@ -106,33 +103,22 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
     end
     awesome.emit_signal("music::set_detail", artist..album)
 
-    if player_name == "chromium" then
-        album_path = awesome_dir.."artwork.png"
-    end
     awesome.emit_signal("music::set_cover", album_path)
     current_art = album_path
 
     if new then
-        local delay = 0.0
-        -- wait for the extension to done fetching the artwork
-        if player_name == "chromium" then delay = 1.0 end
-
-        single_timer(delay, function()
-            local common =  {
-                timeout = 4,
-                title = player_name,
-                message = "now playing\n"..
-                        "<span font = '"..beautiful.font_type.standard.." 18'><b>"..title.."</b></span>\n"..
-                        artist..album,
-                icon        = album_path,
-                icon_size   = 120,
-            }
-            if prev_notification ~= nil then
-                prev_notification:destroy()
-            end
-            prev_notification = naughty.notify(common)
-        end):start()
-end
+        local common =  {
+            timeout = 4,
+            title = "now playing",
+            message = "<span font = '"..beautiful.font_type.standard.." 18'><b>"..title.."</b></span>\n"..artist..album,
+            icon        = album_path,
+            icon_size   = 120,
+        }
+        if prev_notification ~= nil then
+            prev_notification:destroy()
+        end
+        prev_notification = naughty.notify(common)
+    end
 end)
 playerctl:connect_signal("no_players", function()
     current_player = ""

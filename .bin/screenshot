@@ -2,17 +2,26 @@
 
 savedir=''
 prefix=''
+icon_arg=''
 cwd=$(pwd)
 if [ "$2" = 'save' ]; then
     savedir="$(date +"%Y-%m-%d_%H-%M-%S").png"
     prefix=" and saved to ~/Pictures/$savedir"
     cd ~/Pictures
 fi
+
 if [ "$1" = 'full' ]; then
     maim $savedir --hidecursor | xclip -selection clipboard -t image/png
 elif [ "$1" = 'area' ]; then
     maim -s $savedir --hidecursor | xclip -selection clipboard -t image/png
 fi
 
-notify-send "<b>Screen captured</b><br>Image copied to clipboard$prefix"
+if [ "$2" = 'save' ]; then
+    # create a tempfile to store the scaled down image
+    tmpf=$(mktemp /tmp/scrsht-XXXXX.png)
+    magick ~/Pictures/$savedir -resize 100x $tmpf
+    icon_arg="-i $tmpf"
+fi
+
+notify-send "Screen captured" "Image copied to clipboard$prefix" $icon_arg
 cd $cwd

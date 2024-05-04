@@ -4,3 +4,6 @@
 [submodule ".config/awesome/modules/bling"]
 	path = .config/awesome/modules/bling
 	url = https://github.com/BlingCorp/bling
+[submodule ".config/nvim_"]
+	path = .config/nvim
+	url = https://github.com/mncc8337/nvim
