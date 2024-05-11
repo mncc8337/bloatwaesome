@@ -1,7 +1,7 @@
 # dotfiles
 my _dots_
 ### Current
-![free](screenshot/2024-05-04_13-00-37.png)
+![free](screenshot/2024-05-12_00-24-27.png)
 
 ## Details
 - **Distro**: Arch Linux
