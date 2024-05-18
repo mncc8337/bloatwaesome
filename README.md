@@ -1,5 +1,5 @@
-# dotfiles
-my _dots_
+# awesomewm
+my _awesomewm configs_
 ![free](screenshot/2024-05-12_00-24-27.png)
 
 ## Dependencies
