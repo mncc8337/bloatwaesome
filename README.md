@@ -1,27 +1,11 @@
 # dotfiles
 my _dots_
 ![free](screenshot/2024-05-12_00-24-27.png)
-## Install
-- install all dependencies (see below)
-- install [oh my zsh](https://ohmyz.sh)
-- clone this repo and cd into it
-- run `./tool/create_symlink`
-
-## Details
-- **Distro**: Arch Linux
-- **WM**: [awesome](https://github.com/awesomeWM/awesome)
-- **Compositor**: [picom](https://github.com/yshui/picom)
-- **Icons**: [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
-- **Cursor**: [Bibata Modern Classic](https://github.com/ful1e5/Bibata_Cursor)
-- **Launcher**: [rofi](https://github.com/davatorium/rofi)
-- **Terminal**: [Alacritty](https://github.com/alacritty/alacritty)
-- **Shell**: zsh with [Oh my zsh](https://github.com/ohmyzsh/ohmyzsh)
 
 ## Dependencies
 |package               |purpose                           |note|
 |----------------------|----------------------------------|----|
 |awesome-git           |WM                                |    |
-|zsh                   |shell                             |    |
 |alacritty             |terminal                          |    |
 |maim                  |screen shooting                   |    |
 |rofi                  |application launcher              |    |
