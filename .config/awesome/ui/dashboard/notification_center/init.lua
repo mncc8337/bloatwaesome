@@ -17,7 +17,7 @@ local notifs_container = wibox.widget {
 
 local empty_notif = wibox.widget {
     widget = wibox.widget.textbox,
-    markup = markup_fg(beautiful.color[4], "<i>no notifications</i>"),
+    markup = markup_fg(beautiful.color.bg4, "<i>no notifications</i>"),
     align = "center",
     valigh = "center",
 }
@@ -28,8 +28,8 @@ local function remove(wid)
     notifs_container:remove_widgets(wid)
     
     if #notifs_container.children == 0 then
-        notifs_container:insert(1, empty_notif)
         empty_alert = true
+        notifs_container:insert(1, empty_notif)
     end
 end
 

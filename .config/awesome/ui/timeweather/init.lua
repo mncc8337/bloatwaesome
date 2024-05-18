@@ -26,49 +26,20 @@ local timeweather = wibox {
     -- border_color = beautiful.panel_border,
 }
 
-local prev_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
-local next_button = ui.create_button_fg("", beautiful.calendar_button_bg, beautiful.calendar_button_fg, function(_) end, 32, 23, 16)
-
-local tabs = {
+timeweather:setup {
     wibox.widget {
         layout = wibox.layout.fixed.vertical,
-        ui.create_dashboard_panel(wibox.widget {
-            layout = wibox.layout.align.horizontal,
-            prev_button,
+        ui.create_dashboard_panel(
             wibox.widget {
                 widget = wibox.widget.textbox(),
                 markup = "<b>Calendar</b>",
                 align = "center",
                 valign = "center",
                 forced_height = 30,
-            },
-            next_button,
-        }),
+            }
+        ),
         time
     },
-    wibox.widget {
-        layout = wibox.layout.fixed.vertical,
-        ui.create_dashboard_panel(wibox.widget {
-            layout = wibox.layout.align.horizontal,
-            prev_button,
-            wibox.widget {
-                widget = wibox.widget.textbox(),
-                markup = "<b>Weather</b>",
-                align = "center",
-                valign = "center",
-                forced_height = 30,
-            },
-            next_button,
-        })
-    },
-}
-
-local scroller = ui.h_scrollable(tabs, beautiful.timeweather_width, timeweather_height - 4 * 2, {top = 0, bottom = 0, left = 0, right = 0})
-prev_button:buttons(awful.button({}, 1, function() scroller.scroll(-1) end))
-next_button:buttons(awful.button({}, 1, function() scroller.scroll( 1) end))
-
-timeweather:setup {
-    scroller,
     widget = wibox.container.margin,
     margins = 4,
 }

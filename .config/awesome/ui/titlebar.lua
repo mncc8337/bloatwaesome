@@ -92,4 +92,12 @@ client.connect_signal("request::titlebars", function(c)
         widget = wibox.container.margin,
         left = 10, right = 10,
     }
+
+    c:connect_signal("property::maximized", function()
+        if c.maximized then
+            awful.titlebar.hide(c)
+        else
+            awful.titlebar.show(c)
+        end
+    end)
 end)

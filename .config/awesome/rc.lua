@@ -51,7 +51,7 @@ if config.floating_bar then
 
     naughty.config.padding = beautiful.useless_gap * 2
 else
-    naughty.config.padding = config.bar_screen_space
+    naughty.config.padding = config.screen_spacing
 end
 
 local bling = require("modules.bling")
@@ -61,9 +61,9 @@ local bling = require("modules.bling")
 
 --[[ layouts ]]--
 awful.layout.append_default_layouts({
-    awful.layout.suit.tile,
+    -- awful.layout.suit.tile,
     awful.layout.suit.tile.left,
-    bling.layout.centered,
+    -- bling.layout.centered,
     awful.layout.suit.floating,
 })
 
