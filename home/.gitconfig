@@ -1,0 +1,12 @@
+[user]
+	email = mncc8327@gmail.com
+	name = mncc8337
+	signingkey = 10B3216A6AB3FA4B
+[credential]
+	helper = store
+[core]
+	editor = nvim
+[color]
+	ui = auto
+[commit]
+	gpgsign = true

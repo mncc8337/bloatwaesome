@@ -1,0 +1,70 @@
+#!/bin/env python3
+
+import os
+import shutil
+
+
+cwd = os.path.abspath(os.path.dirname(__file__))
+cwd = os.path.abspath(os.path.join(cwd, os.pardir))
+
+home   = os.environ.get("HOME", default = os.path.expanduser("~"))
+config = os.path.expanduser("~/.config")
+bin    = os.path.expanduser("~/.bin")
+
+if not os.path.exists(config):
+    os.mkdir(config)
+
+dots_home   = os.path.join(cwd, "home")
+dots_config = os.path.join(cwd, ".config")
+dots_bin    = os.path.join(cwd, ".bin")
+dots_test   = os.path.join(cwd, "test")
+
+def prompt(message):
+    print(message, end='')
+    return input()
+def symlink(of, to):
+    if os.path.exists(to):
+        islink = os.path.islink(to)
+        isdir = os.path.isdir(to)
+
+        if islink:
+            ans = prompt(f"\"{to}\" is already linked, replace? (Y/n): ")
+            if len(ans) == 0 or ans[0] == 'y':
+                os.unlink(to)
+            else:
+                return
+        else:
+            ans = prompt(f"\"{to}\" is already exists, replace? (y/N): ")
+            if len(ans) == 0 or ans[0] == 'n':
+                return
+            else:
+                if isdir:
+                    shutil.rmtree(to)
+                else:
+                    os.remove(to)
+
+    try:
+        os.symlink(of, to)
+        print("created symlink of", of)
+    except:
+        print("failed to created symlink of", of)
+def bulk_symlink(of, to):
+    print(f"creating symlink of {of} content to {to}")
+    print("--------------------")
+    for dir in os.listdir(of):
+        path = os.path.join(of, dir)
+        target = os.path.join(to, dir)
+        symlink(path, target)
+    print("--------------------\n")
+
+ans = prompt("link to HOME? (Y/n): ")
+if len(ans) == 0 or ans[0] == 'y':
+    bulk_symlink(dots_home, home)
+
+ans = prompt("link to .config? (Y/n): ")
+if len(ans) == 0 or ans[0] == 'y':
+    bulk_symlink(dots_config, config)
+
+ans = prompt("link .bin? (Y/n): ")
+if len(ans) == 0 or ans[0] == 'y':
+    symlink(dots_bin, bin)

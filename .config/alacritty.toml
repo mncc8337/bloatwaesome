@@ -109,4 +109,4 @@ cyan = "#94e2d5"
 white = "#bac2de"
 
 [selection]
-save_to_clipboard = true
+save_to_clipboard = false

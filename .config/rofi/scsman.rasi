@@ -1,12 +1,12 @@
 * {
-    bg-col:  #1e1e2e;
-    bg-col-light: #1e1e2e;
-    border-col: #b4befe;
-    selected-col: #1e1e2e;
-    lavender: #b4befe;
-    fg-col: #cdd6f4;
-    fg-col2: #f38ba8;
-    grey: #6c7086;
+    bg-col:  #282828;
+    bg-col-light: #282828;
+    border-col: #d5c4a1;
+    selected-col: #3c3836;
+    accent: #fe8019;
+    fg-col: #ebdbb2;
+    selected-fg: #fe8019;
+    grey: #3c3836;
 
     width: 600;
     font: "CaskaydiaMono NF 14";
@@ -36,7 +36,7 @@ inputbar {
 }
 
 prompt {
-    background-color: @lavender;
+    background-color: @accent;
     padding: 6px;
     text-color: @bg-col;
     border-radius: 3px;
@@ -76,7 +76,7 @@ element-icon {
 
 element selected {
     background-color:  @selected-col ;
-    text-color: @fg-col2  ;
+    text-color: @selected-fg;
 }
 
 mode-switcher {
@@ -93,7 +93,7 @@ button {
 
 button selected {
   background-color: @bg-col;
-  text-color: @lavender;
+  text-color: @accent;
 }
 
 message {
@@ -106,6 +106,6 @@ message {
 textbox {
     padding: 6px;
     margin: 20px 0px 0px 20px;
-    text-color: @lavender;
+    text-color: @accent;
     background-color: @bg-col-light;
 }
