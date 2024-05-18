@@ -1,7 +1,11 @@
 # dotfiles
 my _dots_
-### Current
 ![free](screenshot/2024-05-12_00-24-27.png)
+## Install
+- install all dependencies (see below)
+- install [oh my zsh](https://ohmyz.sh)
+- clone this repo and cd into it
+- run `./tool/create_symlink`
 
 ## Details
 - **Distro**: Arch Linux
@@ -14,7 +18,7 @@ my _dots_
 - **Shell**: zsh with [Oh my zsh](https://github.com/ohmyzsh/ohmyzsh)
 
 ## Dependencies
-|package               |  purpose                         |note|
+|package               |purpose                           |note|
 |----------------------|----------------------------------|----|
 |awesome-git           |WM                                |    |
 |zsh                   |shell                             |    |
