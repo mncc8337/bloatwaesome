@@ -7,6 +7,7 @@ my _dots_
 |----------------------|----------------------------------|----|
 |awesome-git           |WM                                |    |
 |alacritty             |terminal                          |    |
+|curl                  |fetch weather info                |    |
 |maim                  |screen shooting                   |    |
 |rofi                  |application launcher              |    |
 |alsa-utils            |volume control                    |    |
