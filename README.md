@@ -1,6 +1,7 @@
-# awesomewm
-my _awesomewm configs_
-![free](screenshot/2024-05-12_00-24-27.png)
+# bloatwaesomewm
+my old _awesomewm configs_  
+![free](screenshot/2024-05-12_00-24-27.png)  
+i decided that this config is too bloated so i made a [new one](https://github.com/mncc8337/.dotfiles)  
 
 ## Dependencies
 |package               |purpose                           |note|
