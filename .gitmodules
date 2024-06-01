@@ -1,0 +1,6 @@
+[submodule "bling"]
+	path = modules/bling
+	url = https://github.com/BlingCorp/bling
+[submodule "rubato"]
+	path = modules/rubato
+	url = https://github.com/andOrlando/rubato
